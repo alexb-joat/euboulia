@@ -155,4 +155,15 @@ describe('site adapters', () => {
     expect(resolveModelLabel(BUNDLED, 'poe', a.currentModel(cs[0]!))).toBe('anthropic/claude-sonnet-5.5');
     expect(resolveModelLabel(BUNDLED, 'poe', a.currentModel(cs[1]!))).toBe('openai/gpt-6-luna');
   });
+
+  it('attachments: hidden elements and file inputs are not counted', () => {
+    loadFixture('chatgpt', 'chatgpt.com');
+    const a = pickAdapter({ ...deps, isVisible: el => !el.hasAttribute('hidden') });
+    const [c] = a.composers();
+    const form = c!.container;
+    form.insertAdjacentHTML('beforeend', '<div data-testid="file-attachment" hidden></div><input type="file" data-testid="attachment-input">');
+    const before = a.attachments(c!).length;
+    form.insertAdjacentHTML('beforeend', '<div data-testid="file-attachment">report.pdf</div>');
+    expect(a.attachments(c!).length).toBe(before + 1);
+  });
 });

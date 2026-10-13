@@ -1,7 +1,7 @@
 import type { Attachment, Classification, TaskType } from '../shared/types';
 import { detectSensitive } from './sensitive';
 import { KEYWORD_WEIGHT, PATTERN_WEIGHT, TASK_SIGNALS, keywordRegex } from './signals';
-import { LONG_CONTEXT_TOKENS, estimateTokens, sizeBucket } from './tokens';
+import { LONG_CONTEXT_TOKENS, LONG_PROMPT_TOKENS, estimateTokens, sizeBucket } from './tokens';
 
 const HEAD = 50_000;
 const TAIL = 10_000;
@@ -43,7 +43,12 @@ export function classify(text: string, attachments: Attachment[] = []): Classifi
   const sum = Object.values(scores).reduce((a, b) => a + b, 0);
   const weights: Partial<Record<TaskType, number>> = {};
   let primary: TaskType = 'chat';
-  if (sum === 0) {
+  if (sum === 0 && tokensIn >= LONG_PROMPT_TOKENS) {
+    // A substantial message with no task vocabulary is still not a quick question: weigh quality, not just price.
+    weights.reasoning = 0.6; weights.chat = 0.4;
+    primary = 'reasoning';
+    signals.push('long prompt');
+  } else if (sum === 0) {
     weights.chat = 1;
   } else {
     let best = 0;

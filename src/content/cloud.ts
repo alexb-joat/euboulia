@@ -86,23 +86,44 @@ export class Cloud {
     }
 
     const table = el('table');
-    for (const r of x.rows) {
-      const tr = el('tr', r.isWinner ? 'win' : undefined);
+    const thead = el('thead');
+    const hr = el('tr');
+    const th = (text: string, cls?: string, title?: string) => { const h = el('th', cls, text); if (title) h.title = title; return h; };
+    hr.append(th('Model'), th('Fit for this task', 'fit', 'How well the model suits this kind of prompt, 0 to 100%'), th('Est. cost', 'cost', 'Estimated cost of this one message at API prices, or included in your plan'));
+    thead.append(hr);
+    table.append(thead);
+    const body = el('tbody');
+    const addRow = (r: Explanation['rows'][number], extra = false) => {
+      const tr = el('tr', [r.isWinner ? 'win' : '', extra ? 'extra' : ''].filter(Boolean).join(' ') || undefined);
       const name = el('td', 'name', r.label);
+      if (r.isCurrent) name.append(el('em', undefined, ' · selected now'));
       name.append(el('small', undefined, r.serviceName));
       const fit = el('td', 'fit');
       const bar = el('div', 'bar');
       const fill = el('i');
       fill.style.width = `${Math.round(r.fit * 100)}%`;
       bar.append(fill);
-      bar.title = `fit ${r.fit.toFixed(2)}`;
-      fit.append(bar);
+      fit.append(bar, el('span', 'pct', `${Math.round(r.fit * 100)}%`));
+      fit.title = `Fit for this task: ${Math.round(r.fit * 100)}%`;
       const cost = el('td', 'cost', r.cost);
       if (r.apiCost) cost.append(el('small', undefined, r.apiCost));
       tr.append(name, fit, cost);
-      table.append(tr);
-    }
+      body.append(tr);
+    };
+    for (const r of x.rows) addRow(r);
+    for (const r of x.more) addRow(r, true);
+    table.append(body);
     box.append(table);
+    if (x.more.length) {
+      const toggle = el('button', 'more', `Show ${x.more.length} more model${x.more.length === 1 ? '' : 's'}`);
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.addEventListener('click', () => {
+        const open = table.classList.toggle('all');
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.textContent = open ? 'Show fewer' : `Show ${x.more.length} more model${x.more.length === 1 ? '' : 's'}`;
+      });
+      box.append(toggle);
+    }
 
     box.append(el('p', 'why', x.why));
 

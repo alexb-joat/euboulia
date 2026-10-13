@@ -44,11 +44,20 @@ export const CLOUD_CSS = BASE_CSS + `
 .chip { font-size: .88em; padding: 1px 7px; border-radius: 999px; background: var(--eu-faint); color: var(--eu-muted); }
 .warn { font-size: .92em; color: var(--eu-fg); background: var(--eu-faint); padding: 6px 8px; border-radius: 6px; }
 table { border-collapse: collapse; width: 100%; font-size: .95em; }
+th { text-align: left; font-weight: 500; font-size: .82em; color: var(--eu-muted); padding: 0 0 4px; }
+th.fit { padding-right: 8px; }
+th.cost { text-align: right; }
 td { padding: 4px 0; vertical-align: middle; }
+tr.extra { display: none; }
+table.all tr.extra { display: table-row; }
+td.name em { font-style: normal; font-weight: 400; color: var(--eu-muted); font-size: .85em; }
+td.fit .pct { display: block; font-size: .8em; color: var(--eu-muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
+button.more { align-self: flex-start; color: var(--eu-muted); text-decoration: underline; text-underline-offset: 2px; font-size: .9em; padding: 0; }
+button.more:hover { color: var(--eu-fg); }
 td.name { padding-right: 8px; }
 td.name small { display: block; color: var(--eu-muted); font-size: .85em; }
 tr.win td.name { font-weight: 600; }
-td.fit { width: 72px; padding-right: 8px; }
+td.fit { width: 84px; padding-right: 8px; }
 .bar { height: 5px; border-radius: 3px; background: var(--eu-faint); overflow: hidden; }
 .bar i { display: block; height: 100%; background: var(--eu-muted); }
 td.cost { text-align: right; white-space: nowrap; }

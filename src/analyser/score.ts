@@ -5,6 +5,11 @@ import { applyRules } from './rules';
 
 const DEFAULT_STRENGTH = 0.5;
 const CONTEXT_MARGIN = 1.2;
+// Quality floor: a model whose fit trails the best candidate by more than this cannot win on price alone.
+// The tolerance grows with the cost slider (0 = only near-best models, 1 = anything goes).
+export const FLOOR_BASE = 0.1;
+export const FLOOR_PER_COST = 0.4;
+const FLOOR_PENALTY = 2;
 
 export function fitScore(cls: Classification, strengths: Candidate['model']['strengths']): number {
   let fit = 0;
@@ -51,10 +56,13 @@ export function scoreCandidates(
   }
   const cs = costScores(partial);
   const lambda = Math.min(1, Math.max(0, prefs.costWeight));
+  const bestFit = Math.max(0, ...partial.map(p => p.fit));
+  const floor = bestFit - (FLOOR_BASE + FLOOR_PER_COST * lambda);
   const ranked: Ranked[] = partial.map((p, i) => {
     const boost = effects.boosts.get(p.modelId);
     const bias = biasFor.get(p.modelId);
-    const total = (1 - lambda) * p.fit + lambda * cs[i]! + (boost?.boost ?? 0) + (bias?.boost ?? 0);
+    const shortfall = Math.max(0, floor - p.fit);
+    const total = (1 - lambda) * p.fit + lambda * cs[i]! + (boost?.boost ?? 0) + (bias?.boost ?? 0) - FLOOR_PENALTY * shortfall;
     if (boost) p.reasons.push(`your rule "${boost.ruleId}" prefers it`);
     if (bias && bias.boost > 0) p.reasons.push(bias.reason);
     return { ...p, costScore: cs[i]!, total };

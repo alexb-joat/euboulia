@@ -3,7 +3,7 @@ import { TASK_LABELS } from '../shared/types';
 import { formatCost, formatUsd } from './cost';
 
 export interface ExplainRow {
-  modelId: string; label: string; serviceName: string; fit: number; cost: string; apiCost?: string; isWinner: boolean;
+  modelId: string; label: string; serviceName: string; fit: number; cost: string; apiCost?: string; isWinner: boolean; isCurrent?: boolean;
 }
 
 export interface Explanation {
@@ -12,6 +12,7 @@ export interface Explanation {
   tokens: number;
   sensitive: string[];
   rows: ExplainRow[];
+  more: ExplainRow[];          // every other model that can take the prompt, best first
   why: string;
   elsewhere?: { label: string; serviceName: string; cost: string; why: string };
   isCurrent: boolean;
@@ -62,15 +63,20 @@ function dominantReason(s: Suggestion, catalog: Catalog): string {
 }
 
 export function explain(s: Suggestion, catalog: Catalog): Explanation {
-  const rows: ExplainRow[] = s.ranked.slice(0, 3).map(r => ({
+  const toRow = (r: Ranked): ExplainRow => ({
     modelId: r.modelId, label: r.label,
     serviceName: catalog.services[r.serviceId]?.name ?? r.serviceId,
-    fit: r.fit, ...costStrings(catalog, r), isWinner: r.modelId === s.here.modelId,
-  }));
+    fit: r.fit, ...costStrings(catalog, r), isWinner: r.modelId === s.here.modelId, isCurrent: r.modelId === s.current,
+  });
+  const rows: ExplainRow[] = s.ranked.slice(0, 3).map(toRow);
+  const shown = new Set(rows.map(r => r.modelId));
   if (!rows.some(r => r.isWinner)) {
     const w = s.here;
-    rows.splice(2, 1, { modelId: w.modelId, label: w.label, serviceName: catalog.services[w.serviceId]?.name ?? w.serviceId, fit: w.fit, ...costStrings(catalog, w), isWinner: true });
+    shown.delete(rows[2]!.modelId);
+    rows.splice(2, 1, toRow(w));
+    shown.add(w.modelId);
   }
+  const more = s.ranked.filter(r => !shown.has(r.modelId)).map(toRow);
   const signals = s.classification.signals
     .map(x => x.startsWith('kw:') ? `"${x.slice(3)}"` : x.startsWith('pattern:') ? `${x.slice(8)} pattern` : x.replace(':', ' '))
     .slice(0, 8);
@@ -78,7 +84,7 @@ export function explain(s: Suggestion, catalog: Catalog): Explanation {
   return {
     taskLabel: TASK_LABELS[s.classification.primary as TaskType],
     signals, tokens: s.classification.tokensIn, sensitive: s.classification.sensitive,
-    rows, why: dominantReason(s, catalog), isCurrent: s.isCurrent,
+    rows, more, why: dominantReason(s, catalog), isCurrent: s.isCurrent,
     elsewhere: e ? {
       label: e.label, serviceName: catalog.services[e.serviceId]?.name ?? e.serviceId,
       cost: costStrings(catalog, e).cost, why: e.reasons[e.reasons.length - 1] ?? '',

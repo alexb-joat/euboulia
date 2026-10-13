@@ -4,6 +4,7 @@ import type { Attachment } from '../shared/types';
 export const IMAGE_TOKENS = 1000;
 export const FILE_TOKENS = 2000;
 export const LONG_CONTEXT_TOKENS = 12000;
+export const LONG_PROMPT_TOKENS = 60;     // about 240 characters of plain text
 
 export function estimateTokens(text: string, attachments: Attachment[] = []): number {
   let n = Math.ceil(text.length / 4);

@@ -49,6 +49,17 @@ export function isVisibleDefault(el: Element): boolean {
   return cs.visibility !== 'hidden' && cs.display !== 'none';
 }
 
+/** Lenient visibility for small things like attachment chips (the composer check wants a minimum size). */
+export function isShownDefault(el: Element): boolean {
+  const h = el as HTMLElement;
+  if (!h.isConnected) return false;
+  if (typeof h.getClientRects !== 'function') return true;
+  const rect = h.getBoundingClientRect();
+  if (rect.width < 1 || rect.height < 1) return false;
+  const cs = getComputedStyle(h);
+  return cs.visibility !== 'hidden' && cs.display !== 'none' && cs.opacity !== '0';
+}
+
 export function queryFirst<T extends Element = Element>(root: ParentNode, selectors: string[] | undefined): T | null {
   for (const s of selectors ?? []) {
     try { const el = root.querySelector<T>(s); if (el) return el; } catch { /* bad selector */ }
@@ -154,7 +165,9 @@ export function makeAdapter(spec: AdapterSpec, deps: AdapterDeps): SiteAdapter {
     },
     attachments: (c) => {
       const out: Attachment[] = [];
+      const shown = deps.isVisible ?? isShownDefault;
       for (const el of queryAll(c.container, sel().attachments)) {
+        if (el.tagName === 'INPUT' || !shown(el)) continue;   // hidden file inputs and templates are not attachments
         if (el.closest('button') && el.tagName === 'IMG') continue;
         const isImg = el.tagName === 'IMG' || !!el.querySelector('img') || /image|photo|png|jpe?g|webp|gif/i.test(el.getAttribute('aria-label') ?? el.getAttribute('alt') ?? '');
         out.push({ kind: isImg ? 'image' : 'file', name: el.getAttribute('aria-label') ?? el.getAttribute('alt') ?? undefined });
