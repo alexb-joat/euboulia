@@ -20,4 +20,12 @@ describe('computeCloudPlacement', () => {
     const p = computeCloudPlacement({ width: 1600, height: 400 }, rect(300, 1100), rect(320, 1080, 380, 395));
     if (p.mode === 'margin') expect(p.top).toBe(400 - CLOUD_HEIGHT_GUESS - 16);
   });
+  it('docks above a low composer but never runs off the top for a high one', () => {
+    const vp = { width: 1100, height: 800 };
+    const low = computeCloudPlacement(vp, rect(100, 1100), rect(120, 1000, 650, 730));
+    expect(low.mode === 'dock' && low.bottom).toBe(800 - 650 + 16);
+    const high = computeCloudPlacement(vp, rect(100, 1100), rect(120, 1000, 185, 265));
+    expect(high.mode).toBe('dock');
+    if (high.mode === 'dock') expect(vp.height - high.bottom - CLOUD_HEIGHT_GUESS).toBeGreaterThanOrEqual(0);
+  });
 });

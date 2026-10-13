@@ -18,9 +18,11 @@ export function computeCloudPlacement(vp: Viewport, content: Rect, composer: Rec
     const top = Math.max(GUTTER, Math.min(composer.top - 8, vp.height - CLOUD_HEIGHT_GUESS - GUTTER));
     return { mode: 'margin', left: content.right + GUTTER, top, width, collapsed: false };
   }
+  // Above the composer when there is room for the whole cloud; otherwise the bottom corner, so it never leaves the viewport.
+  const roomAbove = composer.top - 2 * GUTTER;
   return {
     mode: 'dock', right: GUTTER,
-    bottom: Math.max(GUTTER, vp.height - composer.top + GUTTER),
+    bottom: roomAbove >= CLOUD_HEIGHT_GUESS ? Math.max(GUTTER, vp.height - composer.top + GUTTER) : GUTTER,
     width: Math.min(MAX_WIDTH, vp.width - 2 * GUTTER),
     collapsed: !!prefs.collapsedByDefault,
   };
