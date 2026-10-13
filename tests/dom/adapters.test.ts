@@ -43,7 +43,7 @@ describe('site adapters', () => {
     expect(a.id).toBe('gemini');
     const [c] = a.composers();
     expect(c!.element.classList.contains('ql-editor')).toBe(true);
-    expect(a.currentModel(c!)).toBe('3.8 Flash');
+    expect(a.currentModel(c!)).toBe('Flash');   // the real mode picker shows just the family name
     expect(resolveModelLabel(BUNDLED, 'gemini', a.currentModel(c!))).toBe('google/gemini-3.8-flash');
   });
 
