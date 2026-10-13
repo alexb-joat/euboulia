@@ -6,7 +6,8 @@
 //   node scripts/snapshot-fixture.mjs <service> [--url https://...] [--out file]
 //        [--profile DIR]            launch Chromium (headed) with a persistent profile; log in once, the capture
 //                                   runs as soon as the composer appears (default profile: ~/.cache/euboulia/profile)
-//        [--cdp http://127.0.0.1:9222]  attach to a running Chrome started with --remote-debugging-port=9222 instead
+//        [--cdp http://127.0.0.1:9222]  attach to a normal browser you started yourself, e.g.
+//                                   chromium --remote-debugging-port=9222 --user-data-dir=$HOME/snap/chromium/common/euboulia-profile https://claude.ai/new
 //        [--wait SECONDS]           how long to wait for the composer (default 300)
 //
 // Only the composer region leaves the page, and only into the local file; nothing is uploaded anywhere.
@@ -40,14 +41,24 @@ if (cdp) {
   if (!svc.hosts.some(h => page.url().includes(h))) await page.goto(url);
 } else {
   await mkdir(profile, { recursive: true });
-  context = await chromium.launchPersistentContext(profile, { headless: false, viewport: { width: 1600, height: 900 } });
+  // Cloudflare-fronted sites (claude.ai) challenge browsers that announce automation: drop the flags that do.
+  context = await chromium.launchPersistentContext(profile, {
+    headless: false, viewport: { width: 1600, height: 900 },
+    ignoreDefaultArgs: ['--enable-automation'], args: ['--disable-blink-features=AutomationControlled'],
+  });
   page = context.pages()[0] ?? await context.newPage();
   await page.goto(url);
 }
 
 const composerSelectors = svc.selectors.composer;
 console.log(`waiting up to ${waitMs / 1000}s for the composer on ${page.url()} (log in if asked)…`);
-await page.waitForSelector(composerSelectors.join(', '), { state: 'visible', timeout: waitMs });
+try {
+  await page.waitForSelector(composerSelectors.join(', '), { state: 'visible', timeout: waitMs });
+} catch (e) {
+  console.error(/closed/i.test(String(e)) ? '\nThe browser window was closed before the composer appeared. Keep it open until this script prints "wrote …".' : `\nNo composer appeared within ${waitMs / 1000}s: ${String(e.message).split('\n')[0]}`);
+  console.error('If a "Verify you are human" check keeps looping, use your own browser instead: see "--cdp" in the header of this script.');
+  process.exit(1);
+}
 await page.waitForTimeout(1500);
 
 const html = await page.evaluate(({ sel, service }) => {
