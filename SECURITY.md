@@ -19,7 +19,7 @@ Euboulia is a browser extension that reads the prompt you are typing on a chat s
 
 ## Reporting a vulnerability
 
-Please use GitHub's private vulnerability reporting on this repository, or email the maintainer address on the profile. Give the browser, the extension version (options page) and steps to reproduce. You should hear back within a week. Please do not open a public issue for a security problem until a fix is available.
+Please use GitHub's private vulnerability reporting on this repository, or email beyondpeaksolstice@gmail.com. Give the browser, the extension version (options page) and steps to reproduce. You should hear back within a week. Please do not open a public issue for a security problem until a fix is available.
 
 ## Scope notes
 
