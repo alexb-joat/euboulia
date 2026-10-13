@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Euboulia settings</title>
+<link rel="stylesheet" href="options.css">
+</head>
+<body>
+<main>
+  <header>
+    <h1>Euboulia</h1>
+    <p class="muted">Suggests the best-value model for the prompt you are typing. Nothing you type leaves the browser; the only download is the catalog.</p>
+  </header>
+
+  <section id="preference">
+    <h2>Preference</h2>
+    <label for="costWeight">What matters more?</label>
+    <div class="slider">
+      <span>best quality</span>
+      <input id="costWeight" type="range" min="0" max="1" step="0.05">
+      <span>cheapest</span>
+    </div>
+    <p id="costWeightHint" class="muted"></p>
+    <label class="check"><input id="crossService" type="checkbox"> Also suggest a model on another service when it is clearly better value</label>
+    <label class="check"><input id="cloudCollapsed" type="checkbox"> Open the explanation collapsed when it has to dock over the page</label>
+  </section>
+
+  <section id="services">
+    <h2>Services</h2>
+    <p class="muted">Mark your plan so "included" models are costed correctly. "Enabled" means the service may be suggested from other sites. "Trusted" allows a suggestion to send prompts that contain sensitive data there.</p>
+    <table id="servicesTable">
+      <thead><tr><th>Service</th><th>Enabled</th><th>Plan</th><th>Trusted</th><th>Access</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section id="rules">
+    <h2>Custom rules</h2>
+    <p class="muted">Rules run before scoring. <code>prefer</code> adds a boost (default 0.15) to a model id; <code>exclude</code> removes model ids. Conditions: <code>task</code>, <code>site</code>, <code>sensitive</code>, <code>minTokens</code>, <code>maxTokens</code>.</p>
+    <table id="rulesTable">
+      <thead><tr><th>Id</th><th>When</th><th>Then</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <details>
+      <summary>Add or edit rules as JSON</summary>
+      <textarea id="rulesJson" rows="8" spellcheck="false"></textarea>
+      <div class="row"><button id="saveRules">Save rules</button><span id="rulesStatus" class="muted"></span></div>
+    </details>
+  </section>
+
+  <section id="catalog">
+    <h2>Catalog</h2>
+    <dl id="catalogInfo"></dl>
+    <label for="catalogUrl">Catalog URL (static JSON, served with CORS)</label>
+    <div class="row"><input id="catalogUrl" type="url" placeholder="https://…/catalog.json"><button id="refreshCatalog">Refresh now</button><button id="resetCatalog" class="secondary">Use bundled</button></div>
+    <p id="catalogStatus" class="muted"></p>
+  </section>
+
+  <section id="sites">
+    <h2>Self-hosted chat UIs</h2>
+    <p class="muted">Add an origin to run Euboulia there with the generic adapter (Open WebUI, LibreChat and similar). The browser will ask for access to that site.</p>
+    <div class="row"><input id="sitePattern" type="text" placeholder="http://localhost:3000/*"><select id="siteAdapter"><option value="generic">generic</option><option value="openwebui">Open WebUI</option></select><button id="addSite">Add</button></div>
+    <ul id="siteList"></ul>
+    <p id="siteStatus" class="muted"></p>
+  </section>
+
+  <section id="data">
+    <h2>Your data</h2>
+    <p id="usageSummary" class="muted"></p>
+    <div class="row"><button id="exportUsage" class="secondary">Export JSON</button><button id="clearUsage" class="secondary">Clear</button></div>
+  </section>
+</main>
+<script src="options.js"></script>
+</body>
+</html>
