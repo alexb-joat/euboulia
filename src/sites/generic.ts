@@ -1,7 +1,7 @@
 import type { Attachment } from '../shared/types';
 import { allAliases } from '../catalog/aliases';
 import {
-  containerOf, idFor, isVisibleDefault, makeHandle, nearestSendButton, readComposerText, textOf,
+  containerOf, idFor, isShownDefault, isVisibleDefault, makeHandle, nearestSendButton, readComposerText, textOf,
   type AdapterDeps, type ComposerHandle, type SiteAdapter,
 } from './adapter';
 
@@ -46,6 +46,7 @@ export function generic(deps: AdapterDeps, id = 'generic'): SiteAdapter {
     attachments: (c) => {
       const out: Attachment[] = [];
       for (const img of c.container.querySelectorAll('img')) {
+        if (!(deps.isVisible ?? isShownDefault)(img)) continue;
         if (img.closest('button') || img.width < 24 && img.height < 24) continue;
         out.push({ kind: 'image', name: img.alt || undefined });
       }

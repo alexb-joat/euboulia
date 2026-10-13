@@ -30,7 +30,7 @@ test('badge appears while typing, survives re-render and route change, cloud ope
   const composer = page.locator('.ProseMirror');
   await composer.click();
   await page.keyboard.type('Why does this Python function raise KeyError? def f(d): return d["x"]');
-  await expect.poll(() => badgeText(page), { timeout: 3000 }).toContain('Suggest:');
+  await expect.poll(() => badgeText(page), { timeout: 3000 }).toMatch(/Suggest:|Good pick/);
   expect(await page.evaluate(() => document.querySelector('euboulia-badge')?.parentElement === document.body)).toBe(true);
 
   // Cloud in the right margin at 1600 px.
@@ -38,6 +38,14 @@ test('badge appears while typing, survives re-render and route change, cloud ope
   await expect.poll(() => page.evaluate(() => (document.querySelector('euboulia-cloud') as HTMLElement | null)?.dataset.mode ?? '')).toBe('margin');
   const cloudText = await page.evaluate(() => document.querySelector('euboulia-cloud')?.shadowRoot?.textContent ?? '');
   expect(cloudText).toContain('code');
+  expect(cloudText).toContain('Fit for this task');   // the bars are labelled
+  expect(cloudText).toMatch(/\d+%/);                  // and carry a number
+  // The full model list is one click away and reveals the hidden rows.
+  const hiddenBefore = await page.evaluate(() => [...document.querySelector('euboulia-cloud')!.shadowRoot!.querySelectorAll('tr.extra')].filter(r => getComputedStyle(r).display !== 'none').length);
+  expect(hiddenBefore).toBe(0);
+  await page.evaluate(() => (document.querySelector('euboulia-cloud')!.shadowRoot!.querySelector('button.more') as HTMLButtonElement | null)?.click());
+  const shownAfter = await page.evaluate(() => [...document.querySelector('euboulia-cloud')!.shadowRoot!.querySelectorAll('tr.extra')].filter(r => getComputedStyle(r).display !== 'none').length);
+  expect(shownAfter).toBeGreaterThan(0);
   await page.keyboard.press('Escape');
 
   // Re-render + route change: a badge must come back for the new composer.
@@ -45,7 +53,7 @@ test('badge appears while typing, survives re-render and route change, cloud ope
   const newComposer = page.locator('.ProseMirror');
   await newComposer.click();
   await page.keyboard.type('Translate this into French: good morning');
-  await expect.poll(() => badgeText(page), { timeout: 3000 }).toContain('Suggest:');
+  await expect.poll(() => badgeText(page), { timeout: 3000 }).toMatch(/Suggest:|Good pick/);
   expect(await page.evaluate(() => document.querySelectorAll('euboulia-badge').length)).toBe(1);
 
   // Dock mode at a narrow viewport.

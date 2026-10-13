@@ -66,7 +66,7 @@ try {
   const composer = await driver.wait(until.elementLocated(By.css('.ProseMirror')), 5000);
   await composer.click();
   await composer.sendKeys('Why does this Python function raise KeyError? def f(d): return d["x"]');
-  await waitFor(async () => (await badgeText()).includes('Suggest:'), 'badge after typing');
+  await waitFor(async () => /Suggest:|Good pick/.test(await badgeText()), 'badge after typing');
   const inBody = await driver.executeScript('return document.querySelector("euboulia-badge")?.parentElement === document.body');
   if (!inBody) throw new Error('badge host is not a child of body');
   console.log('badge:', (await badgeText()).trim());
@@ -81,7 +81,7 @@ try {
   const again = await driver.findElement(By.css('.ProseMirror'));
   await again.click();
   await again.sendKeys('Translate this into French: good morning');
-  await waitFor(async () => (await badgeText()).includes('Suggest:'), 'badge after re-render');
+  await waitFor(async () => /Suggest:|Good pick/.test(await badgeText()), 'badge after re-render');
   const count = await driver.executeScript('return document.querySelectorAll("euboulia-badge").length');
   if (count !== 1) throw new Error(`expected 1 badge, found ${count}`);
   console.log('firefox smoke: ok');

@@ -52,7 +52,7 @@ export class ComposerWatcher {
     const { adapter, catalog, prefs, rules, serviceId, observed, usage } = this.shared;
     const text = adapter.readText(this.c).trim();
     const attachments = adapter.attachments(this.c);
-    if (!text && !attachments.length) { this.badge.hide(); this.suggestion = undefined; if (this.shared.cloud.isOpen) this.shared.cloud.close(); return; }
+    if (!text && !attachments.some(a => a.kind === 'image')) { this.badge.hide(); this.suggestion = undefined; if (this.shared.cloud.isOpen) this.shared.cloud.close(); return; }
     const cls = classify(text, attachments);
     const currentLabel = adapter.currentModel(this.c);
     const current = resolveModelLabel(catalog, serviceId, currentLabel) ?? undefined;
