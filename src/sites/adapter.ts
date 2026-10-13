@@ -70,7 +70,8 @@ export function queryAll<T extends Element = Element>(root: ParentNode, selector
 export function textOf(el: Element | null): string {
   if (!el) return '';
   const h = el as HTMLElement;
-  return (h.innerText ?? h.textContent ?? '').replace(/\s+/g, ' ').trim();
+  // Icon fonts put private-use glyphs after labels (claude.ai); they are invisible but break comparisons.
+  return (h.innerText ?? h.textContent ?? '').replace(/[\uE000-\uF8FF]/g, '').replace(/\s+/g, ' ').trim();
 }
 
 export function nearestSendButton(el: Element): HTMLElement | null {

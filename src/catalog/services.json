@@ -9,11 +9,13 @@
       "url": "https://claude.ai/new",
       "selectors": {
         "composer": [
+          "div[contenteditable=\"true\"][data-testid=\"chat-input\"]",
           "div[contenteditable=\"true\"].ProseMirror",
           "fieldset div[contenteditable=\"true\"]",
           "div[contenteditable=\"true\"][role=\"textbox\"]"
         ],
         "sendButton": [
+          "button[data-testid=\"chat-input-send\"]",
           "button[aria-label=\"Send message\"]",
           "button[aria-label*=\"Send\" i]",
           "fieldset button[type=\"submit\"]"
@@ -112,7 +114,7 @@
           "capWeight": 0.1
         }
       ],
-      "_verified": "not yet (Cloudflare blocks headless probes; needs a logged-in capture)"
+      "_verified": "2026-10-13 logged in (captured fixture): composer, sendButton, modelPicker, contentColumn"
     },
     "chatgpt": {
       "name": "ChatGPT",

@@ -15,9 +15,10 @@ describe('site adapters', () => {
     const [c] = a.composers();
     expect(c).toBeDefined();
     expect(c!.kind).toBe('contenteditable');
-    expect(c!.sendButton?.getAttribute('aria-label')).toBe('Send message');
-    expect(a.currentModel(c!)).toBe('Sonnet 5.5');
-    expect(resolveModelLabel(BUNDLED, 'claude', a.currentModel(c!))).toBe('anthropic/claude-sonnet-5.5');
+    expect(c!.element.getAttribute('data-testid')).toBe('chat-input');
+    expect(c!.sendButton?.getAttribute('data-testid')).toBe('chat-input-send');
+    expect(a.currentModel(c!)).toBe('Opus 5.5 Max');   // the real picker appends the effort level
+    expect(resolveModelLabel(BUNDLED, 'claude', a.currentModel(c!))).toBe('anthropic/claude-opus-5.5');
     expect(a.contentColumn(c!).tagName).toBe('FIELDSET');
     expect(a.attachments(c!)).toEqual([]);
     c!.element.innerHTML = '<p>fix this bug</p>';
