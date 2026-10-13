@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-12",
+  "generatedAt": "2026-10-13",
   "services": {
     "claude": {
       "name": "Claude",
@@ -10,11 +10,13 @@
       "url": "https://claude.ai/new",
       "selectors": {
         "composer": [
+          "div[contenteditable=\"true\"][data-testid=\"chat-input\"]",
           "div[contenteditable=\"true\"].ProseMirror",
           "fieldset div[contenteditable=\"true\"]",
           "div[contenteditable=\"true\"][role=\"textbox\"]"
         ],
         "sendButton": [
+          "button[data-testid=\"chat-input-send\"]",
           "button[aria-label=\"Send message\"]",
           "button[aria-label*=\"Send\" i]",
           "fieldset button[type=\"submit\"]"
@@ -113,7 +115,7 @@
           "capWeight": 0.1
         }
       ],
-      "_verified": "not yet (Cloudflare blocks headless probes; needs a logged-in capture)"
+      "_verified": "2026-10-13 logged in (captured fixture): composer, sendButton, modelPicker, contentColumn"
     },
     "chatgpt": {
       "name": "ChatGPT",
@@ -1093,17 +1095,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/anthropic/claude-fable-5.1",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/anthropic/claude-fable-5.1",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1135,17 +1137,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/anthropic/claude-opus-5.5",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/anthropic/claude-opus-5.5",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1177,17 +1179,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/anthropic/claude-sonnet-5.5",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/anthropic/claude-sonnet-5.5",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1219,17 +1221,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/anthropic/claude-haiku-5.5",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/anthropic/claude-haiku-5.5",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1261,17 +1263,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/openai/gpt-6-astra",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/openai/gpt-6-astra",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1303,17 +1305,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/openai/gpt-6.1-sol-pro",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/openai/gpt-6.1-sol-pro",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1345,17 +1347,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/openai/gpt-6.1-sol",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/openai/gpt-6.1-sol",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1387,17 +1389,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/openai/gpt-6-luna",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/openai/gpt-6-luna",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1429,17 +1431,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/google/gemini-3.1-pro-preview",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/google/gemini-3.1-pro-preview",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1471,17 +1473,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/google/gemini-3.8-flash",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/google/gemini-3.8-flash",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1513,17 +1515,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/google/gemini-3.5-flash-lite",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/google/gemini-3.5-flash-lite",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1555,17 +1557,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/x-ai/grok-4.7",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/x-ai/grok-4.7",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1597,17 +1599,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/x-ai/grok-4.3",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/x-ai/grok-4.3",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1638,17 +1640,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/x-ai/grok-4.20-multi-agent",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/x-ai/grok-4.20-multi-agent",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1679,17 +1681,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/perplexity/sonar",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/perplexity/sonar",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1720,17 +1722,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/perplexity/sonar-pro",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/perplexity/sonar-pro",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1761,17 +1763,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/perplexity/sonar-reasoning-pro",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/perplexity/sonar-reasoning-pro",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1800,17 +1802,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/perplexity/sonar-deep-research",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/perplexity/sonar-deep-research",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1842,17 +1844,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/mistralai/mistral-large-4-0",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/mistralai/mistral-large-4-0",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1884,17 +1886,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/mistralai/mistral-medium-3-5",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/mistralai/mistral-medium-3-5",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1926,17 +1928,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/mistralai/mistral-small-2603",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/mistralai/mistral-small-2603",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -1967,17 +1969,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/mistralai/devstral-2512",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/mistralai/devstral-2512",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -2008,17 +2010,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/deepseek/deepseek-v4-pro",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/deepseek/deepseek-v4-pro",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -2050,17 +2052,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/deepseek/deepseek-v4.1-flash",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/deepseek/deepseek-v4.1-flash",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -2092,17 +2094,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/z-ai/glm-5.3-flash",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/z-ai/glm-5.3-flash",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -2134,17 +2136,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/qwen/qwen3.8-27b",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/qwen/qwen3.8-27b",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
@@ -2176,17 +2178,17 @@
       "sources": [
         {
           "url": "https://openrouter.ai/moonshotai/kimi-k3",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "price"
         },
         {
           "url": "https://openrouter.ai/moonshotai/kimi-k3",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "context"
         },
         {
           "url": "https://artificialanalysis.ai/",
-          "date": "2026-10-12",
+          "date": "2026-10-13",
           "field": "strengths"
         }
       ]
