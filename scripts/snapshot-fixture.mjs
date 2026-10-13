@@ -9,12 +9,16 @@
 //        [--cdp http://127.0.0.1:9222]  attach to a normal browser you started yourself, e.g.
 //                                   chromium --remote-debugging-port=9222 --user-data-dir=$HOME/snap/chromium/common/euboulia-profile https://claude.ai/new
 //        [--wait SECONDS]           how long to wait for the composer (default 300)
+//        [--pause SECONDS]          keep waiting this long after the composer appears, e.g. to finish logging in (default 0)
+//        [--redact "Name,Other"]    extra words to scrub; your OS user name and git user.name are always scrubbed
+//   Account areas (avatars, "account" labels) are removed outright. ALWAYS read the written file before committing it.
 //
 // Only the composer region leaves the page, and only into the local file; nothing is uploaded anywhere.
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 import { chromium } from 'playwright';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -30,6 +34,9 @@ const url = opt('--url', svc.url ?? `https://${svc.hosts[0]}/`);
 const out = path.resolve(opt('--out', path.join(root, 'tests/fixtures/sites', `${service}.html`)));
 const waitMs = Number(opt('--wait', '300')) * 1000;
 const cdp = opt('--cdp', null);
+const pauseMs = Number(opt('--pause', '0')) * 1000;
+const gitName = (() => { try { return execFileSync('git', ['config', 'user.name'], { encoding: 'utf8' }).trim(); } catch { return ''; } })();
+const scrubWords = [...new Set([...(opt('--redact', '') ?? '').split(','), os.userInfo().username, ...gitName.split(/\s+/)].map(w => w.trim()).filter(w => w.length >= 3))];
 const profile = opt('--profile', path.join(os.homedir(), '.cache/euboulia/profile'));
 
 let browser, context, page;
@@ -59,11 +66,13 @@ try {
   console.error('If a "Verify you are human" check keeps looping, use your own browser instead: see "--cdp" in the header of this script.');
   process.exit(1);
 }
+if (pauseMs) { console.log(`composer found; capturing in ${pauseMs / 1000}s (finish logging in now)…`); await page.waitForTimeout(pauseMs); }
 await page.waitForTimeout(1500);
 
-const html = await page.evaluate(({ sel, service }) => {
+const html = await page.evaluate(({ sel, service, words }) => {
   const SECRET = [/[\w.+-]+@[\w-]+\.[\w.-]+/g, /\b(sk|rk|pk|xoxb|ghp|gho|AIza)[-_][A-Za-z0-9_-]{16,}/g, /\b[A-Za-z0-9+/_-]{40,}\b/g, /\b(?:\d[ -]?){13,19}\b/g];
-  const redact = s => SECRET.reduce((t, re) => t.replace(re, '[redacted]'), s);
+  const wordRes = words.map(w => new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'));
+  const redact = s => [...SECRET, ...wordRes].reduce((t, re) => t.replace(re, '[redacted]'), s);
   const KEEP_ATTR = /^(id|class|role|type|name|placeholder|contenteditable|tabindex|disabled|aria-[\w-]+|data-(testid|test-id|state|placeholder|mobile-[\w-]+|composer-[\w-]+|button-[\w-]+|appearance|lexical-editor|slot|variant|size|radius)|for|lang|dir|hidden|rows|cols|value|checked|selected|title|alt|width|height|style)$/i;
 
   const composer = sel.map(s => { try { return document.querySelector(s); } catch { return null; } }).find(Boolean);
@@ -73,6 +82,8 @@ const html = await page.evaluate(({ sel, service }) => {
   const container = composer.closest('form, fieldset') ?? composer.parentElement?.parentElement ?? composer;
 
   const clone = region.cloneNode(true);
+  // Account areas carry names and emails: remove them outright rather than trusting text redaction alone.
+  clone.querySelectorAll('[class*="avatar" i], [class*="mavatar" i], [aria-label*="account" i], [data-testid*="profile" i], [data-testid*="account" i], [data-testid*="user" i]').forEach(n => n.remove());
   // Map original -> clone so we can tell which clone nodes belong to the composer's own container.
   const origs = [region, ...region.querySelectorAll('*')];
   const clones = [clone, ...clone.querySelectorAll('*')];
@@ -107,7 +118,7 @@ const html = await page.evaluate(({ sel, service }) => {
     else t.textContent = '';
   }
   return `<!-- captured from ${location.hostname} on ${new Date().toISOString().slice(0, 10)} by scripts/snapshot-fixture.mjs (${service}); conversation text, image sources, scripts and styles stripped -->\n` + clone.outerHTML;
-}, { sel: Object.assign([...composerSelectors], { contentColumn: svc.selectors.contentColumn }), service });
+}, { sel: Object.assign([...composerSelectors], { contentColumn: svc.selectors.contentColumn }), service, words: scrubWords });
 
 if (!html) { console.error('composer not found after waiting'); process.exit(1); }
 await mkdir(path.dirname(out), { recursive: true });

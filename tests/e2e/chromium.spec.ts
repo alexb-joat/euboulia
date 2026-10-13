@@ -55,3 +55,27 @@ test('badge appears while typing, survives re-render and route change, cloud ope
   expect(foreign).toEqual([]);
   await page.close();
 });
+
+// The real captured pages (tests/fixtures/sites, from signed-in sessions) with the real extension loaded.
+for (const [name, editor, expectModel] of [
+  ['claude', '[data-testid="chat-input"]', /Suggest|Good pick/],
+  ['gemini', '.ql-editor', /Suggest|Good pick/],
+] as const) {
+  test(`captured ${name} page: badge appears for a typed prompt and stays inside the page`, async () => {
+    const page = await context.newPage();
+    await page.setViewportSize({ width: 1600, height: 900 });
+    await page.goto(`http://127.0.0.1:8099/real/${name}.html`);
+    await page.locator(editor).first().click();
+    await page.keyboard.type('Why does this Python function raise KeyError? def f(d): return d["x"]');
+    await expect.poll(() => badgeText(page), { timeout: 3000 }).toMatch(expectModel);
+    const box = await page.evaluate(() => {
+      const r = (document.querySelector('euboulia-badge') as HTMLElement).getBoundingClientRect();
+      return { x: r.x, y: r.y, w: r.width, h: r.height, vw: innerWidth, vh: innerHeight };
+    });
+    expect(box.w).toBeGreaterThan(40);
+    expect(box.x).toBeGreaterThanOrEqual(0);
+    expect(box.x + box.w).toBeLessThanOrEqual(box.vw);
+    expect(box.y).toBeGreaterThanOrEqual(0);
+    await page.close();
+  });
+}
