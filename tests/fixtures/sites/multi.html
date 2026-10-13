@@ -1,0 +1,14 @@
+<!-- generic UI with two composers side by side (Poe / arena style) -->
+<main>
+  <section class="pane">
+    <h2>Left</h2>
+    <button aria-haspopup="listbox">Model: Claude Sonnet 5.5</button>
+    <form><textarea aria-label="Message left" placeholder="Talk to left"></textarea><button type="submit">Send</button></form>
+  </section>
+  <section class="pane">
+    <h2>Right</h2>
+    <button aria-haspopup="listbox">Model: GPT-6 Luna</button>
+    <form><textarea aria-label="Message right" placeholder="Talk to right"></textarea><button type="submit">Send</button></form>
+  </section>
+  <textarea readonly aria-label="read-only log"></textarea>
+</main>

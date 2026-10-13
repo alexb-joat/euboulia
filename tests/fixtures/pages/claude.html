@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="euboulia-service" content="claude"><title>claude fixture</title>
+<style>body{margin:0;font-family:Inter,sans-serif;background:#fff;color:#1e1e1e} main{max-width:800px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:24px}
+fieldset{border:1px solid #ddd;border-radius:16px;padding:12px;font-size:16px} .ProseMirror{min-height:48px;outline:0} .toolbar{display:flex;justify-content:space-between;margin-top:8px}</style></head>
+<body><main>
+  <div class="conversation" style="flex:1"></div>
+  <fieldset class="composer">
+    <div class="ProseMirror" contenteditable="true" role="textbox" aria-label="Write your prompt to Claude"><p></p></div>
+    <div class="toolbar">
+      <button type="button" data-testid="model-selector-dropdown" aria-haspopup="menu"><span>Sonnet 5.5</span></button>
+      <button type="button" aria-label="Send message">Send</button>
+    </div>
+  </fieldset>
+</main>
+<script>
+  // SPA behaviour: re-render the composer after 1 s, change route after 2 s.
+  setTimeout(() => { const f = document.querySelector('fieldset'); const c = f.cloneNode(true); f.replaceWith(c); window.__rerendered = true; }, 1000);
+  setTimeout(() => { history.pushState({}, '', '/chat/abc'); window.__routed = true; }, 2000);
+</script>
+</body></html>

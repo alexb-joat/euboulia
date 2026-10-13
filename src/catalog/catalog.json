@@ -1,0 +1,2195 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-12",
+  "services": {
+    "claude": {
+      "name": "Claude",
+      "hosts": [
+        "claude.ai"
+      ],
+      "url": "https://claude.ai/new",
+      "selectors": {
+        "composer": [
+          "div[contenteditable=\"true\"].ProseMirror",
+          "fieldset div[contenteditable=\"true\"]",
+          "div[contenteditable=\"true\"][role=\"textbox\"]"
+        ],
+        "sendButton": [
+          "button[aria-label=\"Send message\"]",
+          "button[aria-label*=\"Send\" i]",
+          "fieldset button[type=\"submit\"]"
+        ],
+        "modelPicker": [
+          "button[data-testid=\"model-selector-dropdown\"]",
+          "fieldset button[aria-haspopup=\"menu\"]",
+          "button[aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "div[role=\"menu\"] [role=\"menuitem\"]",
+          "div[role=\"menu\"] [role=\"option\"]"
+        ],
+        "attachments": [
+          "[data-testid=\"file-thumbnail\"]",
+          "fieldset img",
+          "fieldset [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "fieldset",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        },
+        "pro": {
+          "name": "Pro",
+          "price": 20,
+          "capUnit": "messages",
+          "note": "5-hour rolling cap"
+        },
+        "max": {
+          "name": "Max",
+          "price": 100,
+          "capUnit": "messages",
+          "note": "5x or 20x Pro"
+        }
+      },
+      "models": [
+        {
+          "modelId": "anthropic/claude-fable-5.1",
+          "label": "Fable 5.1",
+          "aliases": [
+            "Fable",
+            "Claude Fable"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 5
+        },
+        {
+          "modelId": "anthropic/claude-opus-5.5",
+          "label": "Opus 5.5",
+          "aliases": [
+            "Opus",
+            "Claude Opus"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "anthropic/claude-sonnet-5.5",
+          "label": "Sonnet 5.5",
+          "aliases": [
+            "Sonnet",
+            "Claude Sonnet"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "anthropic/claude-haiku-5.5",
+          "label": "Haiku 5.5",
+          "aliases": [
+            "Haiku",
+            "Claude Haiku"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "max"
+          ],
+          "capWeight": 0.1
+        }
+      ],
+      "_verified": "not yet (Cloudflare blocks headless probes; needs a logged-in capture)"
+    },
+    "chatgpt": {
+      "name": "ChatGPT",
+      "hosts": [
+        "chatgpt.com",
+        "chat.openai.com"
+      ],
+      "url": "https://chatgpt.com/",
+      "selectors": {
+        "composer": [
+          "#prompt-textarea",
+          "textarea[name=\"prompt\"]",
+          "div[contenteditable=\"true\"].ProseMirror",
+          "form div[contenteditable=\"true\"]",
+          "form textarea"
+        ],
+        "sendButton": [
+          "button[data-testid=\"send-button\"]",
+          "button[data-composer-submit]",
+          "button[aria-label*=\"Send\" i]",
+          "form button[type=\"submit\"]"
+        ],
+        "modelPicker": [
+          "button[data-testid=\"model-switcher-dropdown-button\"]",
+          "button[aria-label*=\"Model selector\" i]",
+          "header button[aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "div[role=\"menu\"] [role=\"menuitem\"]"
+        ],
+        "attachments": [
+          "form [data-testid*=\"attachment\"]",
+          "form img[alt*=\"Uploaded\" i]",
+          "form [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "form",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        },
+        "plus": {
+          "name": "Plus",
+          "price": 20,
+          "capUnit": "messages"
+        },
+        "pro": {
+          "name": "Pro",
+          "price": 200,
+          "capUnit": "messages"
+        }
+      },
+      "models": [
+        {
+          "modelId": "openai/gpt-6-astra",
+          "label": "GPT-6 Astra",
+          "aliases": [
+            "Astra"
+          ],
+          "plans": [
+            "pro"
+          ],
+          "capWeight": 5
+        },
+        {
+          "modelId": "openai/gpt-6.1-sol-pro",
+          "label": "GPT-6.1 Sol Pro",
+          "aliases": [
+            "Sol Pro"
+          ],
+          "plans": [
+            "plus",
+            "pro"
+          ],
+          "capWeight": 3
+        },
+        {
+          "modelId": "openai/gpt-6.1-sol",
+          "label": "GPT-6.1 Sol",
+          "aliases": [
+            "Sol",
+            "GPT-6.1"
+          ],
+          "plans": [
+            "free",
+            "plus",
+            "pro"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "openai/gpt-6-luna",
+          "label": "GPT-6 Luna",
+          "aliases": [
+            "Luna"
+          ],
+          "plans": [
+            "free",
+            "plus",
+            "pro"
+          ],
+          "capWeight": 0.1
+        }
+      ],
+      "_verified": "2026-10-12 logged out: composer, sendButton, contentColumn"
+    },
+    "gemini": {
+      "name": "Gemini",
+      "hosts": [
+        "gemini.google.com"
+      ],
+      "url": "https://gemini.google.com/app",
+      "selectors": {
+        "composer": [
+          "rich-textarea div[contenteditable=\"true\"]",
+          ".ql-editor[contenteditable=\"true\"]",
+          "div[contenteditable=\"true\"][role=\"textbox\"]"
+        ],
+        "sendButton": [
+          "button[aria-label=\"Send message\"]",
+          "button[aria-label*=\"Send\" i]",
+          "button.send-button",
+          "button[mattooltip*=\"Send\" i]"
+        ],
+        "modelPicker": [
+          "button[data-test-id=\"bard-mode-menu-button\"]",
+          "bard-mode-switcher button",
+          "button[aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitem\"]",
+          ".mat-mdc-menu-panel button"
+        ],
+        "attachments": [
+          "uploader-file-preview",
+          ".file-preview-container img",
+          "[aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          ".input-area-container",
+          "[data-test-id=\"textarea-wrapper\"]",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "prompts"
+        },
+        "pro": {
+          "name": "AI Pro",
+          "price": 20,
+          "capUnit": "prompts"
+        },
+        "ultra": {
+          "name": "AI Ultra",
+          "price": 250,
+          "capUnit": "prompts"
+        }
+      },
+      "models": [
+        {
+          "modelId": "google/gemini-3.1-pro-preview",
+          "label": "3.1 Pro",
+          "aliases": [
+            "Pro",
+            "Thinking"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "ultra"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "google/gemini-3.8-flash",
+          "label": "3.8 Flash",
+          "aliases": [
+            "Flash",
+            "Fast"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "ultra"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "google/gemini-3.5-flash-lite",
+          "label": "3.5 Flash-Lite",
+          "aliases": [
+            "Flash-Lite",
+            "Lite"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "ultra"
+          ],
+          "capWeight": 0.3
+        }
+      ],
+      "_verified": "2026-10-12 logged out: composer, sendButton"
+    },
+    "grok": {
+      "name": "Grok",
+      "hosts": [
+        "grok.com"
+      ],
+      "url": "https://grok.com/",
+      "_verified": "2026-10-12 logged out: composer, sendButton, modelPicker, contentColumn",
+      "_comment": "The picker shows modes (Fast, Expert, Heavy), not model names; the mode-to-model mapping is a best guess for the crawler to confirm.",
+      "selectors": {
+        "composer": [
+          "div[contenteditable=\"true\"].ProseMirror[role=\"combobox\"]",
+          "[data-testid=\"chat-input\"] div[contenteditable=\"true\"]",
+          "div[contenteditable=\"true\"][aria-label*=\"Ask Grok\" i]"
+        ],
+        "sendButton": [
+          "button[data-testid=\"chat-submit\"]",
+          "button[type=\"submit\"][aria-label*=\"Submit\" i]"
+        ],
+        "modelPicker": [
+          "#model-select-trigger",
+          "button[aria-label^=\"Model:\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitemradio\"]",
+          "[role=\"menu\"] [role=\"menuitem\"]"
+        ],
+        "attachments": [
+          "[data-testid=\"chat-input\"] img",
+          "[data-testid*=\"attachment\" i]",
+          "[data-testid=\"chat-input\"] [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "[data-testid=\"chat-input\"]",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        },
+        "supergrok": {
+          "name": "SuperGrok",
+          "price": 30,
+          "capUnit": "messages"
+        },
+        "heavy": {
+          "name": "SuperGrok Heavy",
+          "price": 300,
+          "capUnit": "messages"
+        }
+      },
+      "models": [
+        {
+          "modelId": "x-ai/grok-4.7",
+          "label": "Expert",
+          "aliases": [
+            "Expert",
+            "Grok 4.7",
+            "Thinking"
+          ],
+          "plans": [
+            "free",
+            "supergrok",
+            "heavy"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "x-ai/grok-4.3",
+          "label": "Fast",
+          "aliases": [
+            "Fast",
+            "Auto",
+            "Grok 4.3"
+          ],
+          "plans": [
+            "free",
+            "supergrok",
+            "heavy"
+          ],
+          "capWeight": 0.5
+        },
+        {
+          "modelId": "x-ai/grok-4.20-multi-agent",
+          "label": "Heavy",
+          "aliases": [
+            "Heavy",
+            "Multi-agent"
+          ],
+          "plans": [
+            "heavy"
+          ],
+          "capWeight": 5
+        }
+      ]
+    },
+    "perplexity": {
+      "name": "Perplexity",
+      "hosts": [
+        "perplexity.ai",
+        "www.perplexity.ai"
+      ],
+      "url": "https://www.perplexity.ai/",
+      "_verified": "2026-10-12 logged out: composer, sendButton, modelPicker",
+      "selectors": {
+        "composer": [
+          "#ask-input",
+          "div[contenteditable=\"true\"][data-lexical-editor=\"true\"]",
+          "textarea[placeholder*=\"Ask\" i]"
+        ],
+        "sendButton": [
+          "button[aria-label=\"Submit\"]",
+          "button[aria-label*=\"Submit\" i]"
+        ],
+        "modelPicker": [
+          "button[aria-label=\"Model\"]",
+          "button[aria-label*=\"Model\" i][aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitemradio\"]",
+          "[role=\"menu\"] [role=\"menuitem\"]",
+          "[role=\"listbox\"] [role=\"option\"]"
+        ],
+        "attachments": [
+          "[data-appearance=\"raised\"] img",
+          "[data-appearance=\"raised\"] [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "main",
+          "[data-appearance=\"raised\"]"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "searches"
+        },
+        "pro": {
+          "name": "Pro",
+          "price": 20,
+          "capUnit": "searches"
+        },
+        "max": {
+          "name": "Max",
+          "price": 200,
+          "capUnit": "searches"
+        }
+      },
+      "models": [
+        {
+          "modelId": "perplexity/sonar",
+          "label": "Sonar",
+          "aliases": [
+            "Sonar",
+            "Best"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "perplexity/sonar-pro",
+          "label": "Sonar Pro",
+          "aliases": [
+            "Sonar Pro"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "perplexity/sonar-reasoning-pro",
+          "label": "Reasoning",
+          "aliases": [
+            "Reasoning",
+            "Sonar Reasoning"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "perplexity/sonar-deep-research",
+          "label": "Deep Research",
+          "aliases": [
+            "Deep Research",
+            "Research"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 10
+        },
+        {
+          "modelId": "anthropic/claude-sonnet-5.5",
+          "label": "Claude Sonnet 5.5",
+          "aliases": [
+            "Claude Sonnet",
+            "Sonnet"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "openai/gpt-6.1-sol",
+          "label": "GPT-6.1 Sol",
+          "aliases": [
+            "GPT-6.1",
+            "Sol"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "google/gemini-3.1-pro-preview",
+          "label": "Gemini 3.1 Pro",
+          "aliases": [
+            "Gemini 3.1",
+            "Gemini Pro"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        }
+      ]
+    },
+    "mistral": {
+      "name": "Le Chat",
+      "hosts": [
+        "chat.mistral.ai"
+      ],
+      "url": "https://chat.mistral.ai/chat",
+      "_verified": "2026-10-12 logged out: composer, sendButton; the model menu was not visible logged out",
+      "selectors": {
+        "composer": [
+          "div.ProseMirror[contenteditable=\"true\"]",
+          "div[contenteditable=\"true\"][role=\"textbox\"]",
+          "form textarea"
+        ],
+        "sendButton": [
+          "button[aria-label=\"Send\"]",
+          "button[type=\"submit\"][aria-label*=\"Send\" i]"
+        ],
+        "modelPicker": [
+          "button[aria-label*=\"model\" i][aria-haspopup=\"menu\"]",
+          "[role=\"button\"][aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitemradio\"]",
+          "[role=\"menu\"] [role=\"menuitem\"]"
+        ],
+        "attachments": [
+          "form img",
+          "form [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "form",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        },
+        "pro": {
+          "name": "Pro",
+          "price": 15,
+          "capUnit": "messages"
+        },
+        "team": {
+          "name": "Team",
+          "price": 25,
+          "capUnit": "messages"
+        }
+      },
+      "models": [
+        {
+          "modelId": "mistralai/mistral-large-4-0",
+          "label": "Mistral Large 4",
+          "aliases": [
+            "Large",
+            "Large 4"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "team"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "mistralai/mistral-medium-3-5",
+          "label": "Mistral Medium 3.5",
+          "aliases": [
+            "Medium"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "team"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "mistralai/mistral-small-2603",
+          "label": "Mistral Small",
+          "aliases": [
+            "Small",
+            "Fast",
+            "Flash"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "team"
+          ],
+          "capWeight": 0.3
+        },
+        {
+          "modelId": "mistralai/devstral-2512",
+          "label": "Devstral",
+          "aliases": [
+            "Devstral",
+            "Code"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "team"
+          ],
+          "capWeight": 1
+        }
+      ]
+    },
+    "deepseek": {
+      "name": "DeepSeek",
+      "hosts": [
+        "chat.deepseek.com"
+      ],
+      "url": "https://chat.deepseek.com/",
+      "_verified": "not yet (sign-in wall); selectors from the public DOM as of 2026",
+      "_comment": "DeepSeek has a DeepThink toggle rather than a model picker: pressed = reasoning model.",
+      "selectors": {
+        "composer": [
+          "textarea#chat-input",
+          "textarea[placeholder*=\"DeepSeek\" i]",
+          "div[contenteditable=\"true\"][role=\"textbox\"]"
+        ],
+        "sendButton": [
+          "button[aria-label*=\"Send\" i]",
+          "div[role=\"button\"][aria-label*=\"send\" i]"
+        ],
+        "modelPicker": [
+          "[role=\"button\"][aria-pressed=\"true\"]",
+          "button[aria-pressed=\"true\"]"
+        ],
+        "pickerOpen": [],
+        "attachments": [
+          "[class*=\"file\" i] img",
+          "[aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "main",
+          "#root"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        }
+      },
+      "models": [
+        {
+          "modelId": "deepseek/deepseek-v4-pro",
+          "label": "DeepThink",
+          "aliases": [
+            "DeepThink",
+            "Thinking",
+            "Reasoner"
+          ],
+          "plans": [
+            "free"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "deepseek/deepseek-v4.1-flash",
+          "label": "DeepSeek",
+          "aliases": [
+            "V4",
+            "Flash"
+          ],
+          "plans": [
+            "free"
+          ],
+          "capWeight": 0.3
+        }
+      ]
+    },
+    "copilot": {
+      "name": "Copilot",
+      "hosts": [
+        "copilot.microsoft.com"
+      ],
+      "url": "https://copilot.microsoft.com/",
+      "_verified": "not yet (sign-in wall); selectors from the public DOM as of 2026",
+      "selectors": {
+        "composer": [
+          "textarea#userInput",
+          "textarea[data-testid=\"composer-input\"]",
+          "textarea[placeholder*=\"Message Copilot\" i]",
+          "div[contenteditable=\"true\"][role=\"textbox\"]"
+        ],
+        "sendButton": [
+          "button[data-testid=\"submit-button\"]",
+          "button[aria-label*=\"Submit\" i]",
+          "button[aria-label*=\"Send\" i]"
+        ],
+        "modelPicker": [
+          "button[data-testid=\"mode-switcher\"]",
+          "button[aria-label*=\"mode\" i][aria-haspopup]",
+          "button[aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitemradio\"]",
+          "[role=\"menu\"] [role=\"menuitem\"]",
+          "[role=\"listbox\"] [role=\"option\"]"
+        ],
+        "attachments": [
+          "[data-testid*=\"attachment\" i]",
+          "[data-testid=\"composer\"] img",
+          "[data-testid=\"composer\"] [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "[data-testid=\"composer\"]",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        },
+        "pro": {
+          "name": "Copilot Pro",
+          "price": 20,
+          "capUnit": "messages"
+        }
+      },
+      "models": [
+        {
+          "modelId": "openai/gpt-6.1-sol",
+          "label": "Think Deeper",
+          "aliases": [
+            "Think Deeper",
+            "Smart",
+            "Deep"
+          ],
+          "plans": [
+            "free",
+            "pro"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "openai/gpt-6-luna",
+          "label": "Quick response",
+          "aliases": [
+            "Quick",
+            "Fast"
+          ],
+          "plans": [
+            "free",
+            "pro"
+          ],
+          "capWeight": 0.3
+        }
+      ]
+    },
+    "poe": {
+      "name": "Poe",
+      "hosts": [
+        "poe.com"
+      ],
+      "url": "https://poe.com/",
+      "_verified": "not yet (sign-in wall); selectors from the public DOM as of 2026",
+      "_comment": "Compare mode shows several composers; each gets its own badge.",
+      "selectors": {
+        "composer": [
+          "textarea[class*=\"GrowingTextArea_textArea\"]",
+          "textarea[placeholder*=\"Talk to\" i]",
+          "textarea[placeholder*=\"Message\" i]",
+          "form textarea"
+        ],
+        "sendButton": [
+          "button[data-button-send=\"true\"]",
+          "button[class*=\"sendButton\" i]",
+          "button[aria-label*=\"Send\" i]"
+        ],
+        "modelPicker": [
+          "[class*=\"ChatPageMainFooter\"] button[aria-haspopup]",
+          "[class*=\"BotSelector\"] button",
+          "a[class*=\"BotHeader\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitem\"]",
+          "[role=\"listbox\"] [role=\"option\"]"
+        ],
+        "attachments": [
+          "[class*=\"Attachment\" i] img",
+          "form [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "[class*=\"ChatPageMainFooter\"]",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "points"
+        },
+        "subscriber": {
+          "name": "Subscriber",
+          "price": 20,
+          "capUnit": "points"
+        }
+      },
+      "models": [
+        {
+          "modelId": "anthropic/claude-sonnet-5.5",
+          "label": "Claude-Sonnet-5.5",
+          "aliases": [
+            "Claude Sonnet 5.5",
+            "Claude-Sonnet"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "anthropic/claude-haiku-5.5",
+          "label": "Claude-Haiku-5.5",
+          "aliases": [
+            "Claude-Haiku"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 0.1
+        },
+        {
+          "modelId": "openai/gpt-6.1-sol",
+          "label": "GPT-6.1-Sol",
+          "aliases": [
+            "GPT-6.1"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "openai/gpt-6-luna",
+          "label": "GPT-6-Luna",
+          "aliases": [
+            "Luna"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 0.1
+        },
+        {
+          "modelId": "google/gemini-3.8-flash",
+          "label": "Gemini-3.8-Flash",
+          "aliases": [
+            "Gemini 3.8 Flash"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 0.5
+        },
+        {
+          "modelId": "x-ai/grok-4.7",
+          "label": "Grok-4.7",
+          "aliases": [
+            "Grok 4.7"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "deepseek/deepseek-v4-pro",
+          "label": "DeepSeek-V4",
+          "aliases": [
+            "DeepSeek V4"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 0.5
+        }
+      ]
+    },
+    "openrouter": {
+      "name": "OpenRouter",
+      "hosts": [
+        "openrouter.ai"
+      ],
+      "url": "https://openrouter.ai/chat",
+      "_verified": "2026-10-12 logged out: composer; the chat is pay-per-use, so no plans",
+      "selectors": {
+        "composer": [
+          "textarea[data-testid=\"composer-input\"]",
+          "textarea[placeholder*=\"Ask anything\" i]"
+        ],
+        "sendButton": [
+          "form button[type=\"submit\"]",
+          "button[aria-label*=\"Send\" i]"
+        ],
+        "modelPicker": [
+          "[data-testid=\"model-pill\"]",
+          "button[aria-label^=\"Add Model\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"dialog\"] [role=\"option\"]",
+          "[role=\"listbox\"] [role=\"option\"]"
+        ],
+        "attachments": [
+          "form img",
+          "form [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "main",
+          "form"
+        ]
+      },
+      "plans": {},
+      "models": [
+        {
+          "modelId": "anthropic/claude-sonnet-5.5",
+          "label": "Claude Sonnet 5.5",
+          "aliases": [
+            "Sonnet 5.5"
+          ]
+        },
+        {
+          "modelId": "anthropic/claude-haiku-5.5",
+          "label": "Claude Haiku 5.5",
+          "aliases": [
+            "Haiku 5.5"
+          ]
+        },
+        {
+          "modelId": "openai/gpt-6.1-sol",
+          "label": "GPT-6.1 Sol",
+          "aliases": [
+            "GPT-6.1"
+          ]
+        },
+        {
+          "modelId": "openai/gpt-6-luna",
+          "label": "GPT-6 Luna",
+          "aliases": [
+            "Luna"
+          ]
+        },
+        {
+          "modelId": "google/gemini-3.8-flash",
+          "label": "Gemini 3.8 Flash"
+        },
+        {
+          "modelId": "google/gemini-3.5-flash-lite",
+          "label": "Gemini 3.5 Flash-Lite"
+        },
+        {
+          "modelId": "x-ai/grok-4.7",
+          "label": "Grok 4.7"
+        },
+        {
+          "modelId": "deepseek/deepseek-v4.1-flash",
+          "label": "DeepSeek V4.1 Flash"
+        },
+        {
+          "modelId": "z-ai/glm-5.3-flash",
+          "label": "GLM 5.3 Flash"
+        },
+        {
+          "modelId": "qwen/qwen3.8-27b",
+          "label": "Qwen3.8 27B"
+        },
+        {
+          "modelId": "moonshotai/kimi-k3",
+          "label": "Kimi K3"
+        },
+        {
+          "modelId": "mistralai/mistral-medium-3-5",
+          "label": "Mistral Medium 3.5"
+        }
+      ]
+    }
+  },
+  "models": {
+    "anthropic/claude-fable-5.1": {
+      "provider": "anthropic",
+      "name": "Claude Fable 5.1",
+      "strengths": {
+        "code": 0.94,
+        "reasoning": 0.87,
+        "writing": 0.94,
+        "chat": 0.97,
+        "summarise": 0.96,
+        "translate": 0.95,
+        "data": 0.95,
+        "vision": 0.9,
+        "long_context": 0.98
+      },
+      "price": {
+        "input": 10,
+        "output": 50
+      },
+      "context": 1000000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-01",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/anthropic/claude-fable-5.1",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/anthropic/claude-fable-5.1",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "anthropic/claude-opus-5.5": {
+      "provider": "anthropic",
+      "name": "Claude Opus 5.5",
+      "strengths": {
+        "code": 0.87,
+        "reasoning": 0.95,
+        "writing": 0.98,
+        "chat": 0.99,
+        "summarise": 0.99,
+        "translate": 0.98,
+        "data": 0.95,
+        "vision": 0.93,
+        "long_context": 0.99
+      },
+      "price": {
+        "input": 4,
+        "output": 20
+      },
+      "context": 1000000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-22",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/anthropic/claude-opus-5.5",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/anthropic/claude-opus-5.5",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "anthropic/claude-sonnet-5.5": {
+      "provider": "anthropic",
+      "name": "Claude Sonnet 5.5",
+      "strengths": {
+        "code": 0.83,
+        "reasoning": 0.92,
+        "writing": 0.96,
+        "chat": 0.98,
+        "summarise": 0.98,
+        "translate": 0.97,
+        "data": 0.93,
+        "vision": 0.92,
+        "long_context": 0.99
+      },
+      "price": {
+        "input": 2,
+        "output": 10
+      },
+      "context": 1000000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-28",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/anthropic/claude-sonnet-5.5",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/anthropic/claude-sonnet-5.5",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "anthropic/claude-haiku-5.5": {
+      "provider": "anthropic",
+      "name": "Claude Haiku 5.5",
+      "strengths": {
+        "code": 0.52,
+        "reasoning": 0.67,
+        "writing": 0.85,
+        "chat": 0.92,
+        "summarise": 0.9,
+        "translate": 0.88,
+        "data": 0.78,
+        "vision": 0.82,
+        "long_context": 0.95
+      },
+      "price": {
+        "input": 0.1,
+        "output": 0.5
+      },
+      "context": 1000000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-10-07",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/anthropic/claude-haiku-5.5",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/anthropic/claude-haiku-5.5",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "openai/gpt-6-astra": {
+      "provider": "openai",
+      "name": "GPT-6 Astra",
+      "strengths": {
+        "code": 0.85,
+        "reasoning": 0.85,
+        "writing": 0.93,
+        "chat": 0.96,
+        "summarise": 0.96,
+        "translate": 0.95,
+        "data": 0.92,
+        "vision": 0.89,
+        "long_context": 0.98
+      },
+      "price": {
+        "input": 10,
+        "output": 50
+      },
+      "context": 1050000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-04",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/openai/gpt-6-astra",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/openai/gpt-6-astra",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "openai/gpt-6.1-sol-pro": {
+      "provider": "openai",
+      "name": "GPT-6.1 Sol Pro",
+      "strengths": {
+        "code": 0.78,
+        "reasoning": 0.88,
+        "writing": 0.94,
+        "chat": 0.97,
+        "summarise": 0.96,
+        "translate": 0.96,
+        "data": 0.9,
+        "vision": 0.9,
+        "long_context": 0.98
+      },
+      "price": {
+        "input": 2,
+        "output": 10
+      },
+      "context": 1050000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-29",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/openai/gpt-6.1-sol-pro",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/openai/gpt-6.1-sol-pro",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "openai/gpt-6.1-sol": {
+      "provider": "openai",
+      "name": "GPT-6.1 Sol",
+      "strengths": {
+        "code": 0.73,
+        "reasoning": 0.84,
+        "writing": 0.93,
+        "chat": 0.96,
+        "summarise": 0.95,
+        "translate": 0.94,
+        "data": 0.88,
+        "vision": 0.88,
+        "long_context": 0.98
+      },
+      "price": {
+        "input": 2,
+        "output": 10
+      },
+      "context": 1050000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-29",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/openai/gpt-6.1-sol",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/openai/gpt-6.1-sol",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "openai/gpt-6-luna": {
+      "provider": "openai",
+      "name": "GPT-6 Luna",
+      "strengths": {
+        "code": 0.39,
+        "reasoning": 0.56,
+        "writing": 0.8,
+        "chat": 0.89,
+        "summarise": 0.87,
+        "translate": 0.85,
+        "data": 0.71,
+        "vision": 0.77,
+        "long_context": 0.93
+      },
+      "price": {
+        "input": 0.1,
+        "output": 0.5
+      },
+      "context": 1050000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-22",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/openai/gpt-6-luna",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/openai/gpt-6-luna",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "google/gemini-3.1-pro-preview": {
+      "provider": "google",
+      "name": "Gemini 3.1 Pro Preview",
+      "strengths": {
+        "code": 0.71,
+        "reasoning": 0.39,
+        "writing": 0.73,
+        "chat": 0.85,
+        "summarise": 0.82,
+        "translate": 0.79,
+        "data": 0.75,
+        "vision": 0.71,
+        "long_context": 0.91
+      },
+      "price": {
+        "input": 2,
+        "output": 12
+      },
+      "context": 1048576,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-02-19",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/google/gemini-3.1-pro-preview",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/google/gemini-3.1-pro-preview",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "google/gemini-3.8-flash": {
+      "provider": "google",
+      "name": "Gemini 3.8 Flash",
+      "strengths": {
+        "code": 0.84,
+        "reasoning": 0.62,
+        "writing": 0.83,
+        "chat": 0.9,
+        "summarise": 0.89,
+        "translate": 0.87,
+        "data": 0.85,
+        "vision": 0.8,
+        "long_context": 0.94
+      },
+      "price": {
+        "input": 0.75,
+        "output": 3.75
+      },
+      "context": 1048576,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-02",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/google/gemini-3.8-flash",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/google/gemini-3.8-flash",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "google/gemini-3.5-flash-lite": {
+      "provider": "google",
+      "name": "Gemini 3.5 Flash Lite",
+      "strengths": {
+        "code": 0.35,
+        "reasoning": 0.24,
+        "writing": 0.66,
+        "chat": 0.81,
+        "summarise": 0.77,
+        "translate": 0.74,
+        "data": 0.61,
+        "vision": 0.65,
+        "long_context": 0.89
+      },
+      "price": {
+        "input": 0.3,
+        "output": 2.5
+      },
+      "context": 1048576,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-07-21",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/google/gemini-3.5-flash-lite",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/google/gemini-3.5-flash-lite",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "x-ai/grok-4.7": {
+      "provider": "x-ai",
+      "name": "SpaceXAI: Grok 4.7",
+      "strengths": {
+        "code": 0.59,
+        "reasoning": 0.73,
+        "writing": 0.88,
+        "chat": 0.93,
+        "summarise": 0.92,
+        "translate": 0.9,
+        "data": 0.81,
+        "vision": 0.84,
+        "long_context": 0.75
+      },
+      "price": {
+        "input": 2,
+        "output": 6
+      },
+      "context": 500000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-21",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/x-ai/grok-4.7",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/x-ai/grok-4.7",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "x-ai/grok-4.3": {
+      "provider": "x-ai",
+      "name": "SpaceXAI: Grok 4.3",
+      "strengths": {
+        "code": 0.22,
+        "reasoning": 0.3,
+        "writing": 0.68,
+        "chat": 0.82,
+        "summarise": 0.79,
+        "translate": 0.75,
+        "data": 0.59,
+        "vision": 0.67,
+        "long_context": 0.89
+      },
+      "price": {
+        "input": 1.25,
+        "output": 2.5
+      },
+      "context": 1000000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-04-30",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/x-ai/grok-4.3",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/x-ai/grok-4.3",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "x-ai/grok-4.20-multi-agent": {
+      "provider": "x-ai",
+      "name": "SpaceXAI: Grok 4.20 Multi-Agent",
+      "strengths": {
+        "code": 0.31,
+        "reasoning": 0.5,
+        "writing": 0.78,
+        "chat": 0.88,
+        "summarise": 0.85,
+        "translate": 0.83,
+        "data": 0.67,
+        "vision": 0.75,
+        "long_context": 0.93
+      },
+      "price": {
+        "input": 1.25,
+        "output": 2.5
+      },
+      "context": 2000000,
+      "capabilities": [
+        "vision"
+      ],
+      "released": "2026-03-31",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/x-ai/grok-4.20-multi-agent",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/x-ai/grok-4.20-multi-agent",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "perplexity/sonar": {
+      "provider": "perplexity",
+      "name": "Perplexity: Sonar",
+      "strengths": {
+        "code": 0,
+        "reasoning": 0,
+        "writing": 0.55,
+        "chat": 0.75,
+        "summarise": 0.7,
+        "translate": 0.65,
+        "data": 0.45,
+        "vision": 0.55,
+        "long_context": 0.3
+      },
+      "price": {
+        "input": 1,
+        "output": 1
+      },
+      "context": 127072,
+      "capabilities": [
+        "vision"
+      ],
+      "released": "2025-01-27",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/perplexity/sonar",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/perplexity/sonar",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "perplexity/sonar-pro": {
+      "provider": "perplexity",
+      "name": "Perplexity: Sonar Pro",
+      "strengths": {
+        "code": 0,
+        "reasoning": 0,
+        "writing": 0.55,
+        "chat": 0.75,
+        "summarise": 0.7,
+        "translate": 0.65,
+        "data": 0.45,
+        "vision": 0.55,
+        "long_context": 0.6
+      },
+      "price": {
+        "input": 3,
+        "output": 15
+      },
+      "context": 200000,
+      "capabilities": [
+        "vision"
+      ],
+      "released": "2025-03-07",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/perplexity/sonar-pro",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/perplexity/sonar-pro",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "perplexity/sonar-reasoning-pro": {
+      "provider": "perplexity",
+      "name": "Perplexity: Sonar Reasoning Pro",
+      "strengths": {
+        "code": 0,
+        "reasoning": 0.04,
+        "writing": 0.57,
+        "chat": 0.76,
+        "summarise": 0.71,
+        "translate": 0.66,
+        "data": 0.46,
+        "vision": 0.56,
+        "long_context": 0.3
+      },
+      "price": {
+        "input": 2,
+        "output": 8
+      },
+      "context": 128000,
+      "capabilities": [
+        "vision"
+      ],
+      "released": "2025-03-07",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/perplexity/sonar-reasoning-pro",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/perplexity/sonar-reasoning-pro",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "perplexity/sonar-deep-research": {
+      "provider": "perplexity",
+      "name": "Perplexity: Sonar Deep Research",
+      "strengths": {
+        "code": 0.31,
+        "reasoning": 0.5,
+        "writing": 0.78,
+        "chat": 0.88,
+        "summarise": 0.85,
+        "translate": 0.83,
+        "data": 0.67,
+        "vision": 0,
+        "long_context": 0.3
+      },
+      "price": {
+        "input": 2,
+        "output": 8
+      },
+      "context": 128000,
+      "capabilities": [],
+      "released": "2025-03-07",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/perplexity/sonar-deep-research",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/perplexity/sonar-deep-research",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "mistralai/mistral-large-4-0": {
+      "provider": "mistralai",
+      "name": "Mistral: Mistral Large 4",
+      "strengths": {
+        "code": 0.31,
+        "reasoning": 0.5,
+        "writing": 0.78,
+        "chat": 0.88,
+        "summarise": 0.85,
+        "translate": 0.83,
+        "data": 0.67,
+        "vision": 0.75,
+        "long_context": 0.93
+      },
+      "price": {
+        "input": 0.68,
+        "output": 2.09
+      },
+      "context": 1048576,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-10-06",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/mistralai/mistral-large-4-0",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/mistralai/mistral-large-4-0",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "mistralai/mistral-medium-3-5": {
+      "provider": "mistralai",
+      "name": "Mistral: Mistral Medium 3.5",
+      "strengths": {
+        "code": 0.31,
+        "reasoning": 0.08,
+        "writing": 0.59,
+        "chat": 0.77,
+        "summarise": 0.73,
+        "translate": 0.68,
+        "data": 0.56,
+        "vision": 0.58,
+        "long_context": 0.62
+      },
+      "price": {
+        "input": 1.5,
+        "output": 7.5
+      },
+      "context": 262144,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-04-30",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/mistralai/mistral-medium-3-5",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/mistralai/mistral-medium-3-5",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "mistralai/mistral-small-2603": {
+      "provider": "mistralai",
+      "name": "Mistral: Mistral Small 4",
+      "strengths": {
+        "code": 0,
+        "reasoning": 0.03,
+        "writing": 0.56,
+        "chat": 0.76,
+        "summarise": 0.71,
+        "translate": 0.66,
+        "data": 0.46,
+        "vision": 0.56,
+        "long_context": 0.61
+      },
+      "price": {
+        "input": 0.15,
+        "output": 0.6
+      },
+      "context": 262144,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-03-16",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/mistralai/mistral-small-2603",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/mistralai/mistral-small-2603",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "mistralai/devstral-2512": {
+      "provider": "mistralai",
+      "name": "Mistral: Devstral 2 2512",
+      "strengths": {
+        "code": 0.02,
+        "reasoning": 0,
+        "writing": 0.55,
+        "chat": 0.75,
+        "summarise": 0.7,
+        "translate": 0.65,
+        "data": 0.46,
+        "vision": 0,
+        "long_context": 0.6
+      },
+      "price": {
+        "input": 0.4,
+        "output": 2
+      },
+      "context": 262144,
+      "capabilities": [
+        "tools"
+      ],
+      "released": "2025-12-09",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/mistralai/devstral-2512",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/mistralai/devstral-2512",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "deepseek/deepseek-v4-pro": {
+      "provider": "deepseek",
+      "name": "DeepSeek: DeepSeek V4 Pro 0423",
+      "strengths": {
+        "code": 0.53,
+        "reasoning": 0.41,
+        "writing": 0.73,
+        "chat": 0.85,
+        "summarise": 0.82,
+        "translate": 0.79,
+        "data": 0.71,
+        "vision": 0,
+        "long_context": 0.91
+      },
+      "price": {
+        "input": 0.41,
+        "output": 0.82
+      },
+      "context": 1048576,
+      "capabilities": [
+        "tools"
+      ],
+      "released": "2026-04-24",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/deepseek/deepseek-v4-pro",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/deepseek/deepseek-v4-pro",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "deepseek/deepseek-v4.1-flash": {
+      "provider": "deepseek",
+      "name": "DeepSeek: DeepSeek V4.1 Flash",
+      "strengths": {
+        "code": 0.42,
+        "reasoning": 0.59,
+        "writing": 0.82,
+        "chat": 0.9,
+        "summarise": 0.88,
+        "translate": 0.86,
+        "data": 0.73,
+        "vision": 0.79,
+        "long_context": 0.94
+      },
+      "price": {
+        "input": 0.15,
+        "output": 0.6
+      },
+      "context": 1048576,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-10",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/deepseek/deepseek-v4.1-flash",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/deepseek/deepseek-v4.1-flash",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "z-ai/glm-5.3-flash": {
+      "provider": "z-ai",
+      "name": "Z.ai: GLM 5.3 Flash",
+      "strengths": {
+        "code": 0.75,
+        "reasoning": 0.64,
+        "writing": 0.84,
+        "chat": 0.91,
+        "summarise": 0.89,
+        "translate": 0.87,
+        "data": 0.83,
+        "vision": 0.8,
+        "long_context": 0.95
+      },
+      "price": {
+        "input": 0.02,
+        "output": 1.2
+      },
+      "context": 1048576,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-08-26",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/z-ai/glm-5.3-flash",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/z-ai/glm-5.3-flash",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "qwen/qwen3.8-27b": {
+      "provider": "qwen",
+      "name": "Qwen: Qwen3.8 27B",
+      "strengths": {
+        "code": 0.69,
+        "reasoning": 0.47,
+        "writing": 0.76,
+        "chat": 0.87,
+        "summarise": 0.84,
+        "translate": 0.82,
+        "data": 0.77,
+        "vision": 0.74,
+        "long_context": 0.92
+      },
+      "price": {
+        "input": 0.04,
+        "output": 2.3
+      },
+      "context": 1000000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-08-14",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/qwen/qwen3.8-27b",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/qwen/qwen3.8-27b",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    },
+    "moonshotai/kimi-k3": {
+      "provider": "moonshotai",
+      "name": "MoonshotAI: Kimi K3",
+      "strengths": {
+        "code": 0.84,
+        "reasoning": 0.67,
+        "writing": 0.85,
+        "chat": 0.92,
+        "summarise": 0.9,
+        "translate": 0.89,
+        "data": 0.87,
+        "vision": 0.82,
+        "long_context": 0.95
+      },
+      "price": {
+        "input": 0.73,
+        "output": 10
+      },
+      "context": 1048576,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-07-16",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/moonshotai/kimi-k3",
+          "date": "2026-10-12",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/moonshotai/kimi-k3",
+          "date": "2026-10-12",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-12",
+          "field": "strengths"
+        }
+      ]
+    }
+  }
+}

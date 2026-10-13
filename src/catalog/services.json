@@ -1,0 +1,1067 @@
+{
+  "_comment": "Hand-maintained part of the catalog: hosts, selectors, plans, picker labels. scripts/build-catalog.mjs merges this with model data into catalog.json; scripts/build.mjs derives the manifest host permissions from the hosts listed here. Selector lists are tried in order; prefer data-testid and roles over class names. Selectors marked in _verified were read from the live site on that date; the others are best guesses pending a real capture (scripts/snapshot-fixture.mjs).",
+  "services": {
+    "claude": {
+      "name": "Claude",
+      "hosts": [
+        "claude.ai"
+      ],
+      "url": "https://claude.ai/new",
+      "selectors": {
+        "composer": [
+          "div[contenteditable=\"true\"].ProseMirror",
+          "fieldset div[contenteditable=\"true\"]",
+          "div[contenteditable=\"true\"][role=\"textbox\"]"
+        ],
+        "sendButton": [
+          "button[aria-label=\"Send message\"]",
+          "button[aria-label*=\"Send\" i]",
+          "fieldset button[type=\"submit\"]"
+        ],
+        "modelPicker": [
+          "button[data-testid=\"model-selector-dropdown\"]",
+          "fieldset button[aria-haspopup=\"menu\"]",
+          "button[aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "div[role=\"menu\"] [role=\"menuitem\"]",
+          "div[role=\"menu\"] [role=\"option\"]"
+        ],
+        "attachments": [
+          "[data-testid=\"file-thumbnail\"]",
+          "fieldset img",
+          "fieldset [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "fieldset",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        },
+        "pro": {
+          "name": "Pro",
+          "price": 20,
+          "capUnit": "messages",
+          "note": "5-hour rolling cap"
+        },
+        "max": {
+          "name": "Max",
+          "price": 100,
+          "capUnit": "messages",
+          "note": "5x or 20x Pro"
+        }
+      },
+      "models": [
+        {
+          "modelId": "anthropic/claude-fable-5.1",
+          "label": "Fable 5.1",
+          "aliases": [
+            "Fable",
+            "Claude Fable"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 5
+        },
+        {
+          "modelId": "anthropic/claude-opus-5.5",
+          "label": "Opus 5.5",
+          "aliases": [
+            "Opus",
+            "Claude Opus"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "anthropic/claude-sonnet-5.5",
+          "label": "Sonnet 5.5",
+          "aliases": [
+            "Sonnet",
+            "Claude Sonnet"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "anthropic/claude-haiku-5.5",
+          "label": "Haiku 5.5",
+          "aliases": [
+            "Haiku",
+            "Claude Haiku"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "max"
+          ],
+          "capWeight": 0.1
+        }
+      ],
+      "_verified": "not yet (Cloudflare blocks headless probes; needs a logged-in capture)"
+    },
+    "chatgpt": {
+      "name": "ChatGPT",
+      "hosts": [
+        "chatgpt.com",
+        "chat.openai.com"
+      ],
+      "url": "https://chatgpt.com/",
+      "selectors": {
+        "composer": [
+          "#prompt-textarea",
+          "textarea[name=\"prompt\"]",
+          "div[contenteditable=\"true\"].ProseMirror",
+          "form div[contenteditable=\"true\"]",
+          "form textarea"
+        ],
+        "sendButton": [
+          "button[data-testid=\"send-button\"]",
+          "button[data-composer-submit]",
+          "button[aria-label*=\"Send\" i]",
+          "form button[type=\"submit\"]"
+        ],
+        "modelPicker": [
+          "button[data-testid=\"model-switcher-dropdown-button\"]",
+          "button[aria-label*=\"Model selector\" i]",
+          "header button[aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "div[role=\"menu\"] [role=\"menuitem\"]"
+        ],
+        "attachments": [
+          "form [data-testid*=\"attachment\"]",
+          "form img[alt*=\"Uploaded\" i]",
+          "form [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "form",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        },
+        "plus": {
+          "name": "Plus",
+          "price": 20,
+          "capUnit": "messages"
+        },
+        "pro": {
+          "name": "Pro",
+          "price": 200,
+          "capUnit": "messages"
+        }
+      },
+      "models": [
+        {
+          "modelId": "openai/gpt-6-astra",
+          "label": "GPT-6 Astra",
+          "aliases": [
+            "Astra"
+          ],
+          "plans": [
+            "pro"
+          ],
+          "capWeight": 5
+        },
+        {
+          "modelId": "openai/gpt-6.1-sol-pro",
+          "label": "GPT-6.1 Sol Pro",
+          "aliases": [
+            "Sol Pro"
+          ],
+          "plans": [
+            "plus",
+            "pro"
+          ],
+          "capWeight": 3
+        },
+        {
+          "modelId": "openai/gpt-6.1-sol",
+          "label": "GPT-6.1 Sol",
+          "aliases": [
+            "Sol",
+            "GPT-6.1"
+          ],
+          "plans": [
+            "free",
+            "plus",
+            "pro"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "openai/gpt-6-luna",
+          "label": "GPT-6 Luna",
+          "aliases": [
+            "Luna"
+          ],
+          "plans": [
+            "free",
+            "plus",
+            "pro"
+          ],
+          "capWeight": 0.1
+        }
+      ],
+      "_verified": "2026-10-12 logged out: composer, sendButton, contentColumn"
+    },
+    "gemini": {
+      "name": "Gemini",
+      "hosts": [
+        "gemini.google.com"
+      ],
+      "url": "https://gemini.google.com/app",
+      "selectors": {
+        "composer": [
+          "rich-textarea div[contenteditable=\"true\"]",
+          ".ql-editor[contenteditable=\"true\"]",
+          "div[contenteditable=\"true\"][role=\"textbox\"]"
+        ],
+        "sendButton": [
+          "button[aria-label=\"Send message\"]",
+          "button[aria-label*=\"Send\" i]",
+          "button.send-button",
+          "button[mattooltip*=\"Send\" i]"
+        ],
+        "modelPicker": [
+          "button[data-test-id=\"bard-mode-menu-button\"]",
+          "bard-mode-switcher button",
+          "button[aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitem\"]",
+          ".mat-mdc-menu-panel button"
+        ],
+        "attachments": [
+          "uploader-file-preview",
+          ".file-preview-container img",
+          "[aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          ".input-area-container",
+          "[data-test-id=\"textarea-wrapper\"]",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "prompts"
+        },
+        "pro": {
+          "name": "AI Pro",
+          "price": 20,
+          "capUnit": "prompts"
+        },
+        "ultra": {
+          "name": "AI Ultra",
+          "price": 250,
+          "capUnit": "prompts"
+        }
+      },
+      "models": [
+        {
+          "modelId": "google/gemini-3.1-pro-preview",
+          "label": "3.1 Pro",
+          "aliases": [
+            "Pro",
+            "Thinking"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "ultra"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "google/gemini-3.8-flash",
+          "label": "3.8 Flash",
+          "aliases": [
+            "Flash",
+            "Fast"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "ultra"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "google/gemini-3.5-flash-lite",
+          "label": "3.5 Flash-Lite",
+          "aliases": [
+            "Flash-Lite",
+            "Lite"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "ultra"
+          ],
+          "capWeight": 0.3
+        }
+      ],
+      "_verified": "2026-10-12 logged out: composer, sendButton"
+    },
+    "grok": {
+      "name": "Grok",
+      "hosts": [
+        "grok.com"
+      ],
+      "url": "https://grok.com/",
+      "_verified": "2026-10-12 logged out: composer, sendButton, modelPicker, contentColumn",
+      "_comment": "The picker shows modes (Fast, Expert, Heavy), not model names; the mode-to-model mapping is a best guess for the crawler to confirm.",
+      "selectors": {
+        "composer": [
+          "div[contenteditable=\"true\"].ProseMirror[role=\"combobox\"]",
+          "[data-testid=\"chat-input\"] div[contenteditable=\"true\"]",
+          "div[contenteditable=\"true\"][aria-label*=\"Ask Grok\" i]"
+        ],
+        "sendButton": [
+          "button[data-testid=\"chat-submit\"]",
+          "button[type=\"submit\"][aria-label*=\"Submit\" i]"
+        ],
+        "modelPicker": [
+          "#model-select-trigger",
+          "button[aria-label^=\"Model:\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitemradio\"]",
+          "[role=\"menu\"] [role=\"menuitem\"]"
+        ],
+        "attachments": [
+          "[data-testid=\"chat-input\"] img",
+          "[data-testid*=\"attachment\" i]",
+          "[data-testid=\"chat-input\"] [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "[data-testid=\"chat-input\"]",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        },
+        "supergrok": {
+          "name": "SuperGrok",
+          "price": 30,
+          "capUnit": "messages"
+        },
+        "heavy": {
+          "name": "SuperGrok Heavy",
+          "price": 300,
+          "capUnit": "messages"
+        }
+      },
+      "models": [
+        {
+          "modelId": "x-ai/grok-4.7",
+          "label": "Expert",
+          "aliases": [
+            "Expert",
+            "Grok 4.7",
+            "Thinking"
+          ],
+          "plans": [
+            "free",
+            "supergrok",
+            "heavy"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "x-ai/grok-4.3",
+          "label": "Fast",
+          "aliases": [
+            "Fast",
+            "Auto",
+            "Grok 4.3"
+          ],
+          "plans": [
+            "free",
+            "supergrok",
+            "heavy"
+          ],
+          "capWeight": 0.5
+        },
+        {
+          "modelId": "x-ai/grok-4.20-multi-agent",
+          "label": "Heavy",
+          "aliases": [
+            "Heavy",
+            "Multi-agent"
+          ],
+          "plans": [
+            "heavy"
+          ],
+          "capWeight": 5
+        }
+      ]
+    },
+    "perplexity": {
+      "name": "Perplexity",
+      "hosts": [
+        "perplexity.ai",
+        "www.perplexity.ai"
+      ],
+      "url": "https://www.perplexity.ai/",
+      "_verified": "2026-10-12 logged out: composer, sendButton, modelPicker",
+      "selectors": {
+        "composer": [
+          "#ask-input",
+          "div[contenteditable=\"true\"][data-lexical-editor=\"true\"]",
+          "textarea[placeholder*=\"Ask\" i]"
+        ],
+        "sendButton": [
+          "button[aria-label=\"Submit\"]",
+          "button[aria-label*=\"Submit\" i]"
+        ],
+        "modelPicker": [
+          "button[aria-label=\"Model\"]",
+          "button[aria-label*=\"Model\" i][aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitemradio\"]",
+          "[role=\"menu\"] [role=\"menuitem\"]",
+          "[role=\"listbox\"] [role=\"option\"]"
+        ],
+        "attachments": [
+          "[data-appearance=\"raised\"] img",
+          "[data-appearance=\"raised\"] [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "main",
+          "[data-appearance=\"raised\"]"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "searches"
+        },
+        "pro": {
+          "name": "Pro",
+          "price": 20,
+          "capUnit": "searches"
+        },
+        "max": {
+          "name": "Max",
+          "price": 200,
+          "capUnit": "searches"
+        }
+      },
+      "models": [
+        {
+          "modelId": "perplexity/sonar",
+          "label": "Sonar",
+          "aliases": [
+            "Sonar",
+            "Best"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "perplexity/sonar-pro",
+          "label": "Sonar Pro",
+          "aliases": [
+            "Sonar Pro"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "perplexity/sonar-reasoning-pro",
+          "label": "Reasoning",
+          "aliases": [
+            "Reasoning",
+            "Sonar Reasoning"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "perplexity/sonar-deep-research",
+          "label": "Deep Research",
+          "aliases": [
+            "Deep Research",
+            "Research"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 10
+        },
+        {
+          "modelId": "anthropic/claude-sonnet-5.5",
+          "label": "Claude Sonnet 5.5",
+          "aliases": [
+            "Claude Sonnet",
+            "Sonnet"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "openai/gpt-6.1-sol",
+          "label": "GPT-6.1 Sol",
+          "aliases": [
+            "GPT-6.1",
+            "Sol"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "google/gemini-3.1-pro-preview",
+          "label": "Gemini 3.1 Pro",
+          "aliases": [
+            "Gemini 3.1",
+            "Gemini Pro"
+          ],
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 1
+        }
+      ]
+    },
+    "mistral": {
+      "name": "Le Chat",
+      "hosts": [
+        "chat.mistral.ai"
+      ],
+      "url": "https://chat.mistral.ai/chat",
+      "_verified": "2026-10-12 logged out: composer, sendButton; the model menu was not visible logged out",
+      "selectors": {
+        "composer": [
+          "div.ProseMirror[contenteditable=\"true\"]",
+          "div[contenteditable=\"true\"][role=\"textbox\"]",
+          "form textarea"
+        ],
+        "sendButton": [
+          "button[aria-label=\"Send\"]",
+          "button[type=\"submit\"][aria-label*=\"Send\" i]"
+        ],
+        "modelPicker": [
+          "button[aria-label*=\"model\" i][aria-haspopup=\"menu\"]",
+          "[role=\"button\"][aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitemradio\"]",
+          "[role=\"menu\"] [role=\"menuitem\"]"
+        ],
+        "attachments": [
+          "form img",
+          "form [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "form",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        },
+        "pro": {
+          "name": "Pro",
+          "price": 15,
+          "capUnit": "messages"
+        },
+        "team": {
+          "name": "Team",
+          "price": 25,
+          "capUnit": "messages"
+        }
+      },
+      "models": [
+        {
+          "modelId": "mistralai/mistral-large-4-0",
+          "label": "Mistral Large 4",
+          "aliases": [
+            "Large",
+            "Large 4"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "team"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "mistralai/mistral-medium-3-5",
+          "label": "Mistral Medium 3.5",
+          "aliases": [
+            "Medium"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "team"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "mistralai/mistral-small-2603",
+          "label": "Mistral Small",
+          "aliases": [
+            "Small",
+            "Fast",
+            "Flash"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "team"
+          ],
+          "capWeight": 0.3
+        },
+        {
+          "modelId": "mistralai/devstral-2512",
+          "label": "Devstral",
+          "aliases": [
+            "Devstral",
+            "Code"
+          ],
+          "plans": [
+            "free",
+            "pro",
+            "team"
+          ],
+          "capWeight": 1
+        }
+      ]
+    },
+    "deepseek": {
+      "name": "DeepSeek",
+      "hosts": [
+        "chat.deepseek.com"
+      ],
+      "url": "https://chat.deepseek.com/",
+      "_verified": "not yet (sign-in wall); selectors from the public DOM as of 2026",
+      "_comment": "DeepSeek has a DeepThink toggle rather than a model picker: pressed = reasoning model.",
+      "selectors": {
+        "composer": [
+          "textarea#chat-input",
+          "textarea[placeholder*=\"DeepSeek\" i]",
+          "div[contenteditable=\"true\"][role=\"textbox\"]"
+        ],
+        "sendButton": [
+          "button[aria-label*=\"Send\" i]",
+          "div[role=\"button\"][aria-label*=\"send\" i]"
+        ],
+        "modelPicker": [
+          "[role=\"button\"][aria-pressed=\"true\"]",
+          "button[aria-pressed=\"true\"]"
+        ],
+        "pickerOpen": [],
+        "attachments": [
+          "[class*=\"file\" i] img",
+          "[aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "main",
+          "#root"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        }
+      },
+      "models": [
+        {
+          "modelId": "deepseek/deepseek-v4-pro",
+          "label": "DeepThink",
+          "aliases": [
+            "DeepThink",
+            "Thinking",
+            "Reasoner"
+          ],
+          "plans": [
+            "free"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "deepseek/deepseek-v4.1-flash",
+          "label": "DeepSeek",
+          "aliases": [
+            "V4",
+            "Flash"
+          ],
+          "plans": [
+            "free"
+          ],
+          "capWeight": 0.3
+        }
+      ]
+    },
+    "copilot": {
+      "name": "Copilot",
+      "hosts": [
+        "copilot.microsoft.com"
+      ],
+      "url": "https://copilot.microsoft.com/",
+      "_verified": "not yet (sign-in wall); selectors from the public DOM as of 2026",
+      "selectors": {
+        "composer": [
+          "textarea#userInput",
+          "textarea[data-testid=\"composer-input\"]",
+          "textarea[placeholder*=\"Message Copilot\" i]",
+          "div[contenteditable=\"true\"][role=\"textbox\"]"
+        ],
+        "sendButton": [
+          "button[data-testid=\"submit-button\"]",
+          "button[aria-label*=\"Submit\" i]",
+          "button[aria-label*=\"Send\" i]"
+        ],
+        "modelPicker": [
+          "button[data-testid=\"mode-switcher\"]",
+          "button[aria-label*=\"mode\" i][aria-haspopup]",
+          "button[aria-haspopup=\"menu\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitemradio\"]",
+          "[role=\"menu\"] [role=\"menuitem\"]",
+          "[role=\"listbox\"] [role=\"option\"]"
+        ],
+        "attachments": [
+          "[data-testid*=\"attachment\" i]",
+          "[data-testid=\"composer\"] img",
+          "[data-testid=\"composer\"] [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "[data-testid=\"composer\"]",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "messages"
+        },
+        "pro": {
+          "name": "Copilot Pro",
+          "price": 20,
+          "capUnit": "messages"
+        }
+      },
+      "models": [
+        {
+          "modelId": "openai/gpt-6.1-sol",
+          "label": "Think Deeper",
+          "aliases": [
+            "Think Deeper",
+            "Smart",
+            "Deep"
+          ],
+          "plans": [
+            "free",
+            "pro"
+          ],
+          "capWeight": 2
+        },
+        {
+          "modelId": "openai/gpt-6-luna",
+          "label": "Quick response",
+          "aliases": [
+            "Quick",
+            "Fast"
+          ],
+          "plans": [
+            "free",
+            "pro"
+          ],
+          "capWeight": 0.3
+        }
+      ]
+    },
+    "poe": {
+      "name": "Poe",
+      "hosts": [
+        "poe.com"
+      ],
+      "url": "https://poe.com/",
+      "_verified": "not yet (sign-in wall); selectors from the public DOM as of 2026",
+      "_comment": "Compare mode shows several composers; each gets its own badge.",
+      "selectors": {
+        "composer": [
+          "textarea[class*=\"GrowingTextArea_textArea\"]",
+          "textarea[placeholder*=\"Talk to\" i]",
+          "textarea[placeholder*=\"Message\" i]",
+          "form textarea"
+        ],
+        "sendButton": [
+          "button[data-button-send=\"true\"]",
+          "button[class*=\"sendButton\" i]",
+          "button[aria-label*=\"Send\" i]"
+        ],
+        "modelPicker": [
+          "[class*=\"ChatPageMainFooter\"] button[aria-haspopup]",
+          "[class*=\"BotSelector\"] button",
+          "a[class*=\"BotHeader\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"menu\"] [role=\"menuitem\"]",
+          "[role=\"listbox\"] [role=\"option\"]"
+        ],
+        "attachments": [
+          "[class*=\"Attachment\" i] img",
+          "form [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "[class*=\"ChatPageMainFooter\"]",
+          "main"
+        ]
+      },
+      "plans": {
+        "free": {
+          "name": "Free",
+          "price": 0,
+          "capUnit": "points"
+        },
+        "subscriber": {
+          "name": "Subscriber",
+          "price": 20,
+          "capUnit": "points"
+        }
+      },
+      "models": [
+        {
+          "modelId": "anthropic/claude-sonnet-5.5",
+          "label": "Claude-Sonnet-5.5",
+          "aliases": [
+            "Claude Sonnet 5.5",
+            "Claude-Sonnet"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "anthropic/claude-haiku-5.5",
+          "label": "Claude-Haiku-5.5",
+          "aliases": [
+            "Claude-Haiku"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 0.1
+        },
+        {
+          "modelId": "openai/gpt-6.1-sol",
+          "label": "GPT-6.1-Sol",
+          "aliases": [
+            "GPT-6.1"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "openai/gpt-6-luna",
+          "label": "GPT-6-Luna",
+          "aliases": [
+            "Luna"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 0.1
+        },
+        {
+          "modelId": "google/gemini-3.8-flash",
+          "label": "Gemini-3.8-Flash",
+          "aliases": [
+            "Gemini 3.8 Flash"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 0.5
+        },
+        {
+          "modelId": "x-ai/grok-4.7",
+          "label": "Grok-4.7",
+          "aliases": [
+            "Grok 4.7"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 1
+        },
+        {
+          "modelId": "deepseek/deepseek-v4-pro",
+          "label": "DeepSeek-V4",
+          "aliases": [
+            "DeepSeek V4"
+          ],
+          "plans": [
+            "free",
+            "subscriber"
+          ],
+          "capWeight": 0.5
+        }
+      ]
+    },
+    "openrouter": {
+      "name": "OpenRouter",
+      "hosts": [
+        "openrouter.ai"
+      ],
+      "url": "https://openrouter.ai/chat",
+      "_verified": "2026-10-12 logged out: composer; the chat is pay-per-use, so no plans",
+      "selectors": {
+        "composer": [
+          "textarea[data-testid=\"composer-input\"]",
+          "textarea[placeholder*=\"Ask anything\" i]"
+        ],
+        "sendButton": [
+          "form button[type=\"submit\"]",
+          "button[aria-label*=\"Send\" i]"
+        ],
+        "modelPicker": [
+          "[data-testid=\"model-pill\"]",
+          "button[aria-label^=\"Add Model\"]"
+        ],
+        "pickerOpen": [
+          "[role=\"dialog\"] [role=\"option\"]",
+          "[role=\"listbox\"] [role=\"option\"]"
+        ],
+        "attachments": [
+          "form img",
+          "form [aria-label*=\"Remove\" i]"
+        ],
+        "contentColumn": [
+          "main",
+          "form"
+        ]
+      },
+      "plans": {},
+      "models": [
+        {
+          "modelId": "anthropic/claude-sonnet-5.5",
+          "label": "Claude Sonnet 5.5",
+          "aliases": [
+            "Sonnet 5.5"
+          ]
+        },
+        {
+          "modelId": "anthropic/claude-haiku-5.5",
+          "label": "Claude Haiku 5.5",
+          "aliases": [
+            "Haiku 5.5"
+          ]
+        },
+        {
+          "modelId": "openai/gpt-6.1-sol",
+          "label": "GPT-6.1 Sol",
+          "aliases": [
+            "GPT-6.1"
+          ]
+        },
+        {
+          "modelId": "openai/gpt-6-luna",
+          "label": "GPT-6 Luna",
+          "aliases": [
+            "Luna"
+          ]
+        },
+        {
+          "modelId": "google/gemini-3.8-flash",
+          "label": "Gemini 3.8 Flash"
+        },
+        {
+          "modelId": "google/gemini-3.5-flash-lite",
+          "label": "Gemini 3.5 Flash-Lite"
+        },
+        {
+          "modelId": "x-ai/grok-4.7",
+          "label": "Grok 4.7"
+        },
+        {
+          "modelId": "deepseek/deepseek-v4.1-flash",
+          "label": "DeepSeek V4.1 Flash"
+        },
+        {
+          "modelId": "z-ai/glm-5.3-flash",
+          "label": "GLM 5.3 Flash"
+        },
+        {
+          "modelId": "qwen/qwen3.8-27b",
+          "label": "Qwen3.8 27B"
+        },
+        {
+          "modelId": "moonshotai/kimi-k3",
+          "label": "Kimi K3"
+        },
+        {
+          "modelId": "mistralai/mistral-medium-3-5",
+          "label": "Mistral Medium 3.5"
+        }
+      ]
+    }
+  }
+}
