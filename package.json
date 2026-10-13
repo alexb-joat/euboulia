@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Browser extension that suggests the best-value LLM for the prompt you are typing, on any chat site.",
+  "author": "Alex <beyondpeaksolstice@gmail.com>",
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs --target all",
