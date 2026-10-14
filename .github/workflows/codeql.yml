@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
+      actions: read          # the action reads its own run metadata; required on private repos
       contents: read
       security-events: write
     steps:
