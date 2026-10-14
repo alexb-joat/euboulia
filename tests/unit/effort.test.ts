@@ -61,4 +61,10 @@ describe('effort levels', () => {
     expect(x.rows.length + x.more.length).toBe(here.length);
     expect([...x.rows, ...x.more].filter(r => r.isCurrent).map(r => r.label)).toEqual(['Opus 5.5 · Max']);
   });
+  it('ChatGPT: reads the thinking effort from "GPT-6.1 Sol Light"', () => {
+    expect(resolveOptionKey(BUNDLED, 'chatgpt', 'GPT-6.1 Sol Light')).toBe('openai/gpt-6.1-sol@light');
+    expect(resolveOptionKey(BUNDLED, 'chatgpt', 'GPT-6.1 Sol Pro')).toBe('openai/gpt-6.1-sol-pro');
+    expect(resolveOptionKey(BUNDLED, 'chatgpt', 'GPT-6 Sol')).toBe('openai/gpt-6-sol');
+    expect(candidatesFor(BUNDLED, 'chatgpt', prefs).some(c => c.label === 'GPT-6.1 Sol · Extended')).toBe(true);
+  });
 });

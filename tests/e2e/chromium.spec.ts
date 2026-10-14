@@ -87,3 +87,33 @@ for (const [name, editor, expectModel] of [
     await page.close();
   });
 }
+
+test('cloud follows window resizes: header visible, panel inside the window, only the list scrolls', async () => {
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.goto('http://127.0.0.1:8099/real/claude.html');
+  await page.locator('[data-testid="chat-input"]').first().click();
+  await page.keyboard.type("let's build the crawling scraping system with a database and an api, analyse the data and design the architecture");
+  await expect.poll(() => badgeText(page), { timeout: 3000 }).toMatch(/Suggest|Good pick/);
+  await page.evaluate(() => (document.querySelector('euboulia-badge')!.shadowRoot!.querySelector('button') as HTMLButtonElement).click());
+  await page.evaluate(() => (document.querySelector('euboulia-cloud')!.shadowRoot!.querySelector('button.more') as HTMLButtonElement).click());
+  const geometry = () => page.evaluate(() => {
+    const host = document.querySelector('euboulia-cloud') as HTMLElement;
+    const r = host.getBoundingClientRect();
+    const head = host.shadowRoot!.querySelector('.head')!.getBoundingClientRect();
+    const list = host.shadowRoot!.querySelector('.list') as HTMLElement;
+    return { top: r.top, bottom: r.bottom, left: r.left, right: r.right, headTop: head.top, vh: innerHeight, vw: innerWidth, mode: host.dataset.mode, listScrolls: list.scrollHeight > list.clientHeight };
+  });
+  for (const [w, h] of [[1600, 520], [1600, 900], [1700, 400], [1000, 700]] as const) {
+    await page.setViewportSize({ width: w, height: h });
+    await page.waitForTimeout(150);
+    const g = await geometry();
+    expect(g.top, `top at ${w}x${h}`).toBeGreaterThanOrEqual(0);
+    expect(g.bottom, `bottom at ${w}x${h}`).toBeLessThanOrEqual(g.vh);
+    expect(g.right, `right at ${w}x${h}`).toBeLessThanOrEqual(g.vw);
+    expect(g.headTop, `header at ${w}x${h}`).toBeGreaterThanOrEqual(g.top);
+    if (h <= 520) expect(g.listScrolls, `list scrolls at ${w}x${h}`).toBe(true);
+    if (w === 1000) expect(g.mode).toBe('dock');
+  }
+  await page.close();
+});

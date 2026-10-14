@@ -46,7 +46,7 @@ describe('badge and cloud', () => {
     const cloud = new Cloud(theme);
     const x = explain(fakeSuggestion(), BUNDLED);
     Object.defineProperty(window, 'innerWidth', { value: 1600, configurable: true });
-    cloud.open(x, { left: 300, right: 1100, top: 0, bottom: 900, width: 800, height: 900 }, { left: 320, right: 1080, top: 600, bottom: 680, width: 760, height: 80 });
+    cloud.open(x, () => ({ content: { left: 300, right: 1100, top: 0, bottom: 900, width: 800, height: 900 }, composer: { left: 320, right: 1080, top: 600, bottom: 680, width: 760, height: 80 } }));
     expect(cloud.isOpen).toBe(true);
     expect(cloud.host.dataset.mode).toBe('margin');
     const t = cloud.host.shadowRoot!.textContent!;

@@ -325,7 +325,13 @@
           "plans": [
             "pro"
           ],
-          "capWeight": 5
+          "capWeight": 5,
+          "efforts": [
+            "light",
+            "standard",
+            "extended",
+            "heavy"
+          ]
         },
         {
           "modelId": "openai/gpt-6.1-sol-pro",
@@ -337,7 +343,13 @@
             "plus",
             "pro"
           ],
-          "capWeight": 3
+          "capWeight": 3,
+          "efforts": [
+            "light",
+            "standard",
+            "extended",
+            "heavy"
+          ]
         },
         {
           "modelId": "openai/gpt-6.1-sol",
@@ -351,7 +363,13 @@
             "plus",
             "pro"
           ],
-          "capWeight": 1
+          "capWeight": 1,
+          "efforts": [
+            "light",
+            "standard",
+            "extended",
+            "heavy"
+          ]
         },
         {
           "modelId": "openai/gpt-6-luna",
@@ -365,9 +383,91 @@
             "pro"
           ],
           "capWeight": 0.1
+        },
+        {
+          "modelId": "openai/gpt-6-sol",
+          "label": "GPT-6 Sol",
+          "plans": [
+            "plus",
+            "pro"
+          ],
+          "capWeight": 1,
+          "legacy": true
+        },
+        {
+          "modelId": "openai/gpt-6-sol-pro",
+          "label": "GPT-6 Sol Pro",
+          "plans": [
+            "pro"
+          ],
+          "capWeight": 3,
+          "legacy": true
+        },
+        {
+          "modelId": "openai/gpt-6-luna-pro",
+          "label": "GPT-6 Luna Pro",
+          "plans": [
+            "plus",
+            "pro"
+          ],
+          "capWeight": 0.3,
+          "legacy": true
         }
       ],
-      "_verified": "2026-10-12 logged out: composer, sendButton, contentColumn"
+      "_verified": "2026-10-12 logged out: composer, sendButton, contentColumn; older models (GPT-6 Sol, Sol Pro, Luna Pro) added from the price list, not yet seen in the picker",
+      "_efforts": "Only 'Light' is confirmed (model button read 'GPT-6.1 Sol Light', 2026-10-14). Standard/Extended/Heavy, the multipliers, and which models offer effort are estimates pending a screenshot of the open picker.",
+      "efforts": [
+        {
+          "id": "light",
+          "label": "Light",
+          "aliases": [
+            "Low"
+          ],
+          "outputMultiplier": 0.6,
+          "fitDelta": {
+            "code": -0.04,
+            "reasoning": -0.06,
+            "data": -0.03,
+            "long_context": -0.03
+          }
+        },
+        {
+          "id": "standard",
+          "label": "Standard",
+          "aliases": [
+            "Medium"
+          ],
+          "outputMultiplier": 1
+        },
+        {
+          "id": "extended",
+          "label": "Extended",
+          "aliases": [
+            "High"
+          ],
+          "outputMultiplier": 1.8,
+          "fitDelta": {
+            "code": 0.02,
+            "reasoning": 0.04,
+            "data": 0.02,
+            "long_context": 0.02
+          }
+        },
+        {
+          "id": "heavy",
+          "label": "Heavy",
+          "aliases": [
+            "Max"
+          ],
+          "outputMultiplier": 3.2,
+          "fitDelta": {
+            "code": 0.04,
+            "reasoning": 0.07,
+            "data": 0.03,
+            "long_context": 0.03
+          }
+        }
+      ]
     },
     "gemini": {
       "name": "Gemini",
@@ -1872,6 +1972,132 @@
         },
         {
           "url": "https://openrouter.ai/openai/gpt-6-luna",
+          "date": "2026-10-14",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-14",
+          "field": "strengths"
+        }
+      ]
+    },
+    "openai/gpt-6-sol": {
+      "provider": "openai",
+      "name": "GPT-6 Sol",
+      "strengths": {
+        "code": 0.62,
+        "reasoning": 0.75,
+        "writing": 0.89,
+        "chat": 0.94,
+        "summarise": 0.93,
+        "translate": 0.91,
+        "data": 0.83,
+        "vision": 0.85,
+        "long_context": 0.96
+      },
+      "price": {
+        "input": 2,
+        "output": 10
+      },
+      "context": 1050000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-22",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/openai/gpt-6-sol",
+          "date": "2026-10-14",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/openai/gpt-6-sol",
+          "date": "2026-10-14",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-14",
+          "field": "strengths"
+        }
+      ]
+    },
+    "openai/gpt-6-sol-pro": {
+      "provider": "openai",
+      "name": "GPT-6 Sol Pro",
+      "strengths": {
+        "code": 0.67,
+        "reasoning": 0.79,
+        "writing": 0.91,
+        "chat": 0.95,
+        "summarise": 0.94,
+        "translate": 0.93,
+        "data": 0.85,
+        "vision": 0.87,
+        "long_context": 0.97
+      },
+      "price": {
+        "input": 2,
+        "output": 10
+      },
+      "context": 1050000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-22",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/openai/gpt-6-sol-pro",
+          "date": "2026-10-14",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/openai/gpt-6-sol-pro",
+          "date": "2026-10-14",
+          "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-14",
+          "field": "strengths"
+        }
+      ]
+    },
+    "openai/gpt-6-luna-pro": {
+      "provider": "openai",
+      "name": "GPT-6 Luna Pro",
+      "strengths": {
+        "code": 0.44,
+        "reasoning": 0.6,
+        "writing": 0.82,
+        "chat": 0.9,
+        "summarise": 0.88,
+        "translate": 0.86,
+        "data": 0.74,
+        "vision": 0.79,
+        "long_context": 0.94
+      },
+      "price": {
+        "input": 0.1,
+        "output": 0.5
+      },
+      "context": 1050000,
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-09-22",
+      "sources": [
+        {
+          "url": "https://openrouter.ai/openai/gpt-6-luna-pro",
+          "date": "2026-10-14",
+          "field": "price"
+        },
+        {
+          "url": "https://openrouter.ai/openai/gpt-6-luna-pro",
           "date": "2026-10-14",
           "field": "context"
         },
