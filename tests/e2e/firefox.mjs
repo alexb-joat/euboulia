@@ -62,6 +62,31 @@ let failed = false;
 try {
   const id = await driver.installAddon(path.join(root, 'dist/firefox'), true);
   console.log(`installed ${id}`);
+
+  // Site access. Firefox 127+ grants the manifest's host permissions at install, so the options page must stay
+  // closed and its "Allow" banner hidden; once the user revokes a site (extensions menu), the banner must return.
+  const optionsUrl = async () => {
+    await driver.setContext(firefox.Context.CHROME);
+    const u = await driver.executeScript('return WebExtensionPolicy.getByID(arguments[0]).getURL("options.html")', id);
+    await driver.setContext(firefox.Context.CONTENT);
+    return u;
+  };
+  const tabs = await driver.getAllWindowHandles();
+  if (tabs.length !== 1) throw new Error(`install opened ${tabs.length - 1} extra tab(s) although access was granted`);
+  await driver.get(await optionsUrl());
+  const hiddenWhenGranted = await waitFor(() => driver.executeScript('const b = document.getElementById("accessBanner"); return b ? String(b.hidden) : null'), 'options page', 3000);
+  if (hiddenWhenGranted !== 'true') throw new Error('access banner shown although every site is granted');
+  await driver.setContext(firefox.Context.CHROME);
+  await driver.executeScript(`
+    const { ExtensionPermissions } = ChromeUtils.importESModule('resource://gre/modules/ExtensionPermissions.sys.mjs');
+    const policy = WebExtensionPolicy.getByID(arguments[0]);
+    return ExtensionPermissions.remove(arguments[0], { permissions: [], origins: ['https://claude.ai/*'] }, policy.extension);
+  `, id);
+  await driver.setContext(firefox.Context.CONTENT);
+  await driver.navigate().refresh();
+  const revoked = await waitFor(() => driver.executeScript('const b = document.getElementById("accessBanner"); return b && !b.hidden ? document.getElementById("grantAll").title : null'), 'banner after revoking a site', 3000);
+  if (!revoked.includes('claude.ai')) throw new Error(`banner should name claude.ai, got: ${revoked}`);
+  console.log(`site access: granted at install, banner hidden; after revoking claude.ai the banner lists: ${revoked}`);
   await driver.get('http://127.0.0.1:8099/claude.html');
   const composer = await driver.wait(until.elementLocated(By.css('.ProseMirror')), 5000);
   await composer.click();

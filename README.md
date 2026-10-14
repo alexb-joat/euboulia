@@ -21,8 +21,8 @@ Nothing you type leaves the browser. The classifier, the scoring and the catalog
 
 1. **Finds the chat UI.** Per-site adapters for Claude, ChatGPT and Gemini; experimental adapters for Grok, Perplexity, Le Chat, DeepSeek, Copilot, Poe and OpenRouter (selectors not yet verified on a signed-in session; a catalog update can fix them without a release); an Open WebUI adapter that recognises the app on any host; and a generic adapter for other self-hosted UIs. It finds every prompt composer on the page (Poe's compare mode gets one badge per pane), the model currently selected in the picker, and attached images or files. When you open the site's model picker it also notes which models the site really offers you, so a model missing from the bundled plan table still counts as included.
 2. **Reads the prompt as you type** (after 400 ms of idle). A keyword and regex classifier (the same signals as the [Trioditis](https://github.com/alexb-joat/trioditis) router) labels the task: code, reasoning, writing, quick chat, summarising, translation, data work, image understanding, long context. It also notices sensitive data (emails, keys, card numbers) without ever storing the matched text.
-3. **Scores the models the site offers.** Fit per task type comes from the catalog; cost is estimated from the prompt size and the model's API price, or shown as "included" when you told it which plan you have. Your preference slider (best quality … cheapest) sets the balance. Custom rules can prefer or exclude models.
-4. **Shows the pick** in a badge styled from the site's own font and colours. "why?" opens the explanation: task, signals, the top three with fit and cost, and the reason the winner won. If another service you enabled would be clearly better value, it says so.
+3. **Scores the models the site offers.** Fit per task type comes from the catalog; cost is estimated from the prompt size and the model's API price, or shown as "included" when you told it which plan you have. Your preference slider (best quality … cheapest) sets the balance, and a quality floor keeps a much weaker model from winning on price alone. Custom rules can prefer or exclude models.
+4. **Shows the pick** in a badge styled from the site's own font and colours. "why?" opens the explanation: task, signals, the top three with fit (as a percentage) and cost, every other available model one click away, and the reason the winner won. If another service you enabled would be clearly better value, it says so.
 5. **Learns locally.** Thumbs up or down, and whether you followed the suggestion when you hit send, are stored in the browser only. When you keep overriding a suggestion with the same model for a task on a site (three or more times, most of the time), that model gets a small nudge and the explanation says "you usually pick X for this"; three net thumbs-downs nudge a model the other way. Export or clear the history on the options page.
 
 ## Install (unpacked, for now)
@@ -33,7 +33,7 @@ npm run build          # dist/chrome and dist/firefox
 ```
 
 - Chrome, Edge, Brave: open `chrome://extensions`, enable Developer mode, "Load unpacked", pick `dist/chrome`.
-- Firefox: `npm run run:ff` (temporary add-on through web-ext), or `about:debugging` → "Load Temporary Add-on" → `dist/firefox/manifest.json`.
+- Firefox: `npm run run:ff` (temporary add-on through web-ext), or `about:debugging` → "Load Temporary Add-on" → `dist/firefox/manifest.json`. Firefox grants the chat sites at install; if you later switch a site off in the extensions menu, the options page shows an "Allow on these sites" banner to restore it.
 
 The manifest's host permissions are generated from the hosts in `src/catalog/services.json`, so adding a site means adding it there (plus an adapter under `src/sites`).
 

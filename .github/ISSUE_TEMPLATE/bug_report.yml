@@ -1,0 +1,21 @@
+name: Bug report
+description: Something doesn't work as documented
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Security issue?** Don't open an issue: report it privately via the Security tab ("Report a vulnerability").
+        Never paste your prompts, conversation text or screenshots that show personal data.
+  - type: textarea
+    id: what
+    attributes: {label: What happened, description: And what you expected instead}
+    validations: {required: true}
+  - type: textarea
+    id: repro
+    attributes: {label: Steps to reproduce, description: "Which page, what kind of prompt (describe it, don't paste it), what the badge or cloud showed"}
+    validations: {required: true}
+  - type: input
+    id: env
+    attributes: {label: Environment, placeholder: "Euboulia 0.1.0 (options page), Firefox 157 on Ubuntu, claude.ai"}
+    validations: {required: true}

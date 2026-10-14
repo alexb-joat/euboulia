@@ -31,3 +31,6 @@ li { margin: 4px 0; }
 details { margin-top: 12px; }
 summary { cursor: pointer; color: var(--muted); }
 .ok { color: #2e7d32; } .err { color: #c62828; }
+.banner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--faint); }
+.banner[hidden] { display: none; }
+.banner p { margin: 4px 0 0; }
