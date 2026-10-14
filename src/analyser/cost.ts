@@ -20,9 +20,9 @@ export function apiUsd(model: CatalogModel, tokensIn: number, tokensOut: number)
 }
 
 export function estimateCost(
-  model: CatalogModel, tokensIn: number, task: TaskType, plan?: string, capWeight?: number,
+  model: CatalogModel, tokensIn: number, task: TaskType, plan?: string, capWeight?: number, outputMultiplier = 1,
 ): CostEstimate {
-  const tokensOut = outputTokensFor(task, tokensIn);
+  const tokensOut = Math.round(outputTokensFor(task, tokensIn) * outputMultiplier);
   const usd = apiUsd(model, tokensIn, tokensOut);
   if (plan) return { kind: 'included', plan, capWeight: capWeight ?? 1, apiUsd: usd, tokensOut };
   if (usd === undefined) return { kind: 'unknown', tokensOut };

@@ -70,7 +70,13 @@
             "pro",
             "max"
           ],
-          "capWeight": 5
+          "capWeight": 5,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "max"
+          ]
         },
         {
           "modelId": "anthropic/claude-opus-5.5",
@@ -83,7 +89,13 @@
             "pro",
             "max"
           ],
-          "capWeight": 2
+          "capWeight": 2,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "max"
+          ]
         },
         {
           "modelId": "anthropic/claude-sonnet-5.5",
@@ -97,7 +109,13 @@
             "pro",
             "max"
           ],
-          "capWeight": 1
+          "capWeight": 1,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "max"
+          ]
         },
         {
           "modelId": "anthropic/claude-haiku-5.5",
@@ -112,9 +130,133 @@
             "max"
           ],
           "capWeight": 0.1
+        },
+        {
+          "modelId": "anthropic/claude-fable-5",
+          "label": "Fable 5",
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 5,
+          "legacy": true
+        },
+        {
+          "modelId": "anthropic/claude-opus-5",
+          "label": "Opus 5",
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 2,
+          "legacy": true
+        },
+        {
+          "modelId": "anthropic/claude-opus-4.8",
+          "label": "Opus 4.8",
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 2,
+          "legacy": true
+        },
+        {
+          "modelId": "anthropic/claude-opus-4.7",
+          "label": "Opus 4.7",
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 2,
+          "legacy": true
+        },
+        {
+          "modelId": "anthropic/claude-opus-4.6",
+          "label": "Opus 4.6",
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 2,
+          "legacy": true
+        },
+        {
+          "modelId": "anthropic/claude-sonnet-5",
+          "label": "Sonnet 5",
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 1,
+          "legacy": true
+        },
+        {
+          "modelId": "anthropic/claude-sonnet-4.6",
+          "label": "Sonnet 4.6",
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 1,
+          "legacy": true
+        },
+        {
+          "modelId": "anthropic/claude-haiku-4.5",
+          "label": "Haiku 4.5",
+          "plans": [
+            "pro",
+            "max"
+          ],
+          "capWeight": 0.3,
+          "legacy": true
         }
       ],
-      "_verified": "2026-10-13 logged in (captured fixture): composer, sendButton, modelPicker, contentColumn"
+      "_verified": "2026-10-13 logged in (captured fixture): composer, sendButton, modelPicker, contentColumn; 'More models' list read from Alex's screenshot 2026-10-14 (Opus 3 omitted: no price source)",
+      "_efforts": "Effort names and multipliers are estimates, not yet read from the open Effort submenu; only 'Max' is confirmed (seen on the model button 2026-10-13). Which models offer effort is also a guess: the 5.x generation except Haiku.",
+      "efforts": [
+        {
+          "id": "low",
+          "label": "Low",
+          "outputMultiplier": 0.6,
+          "fitDelta": {
+            "code": -0.04,
+            "reasoning": -0.06,
+            "data": -0.03,
+            "long_context": -0.03
+          }
+        },
+        {
+          "id": "medium",
+          "label": "Medium",
+          "outputMultiplier": 1
+        },
+        {
+          "id": "high",
+          "label": "High",
+          "outputMultiplier": 1.7,
+          "fitDelta": {
+            "code": 0.02,
+            "reasoning": 0.04,
+            "data": 0.02,
+            "long_context": 0.02
+          }
+        },
+        {
+          "id": "max",
+          "label": "Max",
+          "aliases": [
+            "Maximum"
+          ],
+          "outputMultiplier": 3,
+          "fitDelta": {
+            "code": 0.04,
+            "reasoning": 0.07,
+            "data": 0.03,
+            "long_context": 0.03
+          }
+        }
+      ]
     },
     "chatgpt": {
       "name": "ChatGPT",

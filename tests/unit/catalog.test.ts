@@ -15,7 +15,7 @@ describe('catalog', () => {
   });
   it('a model seen in the picker counts as included in the plan', () => {
     const p = prefs({ services: { claude: { enabled: true, plan: 'free' } } });
-    const fable = (obs = {}) => candidatesFor(BUNDLED, 'claude', p, obs).find(c => c.modelId === 'anthropic/claude-fable-5.1')!;
+    const fable = (obs = {}) => candidatesFor(BUNDLED, 'claude', p, obs).find(c => c.key === 'anthropic/claude-fable-5.1@medium')!;
     expect(fable().plan).toBeUndefined();                      // Fable is not in the free plan table
     const seen = { claude: { models: ['anthropic/claude-fable-5.1'], at: '2026-10-12' } };
     expect(fable(seen).plan).toBe('free');

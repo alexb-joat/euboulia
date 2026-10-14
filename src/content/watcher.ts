@@ -4,7 +4,7 @@ import { explain } from '../analyser/explain';
 import { learnBiases } from '../analyser/learn';
 import { scoreCandidates } from '../analyser/score';
 import { candidatesElsewhere, candidatesFor } from '../catalog/index';
-import { resolveModelLabel } from '../catalog/aliases';
+import { resolveModelLabel, resolveOptionKey } from '../catalog/aliases';
 import { debounce } from '../shared/debounce';
 import type { Catalog, ObservedMap, Prefs, Rule, Suggestion, UsageEvent } from '../shared/types';
 import type { ComposerHandle, SiteAdapter } from '../sites/adapter';
@@ -55,7 +55,7 @@ export class ComposerWatcher {
     if (!text && !attachments.some(a => a.kind === 'image')) { this.badge.hide(); this.suggestion = undefined; if (this.shared.cloud.isOpen) this.shared.cloud.close(); return; }
     const cls = classify(text, attachments);
     const currentLabel = adapter.currentModel(this.c);
-    const current = resolveModelLabel(catalog, serviceId, currentLabel) ?? undefined;
+    const current = resolveOptionKey(catalog, serviceId, currentLabel) ?? undefined;
     const labelOf = (id: string) => catalog.services[serviceId]?.models.find(m => m.modelId === id)?.label ?? catalog.models[id]?.name ?? id;
     const biases = learnBiases(usage, serviceId, cls.primary, labelOf);
     let here = scoreCandidates(cls, candidatesFor(catalog, serviceId, prefs, observed), prefs, rules, serviceId, biases);
@@ -67,7 +67,7 @@ export class ComposerWatcher {
     const trusted = new Set(Object.entries(prefs.services).filter(([, s]) => s.trusted).map(([id]) => id));
     const s = decide({ here, elsewhere, current, previous: this.suggestion, classification: cls, trustedServices: trusted, crossService: prefs.crossService });
     if (!s) { this.badge.hide(); return; }
-    if (this.suggestion?.here.modelId !== s.here.modelId) this.voted = false;
+    if (this.suggestion?.here.key !== s.here.key) this.voted = false;
     this.suggestion = s;
     this.badge.update(s, catalog, serviceId);
     if (this.shared.cloud.isOpen) this.openCloud();

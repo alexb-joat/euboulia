@@ -23,14 +23,21 @@ export function candidatesFor(catalog: Catalog, serviceId: string, prefs: Prefs,
   const plan = prefs.services[serviceId]?.plan;
   const seen = new Set(observed[serviceId]?.models ?? []);
   const out: Candidate[] = [];
+  const efforts = new Map((svc.efforts ?? []).map(e => [e.id, e]));
   for (const m of svc.models) {
     const model = catalog.models[m.modelId];
     if (!model) continue;
     const inPlan = plan !== undefined && ((m.plans ?? []).includes(plan) || seen.has(m.modelId));
-    out.push({
-      modelId: m.modelId, serviceId, label: m.label, model,
-      plan: inPlan ? plan : undefined, capWeight: inPlan ? m.capWeight : undefined,
-    });
+    const base = { modelId: m.modelId, serviceId, model, plan: inPlan ? plan : undefined };
+    const levels = (m.efforts ?? []).map(id => efforts.get(id)).filter((e): e is NonNullable<typeof e> => !!e);
+    if (!levels.length) {
+      out.push({ ...base, key: m.modelId, label: m.label, capWeight: inPlan ? m.capWeight : undefined });
+      continue;
+    }
+    for (const e of levels) {
+      const capWeight = inPlan && m.capWeight !== undefined ? m.capWeight * (e.capMultiplier ?? e.outputMultiplier) : undefined;
+      out.push({ ...base, key: `${m.modelId}@${e.id}`, label: `${m.label} · ${e.label}`, effort: e, capWeight });
+    }
   }
   return out;
 }
