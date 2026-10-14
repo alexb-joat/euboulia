@@ -1,5 +1,6 @@
 import { BUNDLED } from '../catalog/index';
 import { validateRule } from '../analyser/rules';
+import { missingOrigins, requestMissing } from '../shared/access';
 import { ext, isFirefox } from '../shared/browser';
 import { send } from '../shared/messages';
 import {
@@ -62,7 +63,7 @@ async function renderServices(): Promise<void> {
     else {
       const b = document.createElement('button');
       b.textContent = isFirefox ? 'grant' : 'grant';
-      b.addEventListener('click', async () => { if (await ext.permissions.request({ origins })) renderServices(); });
+      b.addEventListener('click', async () => { if (await ext.permissions.request({ origins })) { renderServices(); renderAccess(); } });
       access.append(b);
     }
     tr.append(name, en, plan, tr2, access);
@@ -110,6 +111,12 @@ async function renderCatalog(): Promise<void> {
   $<HTMLInputElement>('catalogUrl').value = prefs.catalogUrl ?? '';
 }
 
+async function renderAccess(): Promise<void> {
+  const missing = await missingOrigins(catalog, ext.permissions);
+  $('accessBanner').hidden = missing.length === 0;
+  $('grantAll').title = missing.map(o => o.replace(/^https:\/\/|\/\*$/g, '')).join(', ');
+}
+
 async function renderSites(): Promise<void> {
   const ul = $('siteList');
   ul.replaceChildren();
@@ -142,6 +149,11 @@ async function init(): Promise<void> {
   rules = await getRules();
   catalog = (await getStoredCatalog()) ?? BUNDLED;
   renderPreference();
+  await renderAccess();
+  $('grantAll').addEventListener('click', async () => {
+    await requestMissing(catalog, ext.permissions);
+    await renderAccess(); await renderServices();
+  });
   await renderServices();
   renderRules();
   await renderCatalog();
