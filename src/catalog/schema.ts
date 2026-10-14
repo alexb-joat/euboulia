@@ -57,6 +57,23 @@ function checkService(id: string, s: unknown, models: Record<string, unknown>): 
       if (!isObj(v) || typeof v.price !== 'number' || v.price < 0) fail(`services.${id}.plans.${p}.price must be >= 0`);
     }
   }
+  const effortIds = new Set<string>();
+  if (s.efforts !== undefined) {
+    if (!Array.isArray(s.efforts)) fail(`services.${id}.efforts must be a list`);
+    for (const e of s.efforts) {
+      if (!isObj(e) || typeof e.id !== 'string' || !e.id || typeof e.label !== 'string') fail(`services.${id}.efforts entries need id and label`);
+      if (typeof e.outputMultiplier !== 'number' || e.outputMultiplier <= 0 || e.outputMultiplier > 20) fail(`services.${id}.efforts.${e.id}.outputMultiplier must be in (0, 20]`);
+      if (e.capMultiplier !== undefined && (typeof e.capMultiplier !== 'number' || e.capMultiplier < 0)) fail(`services.${id}.efforts.${e.id}.capMultiplier must be >= 0`);
+      if (e.fitDelta !== undefined) {
+        if (!isObj(e.fitDelta)) fail(`services.${id}.efforts.${e.id}.fitDelta must be an object`);
+        for (const [t, v] of Object.entries(e.fitDelta)) {
+          if (!TASK_TYPES.includes(t as TaskType)) fail(`services.${id}.efforts.${e.id}.fitDelta.${t} is not a task type`);
+          if (typeof v !== 'number' || v < -0.5 || v > 0.5) fail(`services.${id}.efforts.${e.id}.fitDelta.${t} must be within ±0.5`);
+        }
+      }
+      effortIds.add(e.id);
+    }
+  }
   if (!Array.isArray(s.models)) fail(`services.${id}.models must be a list`);
   for (const m of s.models) {
     if (!isObj(m) || typeof m.modelId !== 'string' || typeof m.label !== 'string') fail(`services.${id}.models entries need modelId and label`);
@@ -66,6 +83,10 @@ function checkService(id: string, s: unknown, models: Record<string, unknown>): 
       for (const p of m.plans) if (!isObj(s.plans) || !(String(p) in s.plans)) fail(`services.${id}.models.${m.modelId}: unknown plan ${p}`);
     }
     if (m.capWeight !== undefined && (typeof m.capWeight !== 'number' || m.capWeight < 0)) fail(`services.${id}.models.${m.modelId}.capWeight must be >= 0`);
+    if (m.efforts !== undefined) {
+      if (!Array.isArray(m.efforts)) fail(`services.${id}.models.${m.modelId}.efforts must be a list`);
+      for (const e of m.efforts) if (!effortIds.has(String(e))) fail(`services.${id}.models.${m.modelId}: unknown effort ${e}`);
+    }
   }
 }
 

@@ -10,7 +10,7 @@ import { loadFixture } from './helpers';
 
 function fakeSuggestion(): Suggestion {
   const model = BUNDLED.models['anthropic/claude-haiku-5.5']!;
-  const here = { modelId: 'anthropic/claude-haiku-5.5', serviceId: 'claude', label: 'Haiku 5.5', model, fit: 0.9, cost: { kind: 'api' as const, usd: 0.0012, tokensOut: 150 }, costScore: 1, total: 0.95, reasons: [] };
+  const here = { key: 'anthropic/claude-haiku-5.5', modelId: 'anthropic/claude-haiku-5.5', serviceId: 'claude', label: 'Haiku 5.5', model, fit: 0.9, cost: { kind: 'api' as const, usd: 0.0012, tokensOut: 150 }, costScore: 1, total: 0.95, reasons: [] };
   return { id: 's1', here, isCurrent: false, classification: { primary: 'chat', weights: { chat: 1 }, tokensIn: 20, size: 'short', signals: [], sensitive: [] }, ranked: [here] };
 }
 

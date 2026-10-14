@@ -8,13 +8,14 @@ const CONTEXT_MARGIN = 1.2;
 // Quality floor: a model whose fit trails the best candidate by more than this cannot win on price alone.
 // The tolerance grows with the cost slider (0 = only near-best models, 1 = anything goes).
 export const FLOOR_BASE = 0.1;
-export const FLOOR_PER_COST = 0.4;
-const FLOOR_PENALTY = 2;
+export const FLOOR_PER_COST = 0.3;
+const FLOOR_PENALTY = 6;
 
-export function fitScore(cls: Classification, strengths: Candidate['model']['strengths']): number {
+export function fitScore(cls: Classification, strengths: Candidate['model']['strengths'], delta: Partial<Record<TaskType, number>> = {}): number {
   let fit = 0;
   for (const [t, w] of Object.entries(cls.weights) as [TaskType, number][]) {
-    fit += w * (strengths[t] ?? DEFAULT_STRENGTH);
+    const s = (strengths[t] ?? DEFAULT_STRENGTH) + (delta[t] ?? 0);
+    fit += w * Math.min(1, Math.max(0, s));
   }
   return fit;
 }
@@ -49,9 +50,9 @@ export function scoreCandidates(
     const reasons: string[] = [];
     if (effects.excluded.has(c.modelId)) continue;
     if ((cls.weights.vision ?? 0) > 0 && !c.model.capabilities.includes('vision')) continue;
-    const cost = estimateCost(c.model, cls.tokensIn, cls.primary, c.plan, c.capWeight);
+    const cost = estimateCost(c.model, cls.tokensIn, cls.primary, c.plan, c.capWeight, c.effort?.outputMultiplier);
     if (c.model.context < cls.tokensIn * CONTEXT_MARGIN + cost.tokensOut) continue;
-    const fit = fitScore(cls, c.model.strengths);
+    const fit = fitScore(cls, c.model.strengths, c.effort?.fitDelta);
     partial.push({ ...c, fit, cost, reasons });
   }
   const cs = costScores(partial);
@@ -61,7 +62,8 @@ export function scoreCandidates(
   const ranked: Ranked[] = partial.map((p, i) => {
     const boost = effects.boosts.get(p.modelId);
     const bias = biasFor.get(p.modelId);
-    const shortfall = Math.max(0, floor - p.fit);
+    // Your own rules outrank the automatic floor: a model you told it to prefer is not penalised.
+    const shortfall = boost && boost.boost > 0 ? 0 : Math.max(0, floor - p.fit);
     const total = (1 - lambda) * p.fit + lambda * cs[i]! + (boost?.boost ?? 0) + (bias?.boost ?? 0) - FLOOR_PENALTY * shortfall;
     if (boost) p.reasons.push(`your rule "${boost.ruleId}" prefers it`);
     if (bias && bias.boost > 0) p.reasons.push(bias.reason);

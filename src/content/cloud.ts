@@ -49,6 +49,15 @@ export class Cloud {
     this.host.hidden = false;
   }
 
+  /** After the content grows (full model list), move the panel up so its bottom stays on screen. */
+  private keepInView(): void {
+    const r = this.host.getBoundingClientRect();
+    const overflow = r.bottom - (innerHeight - 16);
+    if (overflow <= 0) return;
+    const s = this.host.style;
+    if (this.host.dataset.mode === 'margin') s.top = `${Math.max(16, r.top - overflow)}px`;
+  }
+
   close(): void {
     if (this.host.hidden) return;
     this.host.hidden = true;
@@ -113,7 +122,9 @@ export class Cloud {
     for (const r of x.rows) addRow(r);
     for (const r of x.more) addRow(r, true);
     table.append(body);
-    box.append(table);
+    const list = el('div', 'list');
+    list.append(table);
+    box.append(list);
     if (x.more.length) {
       const toggle = el('button', 'more', `Show ${x.more.length} more model${x.more.length === 1 ? '' : 's'}`);
       toggle.setAttribute('aria-expanded', 'false');
@@ -121,6 +132,7 @@ export class Cloud {
         const open = table.classList.toggle('all');
         toggle.setAttribute('aria-expanded', String(open));
         toggle.textContent = open ? 'Show fewer' : `Show ${x.more.length} more model${x.more.length === 1 ? '' : 's'}`;
+        this.keepInView();
       });
       box.append(toggle);
     }

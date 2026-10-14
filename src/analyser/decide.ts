@@ -1,3 +1,4 @@
+import { sameOption } from '../catalog/aliases';
 import type { Classification, Ranked, Suggestion } from '../shared/types';
 
 export const TIE = 0.02;
@@ -30,15 +31,15 @@ export function decide(input: DecideInput): Suggestion | undefined {
   // Tie set: within TIE of the top. Prefer the current model, then cheaper, then fitter.
   const top = here[0]!.total;
   const ties = here.filter(r => top - r.total <= TIE);
-  let winner = ties.find(r => r.modelId === current) ?? ties.slice().sort((a, b) => {
+  let winner = ties.find(r => sameOption(current, r.key)) ?? ties.slice().sort((a, b) => {
     const ca = usdOf(a) ?? Infinity, cb = usdOf(b) ?? Infinity;
     if (ca !== cb) return ca - cb;
     return b.fit - a.fit;
   })[0]!;
 
   // Hysteresis: keep the previous winner unless beaten clearly or gone.
-  if (previous && previous.here.modelId !== winner.modelId) {
-    const prev = here.find(r => r.modelId === previous.here.modelId);
+  if (previous && previous.here.key !== winner.key) {
+    const prev = here.find(r => r.key === previous.here.key);
     if (prev && winner.total - prev.total < HYSTERESIS) winner = prev;
   }
 
@@ -64,7 +65,8 @@ export function decide(input: DecideInput): Suggestion | undefined {
   return {
     id: `s${Date.now().toString(36)}${(counter++).toString(36)}`,
     here: winner, elsewhere: other,
-    isCurrent: current !== undefined && current === winner.modelId,
+    // "Good pick" only when the exact option is selected; a picker that hides the effort level gets a suggestion.
+    isCurrent: current !== undefined && current === winner.key,
     current, classification, ranked: here,
   };
 }

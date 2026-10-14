@@ -10,7 +10,7 @@ export function model(over: Partial<CatalogModel> & { strengths?: Partial<Record
 }
 
 export function cand(modelId: string, over: Partial<CatalogModel> = {}, serviceId = 'svc', extra: Partial<Candidate> = {}): Candidate {
-  return { modelId, serviceId, label: modelId, model: model({ name: modelId, ...over }), ...extra };
+  return { key: modelId, modelId, serviceId, label: modelId, model: model({ name: modelId, ...over }), ...extra };
 }
 
 export function cls(primary: TaskType = 'code', tokensIn = 200, over: Partial<Classification> = {}): Classification {

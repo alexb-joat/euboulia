@@ -26,6 +26,30 @@ export function resolveModelLabel(catalog: Catalog, serviceId: string, label: st
   return null;
 }
 
+/**
+ * Resolve a picker label to the option key: the model id, plus "@effort" when the label names an effort level the
+ * model offers (Claude's button reads "Opus 5.5 Max"). Without an effort word the service's first listed level that
+ * the model offers is not assumed: the plain model id is returned, and callers treat it as "effort unknown".
+ */
+export function resolveOptionKey(catalog: Catalog, serviceId: string, label: string | null | undefined): string | null {
+  const modelId = resolveModelLabel(catalog, serviceId, label);
+  if (!modelId || !label) return modelId;
+  const svc = catalog.services[serviceId];
+  const sm = svc?.models.find(m => m.modelId === modelId);
+  const words = ` ${norm(label)} `;
+  const levels = (sm?.efforts ?? []).map(id => svc?.efforts?.find(e => e.id === id)).filter(Boolean) as NonNullable<NonNullable<typeof svc>['efforts']>;
+  // Longest effort words first, so "extra high" beats "high".
+  const pairs = levels.flatMap(e => [e.label, ...(e.aliases ?? [])].map(w => [norm(w), e.id] as [string, string])).sort((a, b) => b[0].length - a[0].length);
+  for (const [w, id] of pairs) if (w && words.includes(` ${w} `)) return `${modelId}@${id}`;
+  return modelId;
+}
+
+/** True when an option key (model or model@effort) refers to the given candidate key, treating a bare model id as matching any of its efforts. */
+export function sameOption(current: string | undefined, key: string): boolean {
+  if (!current) return false;
+  return current === key || (!current.includes('@') && key.startsWith(current + '@'));
+}
+
 /** Every alias across all services, for the generic adapter's picker sniffing. */
 export function allAliases(catalog: Catalog): string[] {
   const out = new Set<string>();

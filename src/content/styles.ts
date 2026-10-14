@@ -33,7 +33,7 @@ export const BADGE_CSS = BASE_CSS + `
 
 export const CLOUD_CSS = BASE_CSS + `
 :host { position: fixed; z-index: 2147483001; contain: layout style; }
-.cloud { background: var(--eu-bg); color: var(--eu-fg); border: 1px solid var(--eu-border); border-radius: var(--eu-radius);
+.cloud { max-height: calc(100vh - 32px); overflow-y: auto; background: var(--eu-bg); color: var(--eu-fg); border: 1px solid var(--eu-border); border-radius: var(--eu-radius);
   box-shadow: var(--eu-shadow); padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
 .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .head h2 { margin: 0; font-size: 1em; font-weight: 600; }
@@ -44,6 +44,7 @@ export const CLOUD_CSS = BASE_CSS + `
 .chip { font-size: .88em; padding: 1px 7px; border-radius: 999px; background: var(--eu-faint); color: var(--eu-muted); }
 .warn { font-size: .92em; color: var(--eu-fg); background: var(--eu-faint); padding: 6px 8px; border-radius: 6px; }
 table { border-collapse: collapse; width: 100%; font-size: .95em; }
+.list { max-height: 45vh; overflow-y: auto; overscroll-behavior: contain; }
 th { text-align: left; font-weight: 500; font-size: .82em; color: var(--eu-muted); padding: 0 0 4px; }
 th.fit { padding-right: 8px; }
 th.cost { text-align: right; }

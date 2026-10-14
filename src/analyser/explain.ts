@@ -3,7 +3,7 @@ import { TASK_LABELS } from '../shared/types';
 import { formatCost, formatUsd } from './cost';
 
 export interface ExplainRow {
-  modelId: string; label: string; serviceName: string; fit: number; cost: string; apiCost?: string; isWinner: boolean; isCurrent?: boolean;
+  key: string; modelId: string; label: string; serviceName: string; fit: number; cost: string; apiCost?: string; isWinner: boolean; isCurrent?: boolean;
 }
 
 export interface Explanation {
@@ -32,7 +32,7 @@ function costStrings(catalog: Catalog, r: Ranked): { cost: string; apiCost?: str
 
 function dominantReason(s: Suggestion, catalog: Catalog): string {
   const w = s.here;
-  const runnerUp = s.ranked.find(r => r.modelId !== w.modelId);
+  const runnerUp = s.ranked.find(r => r.key !== w.key);
   const task = TASK_LABELS[s.classification.primary];
   const parts: string[] = [];
   if (w.reasons.length) parts.push(w.reasons[0]!);
@@ -64,19 +64,19 @@ function dominantReason(s: Suggestion, catalog: Catalog): string {
 
 export function explain(s: Suggestion, catalog: Catalog): Explanation {
   const toRow = (r: Ranked): ExplainRow => ({
-    modelId: r.modelId, label: r.label,
+    key: r.key, modelId: r.modelId, label: r.label,
     serviceName: catalog.services[r.serviceId]?.name ?? r.serviceId,
-    fit: r.fit, ...costStrings(catalog, r), isWinner: r.modelId === s.here.modelId, isCurrent: r.modelId === s.current,
+    fit: r.fit, ...costStrings(catalog, r), isWinner: r.key === s.here.key, isCurrent: s.current === r.key,
   });
   const rows: ExplainRow[] = s.ranked.slice(0, 3).map(toRow);
-  const shown = new Set(rows.map(r => r.modelId));
+  const shown = new Set(rows.map(r => r.key));
   if (!rows.some(r => r.isWinner)) {
     const w = s.here;
-    shown.delete(rows[2]!.modelId);
+    shown.delete(rows[2]!.key);
     rows.splice(2, 1, toRow(w));
-    shown.add(w.modelId);
+    shown.add(w.key);
   }
-  const more = s.ranked.filter(r => !shown.has(r.modelId)).map(toRow);
+  const more = s.ranked.filter(r => !shown.has(r.key)).map(toRow);
   const signals = s.classification.signals
     .map(x => x.startsWith('kw:') ? `"${x.slice(3)}"` : x.startsWith('pattern:') ? `${x.slice(8)} pattern` : x.replace(':', ' '))
     .slice(0, 8);

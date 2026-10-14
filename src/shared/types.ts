@@ -43,6 +43,21 @@ export interface ServiceModel {
   aliases?: string[];
   plans?: string[];           // plan ids that include this model
   capWeight?: number;         // how hard it hits the plan's cap (1 = reference)
+  efforts?: string[];         // ids from CatalogService.efforts this model offers; absent = no effort setting
+  legacy?: boolean;           // listed under the site's "More models" / older models
+}
+
+/**
+ * A reasoning-effort setting a service offers on some models (e.g. Claude's Low … Max).
+ * Higher effort spends more output (thinking) tokens and plan cap, and fits hard tasks a little better.
+ */
+export interface EffortLevel {
+  id: string;
+  label: string;                                    // as shown in the picker
+  aliases?: string[];
+  outputMultiplier: number;                         // output tokens relative to the default effort
+  capMultiplier?: number;                           // plan cap use relative to the default (defaults to outputMultiplier)
+  fitDelta?: Partial<Record<TaskType, number>>;     // added to the model's strengths, clamped to 0..1
 }
 
 export interface ServiceSelectors {
@@ -60,6 +75,7 @@ export interface CatalogService {
   url?: string;               // where to open a new chat
   selectors?: ServiceSelectors;
   plans?: Record<string, ServicePlan>;
+  efforts?: EffortLevel[];
   models: ServiceModel[];
 }
 
@@ -96,9 +112,11 @@ export type CostEstimate =
   | { kind: 'unknown'; tokensOut: number };
 
 export interface Candidate {
+  key: string;                // modelId, plus "@effort" when an effort level applies: the identity of an option
   modelId: string;
   serviceId: string;
-  label: string;
+  label: string;              // picker label, plus " · <effort>" when an effort level applies
+  effort?: EffortLevel;
   model: CatalogModel;
   plan?: string;              // plan the user has on this service, if the model is in it
   capWeight?: number;
@@ -117,7 +135,7 @@ export interface Suggestion {
   here: Ranked;
   elsewhere?: Ranked;
   isCurrent: boolean;
-  current?: string;           // current model id if recognised
+  current?: string;           // key of the option selected in the picker, if recognised
   classification: Classification;
   ranked: Ranked[];
 }
