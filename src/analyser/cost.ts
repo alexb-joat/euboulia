@@ -15,8 +15,11 @@ export function outputTokensFor(task: TaskType, tokensIn: number): number {
 }
 
 export function apiUsd(model: CatalogModel, tokensIn: number, tokensOut: number): number | undefined {
-  if (!model.price) return undefined;
-  return (tokensIn * model.price.input + tokensOut * model.price.output) / 1e6;
+  const p = model.price;
+  if (!p) return undefined;
+  // Providers price the whole request at the higher tier once the prompt passes the threshold.
+  const tier = p.longContext && tokensIn > p.longContext.threshold ? p.longContext : p;
+  return (tokensIn * tier.input + tokensOut * tier.output) / 1e6;
 }
 
 export function estimateCost(

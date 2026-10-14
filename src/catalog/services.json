@@ -49,13 +49,13 @@
           "name": "Pro",
           "price": 20,
           "capUnit": "messages",
-          "note": "5-hour rolling cap"
+          "note": "price not verified from Anthropic"
         },
         "max": {
           "name": "Max",
           "price": 100,
           "capUnit": "messages",
-          "note": "5x or 20x Pro"
+          "note": "price not verified from Anthropic; Fable models up to 50% of weekly usage"
         }
       },
       "models": [
@@ -67,17 +67,17 @@
             "Claude Fable"
           ],
           "plans": [
-            "pro",
             "max"
           ],
           "capWeight": 5,
           "efforts": [
-            "light",
+            "low",
             "medium",
             "high",
             "xhigh",
             "max"
-          ]
+          ],
+          "note": "Pro: usage credits, not plan usage"
         },
         {
           "modelId": "anthropic/claude-opus-5.5",
@@ -92,7 +92,7 @@
           ],
           "capWeight": 2,
           "efforts": [
-            "light",
+            "low",
             "medium",
             "high",
             "xhigh",
@@ -113,7 +113,7 @@
           ],
           "capWeight": 1,
           "efforts": [
-            "light",
+            "low",
             "medium",
             "high",
             "xhigh",
@@ -132,81 +132,143 @@
             "pro",
             "max"
           ],
-          "capWeight": 0.1
+          "capWeight": 0.1,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ]
         },
         {
           "modelId": "anthropic/claude-fable-5",
           "label": "Fable 5",
+          "aliases": [],
           "plans": [
-            "pro",
             "max"
           ],
           "capWeight": 5,
-          "legacy": true
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "legacy": true,
+          "note": "Pro: usage credits"
         },
         {
           "modelId": "anthropic/claude-opus-5",
           "label": "Opus 5",
+          "aliases": [],
           "plans": [
             "pro",
             "max"
           ],
           "capWeight": 2,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
           "legacy": true
         },
         {
           "modelId": "anthropic/claude-opus-4.8",
           "label": "Opus 4.8",
+          "aliases": [],
           "plans": [
             "pro",
             "max"
           ],
           "capWeight": 2,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
           "legacy": true
         },
         {
           "modelId": "anthropic/claude-opus-4.7",
           "label": "Opus 4.7",
+          "aliases": [],
           "plans": [
             "pro",
             "max"
           ],
           "capWeight": 2,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
           "legacy": true
         },
         {
           "modelId": "anthropic/claude-opus-4.6",
           "label": "Opus 4.6",
+          "aliases": [],
           "plans": [
             "pro",
             "max"
           ],
           "capWeight": 2,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "max"
+          ],
           "legacy": true
         },
         {
           "modelId": "anthropic/claude-sonnet-5",
           "label": "Sonnet 5",
+          "aliases": [],
           "plans": [
             "pro",
             "max"
           ],
           "capWeight": 1,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
           "legacy": true
         },
         {
           "modelId": "anthropic/claude-sonnet-4.6",
           "label": "Sonnet 4.6",
+          "aliases": [],
           "plans": [
             "pro",
             "max"
           ],
           "capWeight": 1,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "max"
+          ],
           "legacy": true
         },
         {
           "modelId": "anthropic/claude-haiku-4.5",
           "label": "Haiku 4.5",
+          "aliases": [],
           "plans": [
             "pro",
             "max"
@@ -215,16 +277,16 @@
           "legacy": true
         }
       ],
-      "_verified": "2026-10-13 logged in (captured fixture): composer, sendButton, modelPicker, contentColumn; 'More models' list read from Alex's screenshot 2026-10-14 (Opus 3 omitted: no price source)",
-      "_efforts": "Level names from Alex (2026-10-14): Light, Medium, High, Extra high, Max, the same on ChatGPT and Claude. outputMultiplier and fitDelta are Euboulia's own estimates, not published figures. Models offering effort: the 5.x generation except Haiku (Opus 5.5 'Max' seen on the button); older models not yet checked.",
+      "_verified": "Selectors: 2026-10-13 signed-in capture. Models: platform.claude.com models overview + 'More models' list in claude.ai (Alex, 2026-10-14). Prices/efforts/status: provider docs via provider-facts.json. Plans: Fable 5/5.1 per support article 15424964 (Max: included, up to 50% of weekly usage; Pro: usage credits, not included; Free: not available); other plan memberships and plan prices are NOT verified from Anthropic.",
+      "_efforts": "Ids are the Claude API effort values (platform.claude.com/docs/en/build-with-claude/effort, 2026-10-14); which models accept which level comes from the same page. Labels: Alex sees Light/Medium/High/Extra high/Max in claude.ai (2026-10-14). outputMultiplier and fitDelta are Euboulia's own estimates of each level's effect; providers publish no figures.",
       "efforts": [
         {
-          "id": "light",
+          "id": "low",
           "label": "Light",
+          "outputMultiplier": 0.6,
           "aliases": [
             "Low"
           ],
-          "outputMultiplier": 0.6,
           "fitDelta": {
             "code": -0.04,
             "reasoning": -0.06,
@@ -251,11 +313,12 @@
         {
           "id": "xhigh",
           "label": "Extra high",
+          "outputMultiplier": 2.2,
           "aliases": [
             "Extra-high",
-            "XHigh"
+            "XHigh",
+            "Extra High"
           ],
-          "outputMultiplier": 2.2,
           "fitDelta": {
             "code": 0.03,
             "reasoning": 0.05,
@@ -266,10 +329,10 @@
         {
           "id": "max",
           "label": "Max",
+          "outputMultiplier": 3,
           "aliases": [
             "Maximum"
           ],
-          "outputMultiplier": 3,
           "fitDelta": {
             "code": 0.04,
             "reasoning": 0.065,
@@ -277,7 +340,8 @@
             "long_context": 0.03
           }
         }
-      ]
+      ],
+      "_omitted": "Opus 3 appears in the claude.ai 'More models' list but is retired on the API (2026-01-05) and no longer priced in Anthropic's docs, so it is left out."
     },
     "chatgpt": {
       "name": "ChatGPT",
@@ -322,98 +386,181 @@
         "free": {
           "name": "Free",
           "price": 0,
-          "capUnit": "messages"
+          "capUnit": "messages",
+          "note": "GPT-5.6 Luna only (Instant and Think)"
         },
         "plus": {
           "name": "Plus",
           "price": 20,
-          "capUnit": "messages"
+          "capUnit": "messages",
+          "note": "Chat: Medium and High; no Extra High, no Pro"
         },
-        "pro": {
-          "name": "Pro",
+        "pro100": {
+          "name": "Pro $100",
+          "price": 100,
+          "capUnit": "messages",
+          "note": "shared weekly allowance for GPT-6 Pro and GPT-5.6 Sol Pro"
+        },
+        "pro200": {
+          "name": "Pro $200",
           "price": 200,
           "capUnit": "messages"
         }
       },
       "models": [
         {
-          "modelId": "openai/gpt-6.1-sol",
-          "label": "GPT-6.1 Sol",
+          "modelId": "openai/gpt-6-sol",
+          "label": "GPT-6",
           "aliases": [
-            "Sol",
-            "GPT-6.1"
+            "Latest"
           ],
           "plans": [
-            "free",
             "plus",
-            "pro"
+            "pro100",
+            "pro200"
           ],
           "capWeight": 1,
           "efforts": [
-            "light",
+            "none",
             "medium",
             "high",
-            "xhigh",
-            "max"
-          ]
+            "xhigh"
+          ],
+          "surface": "chat",
+          "note": "Chat's 'GPT-6' is powered by GPT-6 Sol; Extra High needs Pro, Business or Enterprise"
         },
         {
           "modelId": "openai/gpt-6-astra",
           "label": "GPT-6 Astra",
           "aliases": [
+            "GPT-6 Pro",
             "Astra"
           ],
           "plans": [
-            "pro"
+            "plus",
+            "pro100",
+            "pro200"
           ],
           "capWeight": 5,
           "efforts": [
-            "light",
+            "low",
             "medium",
             "high",
             "xhigh",
             "max"
-          ]
+          ],
+          "surface": "work",
+          "note": "Chat: 'GPT-6 Pro' on Pro, Business, Enterprise; Work and Codex: Astra on Plus and Pro"
+        },
+        {
+          "modelId": "openai/gpt-6.1-sol",
+          "label": "GPT-6.1 Sol",
+          "aliases": [
+            "Sol 6.1"
+          ],
+          "plans": [
+            "plus",
+            "pro100",
+            "pro200"
+          ],
+          "capWeight": 1,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "surface": "work"
         },
         {
           "modelId": "openai/gpt-6-luna",
           "label": "GPT-6 Luna",
-          "aliases": [
-            "Luna"
-          ],
+          "aliases": [],
           "plans": [
-            "free",
             "plus",
-            "pro"
+            "pro100",
+            "pro200"
           ],
-          "capWeight": 0.1
+          "capWeight": 0.1,
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "surface": "work",
+          "note": "Work/Codex: Luna supports Max but not Ultra"
         },
         {
           "modelId": "openai/gpt-5.6-sol",
           "label": "GPT-5.6 Sol",
-          "legacy": true
+          "aliases": [],
+          "plans": [
+            "plus",
+            "pro100",
+            "pro200"
+          ],
+          "capWeight": 1,
+          "surface": "chat",
+          "legacy": true,
+          "note": "Chat thinking levels Medium, High, Extra High; effort ids not documented on the API model page, so none are modelled"
         },
         {
           "modelId": "openai/gpt-5.6-terra",
           "label": "GPT-5.6 Terra",
+          "aliases": [],
+          "plans": [
+            "plus",
+            "pro100",
+            "pro200"
+          ],
+          "capWeight": 0.5,
+          "surface": "work",
           "legacy": true
         },
         {
           "modelId": "openai/gpt-5.6-luna",
           "label": "GPT-5.6 Luna",
-          "legacy": true
+          "aliases": [],
+          "plans": [
+            "free",
+            "plus",
+            "pro100",
+            "pro200"
+          ],
+          "capWeight": 0.1,
+          "surface": "work",
+          "legacy": true,
+          "note": "default model for Free and Go in Chat"
         }
       ],
-      "_verified": "2026-10-14 signed in, from Alex's screenshot of the open picker: GPT-6.1 Sol, GPT-6 Astra, GPT-6 Luna, GPT-5.6 Sol, GPT-5.6 Terra, GPT-5.6 Luna (one row was hidden behind the badge, and the list scrolls further). New models carry no plan list: the picker reading marks them as included. Composer and send button verified logged out 2026-10-12.",
-      "_efforts": "Level names from Alex (2026-10-14): Light, Medium, High, Extra high, Max, the same on ChatGPT and Claude. outputMultiplier and fitDelta are Euboulia's own estimates, not published figures. Models offering effort: GPT-6.1 Sol ('Light' seen) and GPT-6 Astra ('Max' seen); the others not yet checked.",
+      "_verified": "Selectors: logged out 2026-10-12. Chat picker: 'GPT-6' (powered by GPT-6 Sol), 'GPT-6 Pro' (GPT-6 Astra), GPT-5.6 Sol; Free/Go get GPT-5.6 Luna (help article 20001354). Work picker as seen signed in by Alex 2026-10-14: GPT-6.1 Sol, GPT-6 Astra, GPT-6 Luna, GPT-5.6 Sol, Terra, Luna. Plan prices from the same help article (Plus $20; Pro $100 and $200); Go's price not read, so Go is omitted. Which Work models each plan includes is not fully documented: Plus includes Astra in Work and Codex; GPT-5.6 Sol/Terra/Luna are in Work for Plus, Pro, Business, Enterprise.",
+      "_efforts": "Ids are the OpenAI API reasoning.effort values (developers.openai.com model pages, 2026-10-14). ChatGPT Work/Codex label them Light, Medium, High, Extra High, Max (learn.chatgpt.com/docs/models); Chat shows Instant, Medium, High, Extra High and Pro (help.openai.com article 20001354, ~2026-10-10). 'Pro' in Chat is GPT-6 Pro = GPT-6 Astra, modelled as a model alias. Ultra (subagents) is not an effort level. outputMultiplier and fitDelta are Euboulia's own estimates of each level's effect; providers publish no figures.",
       "efforts": [
         {
-          "id": "light",
+          "id": "none",
+          "label": "Instant",
+          "outputMultiplier": 0.4,
+          "aliases": [
+            "Instant"
+          ],
+          "fitDelta": {
+            "code": -0.08,
+            "reasoning": -0.12,
+            "data": -0.06,
+            "long_context": -0.06
+          },
+          "note": "Chat's no-thinking level; the API value is none"
+        },
+        {
+          "id": "low",
           "label": "Light",
+          "outputMultiplier": 0.6,
           "aliases": [
             "Low"
           ],
-          "outputMultiplier": 0.6,
           "fitDelta": {
             "code": -0.04,
             "reasoning": -0.06,
@@ -440,11 +587,12 @@
         {
           "id": "xhigh",
           "label": "Extra high",
+          "outputMultiplier": 2.2,
           "aliases": [
             "Extra-high",
-            "XHigh"
+            "XHigh",
+            "Extra High"
           ],
-          "outputMultiplier": 2.2,
           "fitDelta": {
             "code": 0.03,
             "reasoning": 0.05,
@@ -455,10 +603,10 @@
         {
           "id": "max",
           "label": "Max",
+          "outputMultiplier": 3,
           "aliases": [
             "Maximum"
           ],
-          "outputMultiplier": 3,
           "fitDelta": {
             "code": 0.04,
             "reasoning": 0.065,

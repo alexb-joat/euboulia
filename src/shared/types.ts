@@ -15,13 +15,25 @@ export const TASK_LABELS: Record<TaskType, string> = {
   vision: 'image understanding', long_context: 'long context',
 };
 
-export interface Price { input: number; output: number }   // USD per 1M tokens
+export interface Price {
+  input: number; output: number;   // USD per 1M tokens
+  /** Higher rates once the prompt exceeds `threshold` input tokens (Haiku 5.5 above 100k, GPT-6 above 272k). */
+  longContext?: { threshold: number; input: number; output: number };
+}
+
+export type ModelStatus = 'active' | 'legacy' | 'deprecated' | 'retired';
 
 export interface CatalogSource { url: string; date: string; field?: string }
 
 export interface CatalogModel {
   provider: string;
   name: string;
+  apiId?: string;                                  // the provider's own model id
+  status?: ModelStatus;                            // from the provider's deprecations page; retired models are never offered
+  retiresAt?: string;                              // date or "not before <date>"
+  maxOutput?: number;
+  efforts?: string[];                              // API effort ids the model accepts (low … max); absent = no effort control
+  defaultEffort?: string;
   strengths: Partial<Record<TaskType, number>>;   // 0..1
   price?: Price;
   context: number;
@@ -45,6 +57,8 @@ export interface ServiceModel {
   capWeight?: number;         // how hard it hits the plan's cap (1 = reference)
   efforts?: string[];         // ids from CatalogService.efforts this model offers; absent = no effort setting
   legacy?: boolean;           // listed under the site's "More models" / older models
+  surface?: string;           // where the site offers it when it has several pickers (ChatGPT: "chat" | "work")
+  note?: string;
 }
 
 /**
@@ -52,7 +66,7 @@ export interface ServiceModel {
  * Higher effort spends more output (thinking) tokens and plan cap, and fits hard tasks a little better.
  */
 export interface EffortLevel {
-  id: string;
+  id: string;                                       // the provider's API value (low, medium, high, xhigh, max, none)
   label: string;                                    // as shown in the picker
   aliases?: string[];
   outputMultiplier: number;                         // output tokens relative to the default effort
@@ -82,6 +96,7 @@ export interface CatalogService {
 export interface Catalog {
   schemaVersion: 1;
   generatedAt: string;
+  factsGeneratedAt?: string;  // date of the provider documentation the prices and statuses were read from
   services: Record<string, CatalogService>;
   models: Record<string, CatalogModel>;
 }

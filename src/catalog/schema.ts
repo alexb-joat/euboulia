@@ -29,7 +29,14 @@ function checkModel(id: string, m: unknown): asserts m is CatalogModel {
   if (m.price !== undefined) {
     if (!isObj(m.price) || typeof m.price.input !== 'number' || typeof m.price.output !== 'number'
       || m.price.input < 0 || m.price.output < 0) fail(`models.${id}.price must be {input, output} >= 0`);
+    const lc = m.price.longContext;
+    if (lc !== undefined && (!isObj(lc) || typeof lc.threshold !== 'number' || lc.threshold <= 0
+      || typeof lc.input !== 'number' || typeof lc.output !== 'number' || lc.input < 0 || lc.output < 0)) fail(`models.${id}.price.longContext must be {threshold > 0, input, output}`);
   }
+  if (m.status !== undefined && !['active', 'legacy', 'deprecated', 'retired'].includes(String(m.status))) fail(`models.${id}.status must be active|legacy|deprecated|retired`);
+  if (m.efforts !== undefined && !(Array.isArray(m.efforts) && m.efforts.every(e => typeof e === 'string' && e))) fail(`models.${id}.efforts must be a list of effort ids`);
+  if (m.defaultEffort !== undefined && (typeof m.defaultEffort !== 'string' || !(m.efforts as string[] | undefined)?.includes(m.defaultEffort))) fail(`models.${id}.defaultEffort must be one of its efforts`);
+  if (m.maxOutput !== undefined && (typeof m.maxOutput !== 'number' || m.maxOutput <= 0)) fail(`models.${id}.maxOutput must be a positive number`);
   if (typeof m.context !== 'number' || m.context <= 0) fail(`models.${id}.context must be a positive number`);
   if (!Array.isArray(m.capabilities) || !m.capabilities.every(c => typeof c === 'string')) fail(`models.${id}.capabilities must be a string list`);
   if (m.sources !== undefined) {
@@ -85,7 +92,12 @@ function checkService(id: string, s: unknown, models: Record<string, unknown>): 
     if (m.capWeight !== undefined && (typeof m.capWeight !== 'number' || m.capWeight < 0)) fail(`services.${id}.models.${m.modelId}.capWeight must be >= 0`);
     if (m.efforts !== undefined) {
       if (!Array.isArray(m.efforts)) fail(`services.${id}.models.${m.modelId}.efforts must be a list`);
-      for (const e of m.efforts) if (!effortIds.has(String(e))) fail(`services.${id}.models.${m.modelId}: unknown effort ${e}`);
+      const allowed = (models[m.modelId] as { efforts?: string[] }).efforts;
+      for (const e of m.efforts) {
+        if (!effortIds.has(String(e))) fail(`services.${id}.models.${m.modelId}: unknown effort ${e}`);
+        // A site may offer a subset of the API's levels, never a level the provider does not document.
+        if (allowed && !allowed.includes(String(e))) fail(`services.${id}.models.${m.modelId}: effort ${e} is not documented for this model`);
+      }
     }
   }
 }
