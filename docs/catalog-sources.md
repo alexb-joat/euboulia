@@ -34,7 +34,16 @@ are observed in the apps, not documented. Both are labelled as such in the files
 
 ## The Ninshubur feed
 
-The crawler project publishes `provider-facts.json` in exactly this format (`"$schema": "provider-facts.v1"`), read
-from the pages above on a schedule, with every row quarantined if the page's structure changes. Euboulia's
-`npm run catalog:build -- --facts <file>` consumes it, and the extension's daily catalog refresh downloads the
-resulting `catalog.json` from the URL set on the options page.
+The Ninshubur crawler's `provider_docs` adapter reads the Markdown pages above on a schedule through its trust policy
+(hard-coded pages only, declared fields, taint checks, quarantine on structure changes) and exports this same file:
+
+```bash
+ninshubur sources test provider-docs-anthropic     # admission checklist against the live page
+ninshubur run --source provider-docs-anthropic --source provider-docs-openai
+ninshubur export euboulia-facts -o provider-facts.json
+npm run catalog:build -- --facts provider-facts.json   # in this repo; then publish catalog.json
+```
+
+Verified on 2026-10-14: the exported file rebuilt this catalog identically to the hand-entered one, apart from GPT-6
+Astra's default effort, which comes from OpenAI's reasoning guide (HTML, not yet parsed). The extension's daily
+catalog refresh then downloads the published `catalog.json` from the URL set on the options page.
