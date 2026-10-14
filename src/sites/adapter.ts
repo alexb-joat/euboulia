@@ -149,14 +149,22 @@ export function makeAdapter(spec: AdapterSpec, deps: AdapterDeps): SiteAdapter {
     readText: readComposerText,
     currentModel: (c) => {
       // Nearest picker first, so each pane of a multi-composer page reads its own model.
+      const label = (btn: Element): string | null => {
+        // ChatGPT's model button carries the selected effort as data and lists every effort in its text; the
+        // button's first text line is the model, the attribute the effort.
+        const eff = btn.getAttribute('data-selected-reasoning-effort');
+        const text = textOf(btn);
+        if (eff) { const first = (btn as HTMLElement).innerText?.split('\n')[0]?.trim() || text; return `${first.replace(/\s+(none|minimal|light|low|medium|high|extra high|xhigh|max)$/i, '')} ${eff}`.trim(); }
+        return text || null;
+      };
       let scope: Element | null = c.container;
       for (let i = 0; i < 8 && scope && scope !== document.body; i++) {
         const btn = queryFirst(scope, sel().modelPicker);
-        if (btn) return textOf(btn) || null;
+        if (btn) return label(btn);
         scope = scope.parentElement;
       }
       const btn = queryFirst(document, sel().modelPicker);
-      return btn ? textOf(btn) || null : null;
+      return btn ? label(btn) : null;
     },
     models: () => {
       const items = queryAll(document, sel().pickerOpen);

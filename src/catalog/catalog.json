@@ -355,6 +355,7 @@
       "selectors": {
         "composer": [
           "#prompt-textarea",
+          "div[contenteditable=\"true\"][data-composer-markdown]",
           "textarea[name=\"prompt\"]",
           "div[contenteditable=\"true\"].ProseMirror",
           "form div[contenteditable=\"true\"]",
@@ -363,21 +364,25 @@
         "sendButton": [
           "button[data-testid=\"send-button\"]",
           "button[data-composer-submit]",
+          "form button[type=\"submit\"][aria-label=\"Send\"]",
           "button[aria-label*=\"Send\" i]",
           "form button[type=\"submit\"]"
         ],
         "modelPicker": [
+          "button[data-composer-navigation-target=\"reasoning\"]",
+          "button[aria-label=\"Select ChatGPT model\"]",
           "button[data-testid=\"model-switcher-dropdown-button\"]",
           "button[aria-label*=\"Model selector\" i]",
           "header button[aria-haspopup=\"menu\"]"
         ],
         "pickerOpen": [
+          "div[role=\"menu\"] [role=\"menuitemradio\"]",
           "div[role=\"menu\"] [role=\"menuitem\"]"
         ],
         "attachments": [
+          "[data-composer-attachments] > *",
           "form [data-testid*=\"attachment\"]",
-          "form img[alt*=\"Uploaded\" i]",
-          "form [aria-label*=\"Remove\" i]"
+          "form img[alt*=\"Uploaded\" i]"
         ],
         "contentColumn": [
           "form",
@@ -414,7 +419,8 @@
           "modelId": "openai/gpt-6-sol",
           "label": "GPT-6",
           "aliases": [
-            "Latest"
+            "Latest",
+            "GPT-6 Sol"
           ],
           "plans": [
             "plus",
@@ -424,12 +430,14 @@
           "capWeight": 1,
           "efforts": [
             "none",
+            "low",
             "medium",
             "high",
-            "xhigh"
+            "xhigh",
+            "max"
           ],
-          "surface": "chat",
-          "note": "Chat's 'GPT-6' is powered by GPT-6 Sol; Extra High needs Pro, Business or Enterprise"
+          "surface": "chat+work",
+          "note": "Chat's 'GPT-6' is powered by GPT-6 Sol (Instant to Extra High; Extra High needs Pro, Business or Enterprise); the Work picker lists it as 'GPT-6 Sol' with Light to Max"
         },
         {
           "modelId": "openai/gpt-6-astra",
@@ -538,23 +546,34 @@
           "note": "default model for Free and Go in Chat"
         }
       ],
-      "_verified": "Selectors: logged out 2026-10-12. Chat picker: 'GPT-6' (powered by GPT-6 Sol), 'GPT-6 Pro' (GPT-6 Astra), GPT-5.6 Sol; Free/Go get GPT-5.6 Luna (help article 20001354). Work picker as seen signed in by Alex 2026-10-14: GPT-6.1 Sol, GPT-6 Astra, GPT-6 Luna, GPT-5.6 Sol, Terra, Luna. Plan prices from the same help article (Plus $20; Pro $100 and $200); Go's price not read, so Go is omitted. Which Work models each plan includes is not fully documented: Plus includes Astra in Work and Codex; GPT-5.6 Sol/Terra/Luna are in Work for Plus, Pro, Business, Enterprise.",
-      "_efforts": "Ids are the OpenAI API reasoning.effort values (developers.openai.com model pages, 2026-10-14). ChatGPT Work/Codex label them Light, Medium, High, Extra High, Max (learn.chatgpt.com/docs/models); Chat shows Instant, Medium, High, Extra High and Pro (help.openai.com article 20001354, ~2026-10-10). 'Pro' in Chat is GPT-6 Pro = GPT-6 Astra, modelled as a model alias. Ultra (subagents) is not an effort level. outputMultiplier and fitDelta are Euboulia's own estimates of each level's effect; providers publish no figures.",
+      "_verified": "Selectors: signed-in Work composer captured from Alex's Firefox profile 2026-10-14 (composer div[data-composer-markdown], send button[type=submit][aria-label=Send], model button[data-composer-navigation-target=reasoning] whose data-selected-reasoning-effort carries the effort id and whose text lists the effort entries None, Minimal, Light, Medium, High, Extra High, Max, Ultra), logged-out composer 2026-10-12. Chat picker: 'GPT-6' (powered by GPT-6 Sol), 'GPT-6 Pro' (GPT-6 Astra), GPT-5.6 Sol; Free/Go get GPT-5.6 Luna (help article 20001354). Work picker read from Alex's signed-in session 2026-10-14: Default, GPT-6.1 Sol, GPT-6 Astra, GPT-6 Sol, GPT-6 Luna, GPT-5.6 Sol, GPT-5.6 Terra, GPT-5.6 Luna, GPT-5.5 ('Leaving on October 14'). Plan prices from the same help article (Plus $20; Pro $100 and $200); Go's price not read, so Go is omitted. Which Work models each plan includes is not fully documented: Plus includes Astra in Work and Codex; GPT-5.6 Sol/Terra/Luna are in Work for Plus, Pro, Business, Enterprise.",
+      "_efforts": "Ids are the OpenAI API reasoning.effort values (developers.openai.com model pages, 2026-10-14). ChatGPT Work/Codex label them Light, Medium, High, Extra High, Max (learn.chatgpt.com/docs/models); Chat shows Instant, Medium, High, Extra High and Pro (help.openai.com article 20001354, ~2026-10-10). 'Pro' in Chat is GPT-6 Pro = GPT-6 Astra, modelled as a model alias. The Work composer lists None, Minimal, Light, Medium, High, Extra High, Max, Ultra (seen 2026-10-14); Ultra is a subagent mode, not an effort level, and None/Minimal are only offered on models whose API page documents them. outputMultiplier and fitDelta are Euboulia's own estimates of each level's effect; providers publish no figures.",
       "efforts": [
         {
           "id": "none",
-          "label": "Instant",
-          "outputMultiplier": 0.4,
+          "label": "None",
           "aliases": [
             "Instant"
           ],
+          "outputMultiplier": 0.4,
           "fitDelta": {
             "code": -0.08,
             "reasoning": -0.12,
             "data": -0.06,
             "long_context": -0.06
           },
-          "note": "Chat's no-thinking level; the API value is none"
+          "note": "Chat calls this level Instant; Work lists None"
+        },
+        {
+          "id": "minimal",
+          "label": "Minimal",
+          "outputMultiplier": 0.5,
+          "fitDelta": {
+            "code": -0.06,
+            "reasoning": -0.09,
+            "data": -0.045,
+            "long_context": -0.045
+          }
         },
         {
           "id": "low",
@@ -2385,6 +2404,11 @@
           "field": "efforts"
         },
         {
+          "url": "https://developers.openai.com/docs/guides/reasoning",
+          "date": "2026-10-14",
+          "field": "defaultEffort"
+        },
+        {
           "url": "https://artificialanalysis.ai/",
           "date": "2026-10-14",
           "field": "strengths"
@@ -2574,7 +2598,7 @@
       },
       "context": 1050000,
       "maxOutput": 128000,
-      "status": "legacy",
+      "status": "active",
       "capabilities": [
         "vision",
         "tools"
@@ -2634,7 +2658,7 @@
       },
       "context": 1050000,
       "maxOutput": 128000,
-      "status": "legacy",
+      "status": "active",
       "capabilities": [
         "vision",
         "tools"
@@ -2694,7 +2718,7 @@
       },
       "context": 1050000,
       "maxOutput": 128000,
-      "status": "legacy",
+      "status": "active",
       "capabilities": [
         "vision",
         "tools"
