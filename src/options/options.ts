@@ -1,4 +1,5 @@
 import { BUNDLED } from '../catalog/index';
+import { DEFAULT_CATALOG_URL } from '../background/catalogRefresh';
 import { validateRule } from '../analyser/rules';
 import { missingOrigins, requestMissing } from '../shared/access';
 import { ext, isFirefox } from '../shared/browser';
@@ -108,7 +109,7 @@ async function renderCatalog(): Promise<void> {
     const dd = document.createElement('dd'); dd.textContent = v;
     return [dt, dd];
   }));
-  $<HTMLInputElement>('catalogUrl').value = prefs.catalogUrl ?? '';
+  $<HTMLInputElement>('catalogUrl').value = prefs.catalogUrl ?? DEFAULT_CATALOG_URL;
 }
 
 async function renderAccess(): Promise<void> {
@@ -189,7 +190,7 @@ async function init(): Promise<void> {
         }
       } catch { status('catalogStatus', 'not a valid URL', false); return; }
     }
-    prefs.catalogUrl = url || undefined; await savePrefs();
+    prefs.catalogUrl = url === DEFAULT_CATALOG_URL ? undefined : url; await savePrefs();   // '' means: never download
     status('catalogStatus', 'refreshing…');
     const r = await send({ type: 'refreshCatalog' });
     status('catalogStatus', r.ok ? String(r.message) : String(r.error), r.ok);

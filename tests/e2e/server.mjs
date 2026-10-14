@@ -9,6 +9,15 @@ const siteDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../f
 export function start(port = 8099) {
   const server = createServer(async (req, res) => {
     const name = (req.url ?? '/').split('?')[0].replace(/^\//, '') || 'index.html';
+    // /catalog.json serves the bundled catalog, for the options page's refresh path.
+    if (name === 'catalog.json') {
+      try {
+        const body = await readFile(path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../src/catalog/catalog.json'));
+        res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store', etag: '"fixture-catalog"' });
+        res.end(body);
+      } catch { res.writeHead(404); res.end('not found'); }
+      return;
+    }
     // /real/<service>.html wraps a captured site fixture in a page that forces that service's adapter (dev builds only).
     const real = /^real\/([a-z]+)\.html$/.exec(name);
     if (real) {

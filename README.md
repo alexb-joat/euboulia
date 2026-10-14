@@ -12,7 +12,7 @@ chat.deepseek.com / copilot.microsoft.com / poe.com / openrouter.ai / your own O
                                                            blank right margin (never over content)
 ```
 
-Nothing you type leaves the browser. The classifier, the scoring and the catalog all run inside the extension; the only network call is a daily download of the catalog JSON, and only if you configure a URL. See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md).
+Nothing you type leaves the browser. The classifier, the scoring and the catalog all run inside the extension; the only network call is a daily download of the catalog JSON from the public [euboulia-catalog](https://github.com/alexb-joat/euboulia-catalog) data repository (clear the URL on the options page to switch it off). See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md).
 
 ![Badge next to the composer](store/screenshots/1-badge.png)
 ![Explanation cloud in the margin](store/screenshots/2-cloud.png)
@@ -46,7 +46,7 @@ Then open the extension's options page, set your plan on each service and move t
 - `npm run catalog:build` regenerates the bundled file from `src/catalog/services.json` plus the OpenRouter models API (prices, context, capabilities, benchmark indexes mapped to initial strengths); `--from models.json` uses a saved copy of that API response instead of fetching.
 - Each service in `services.json` carries a `_verified` note saying which selectors were read from the live site and when. Sites behind a sign-in wall (Claude, DeepSeek, Copilot, Poe) still have best-guess selectors; the catalog can patch them later without a release.
 - `npm run catalog:validate` runs the same validation the extension applies to a downloaded catalog.
-- Prices, context, status and effort levels are read from the providers' documentation into `src/catalog/provider-facts.json`, every figure with its source; see [docs/catalog-sources.md](docs/catalog-sources.md). The Ninshubur crawler publishes that file on a schedule; paste the resulting catalog URL into the options page.
+- Prices, context, status and effort levels are read from the providers' documentation into `src/catalog/provider-facts.json`, every figure with its source; see [docs/catalog-sources.md](docs/catalog-sources.md). The Ninshubur crawler produces that file on a schedule; `npm run catalog:publish` pushes the built catalog to the public data repository the extension reads.
 
 ## Development
 

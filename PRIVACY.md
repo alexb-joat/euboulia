@@ -6,7 +6,7 @@ Euboulia suggests which model to use for the prompt you are typing on an LLM cha
 
 **What it stores, in your browser only.** Your settings (preference slider, plans, rules, trusted services), the models seen in each site's picker, and a history of up to 2000 events holding the site, the task type, the suggested model id, the selected model id and your thumbs up or down. No prompt text, no page content, no account information. You can export or clear the history on the options page.
 
-**What leaves your browser.** Nothing you type, ever. The only network request the extension makes is a daily download of the model catalog (prices, context sizes, capabilities) from the URL you enter on the options page. If you leave it empty, the bundled catalog is used and the extension makes no network requests at all.
+**What leaves your browser.** Nothing you type, ever. The only network request the extension makes is a daily download of the model catalog (prices, context sizes, capabilities, with their sources) from the project's public data repository on GitHub, `raw.githubusercontent.com/alexb-joat/euboulia-catalog`. That request carries no identifier beyond what any download does. You can point it at your own URL, or clear the URL on the options page, after which the bundled catalog is used and the extension makes no network requests at all.
 
 **What we collect.** Nothing. There is no telemetry, no analytics, no account, no server.
 
