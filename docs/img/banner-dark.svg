@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 190" width="880" height="190" role="img" aria-label="Euboulia: good counsel for every prompt you type">
+  <rect x="26" y="62" width="130" height="62" rx="16" fill="none" stroke="#a3a39d" stroke-width="3"/>
+  <path d="M46 93 H78" stroke="#a3a39d" stroke-width="3" stroke-linecap="round"/>
+  <path d="M84 82 V104" stroke="#ececea" stroke-width="3" stroke-linecap="round"/>
+  <rect x="98" y="79" width="44" height="28" rx="14" fill="#8ea6ff"/>
+  <path d="M110 93 L117 100 L131 86" fill="none" stroke="#111112" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="196" y="96" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="60" font-weight="700" fill="#ececea" letter-spacing="1">Εὐβουλία</text>
+  <text x="198" y="136" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="22" fill="#a3a39d">Good counsel for every prompt you type.</text>
+  <text x="198" y="166" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="#a3a39d">euboulia   <tspan fill="#8ea6ff">● best value</tspan>   <tspan fill="#5fd6ae">● included in your plan</tspan>   ○ why?</text>
+</svg>

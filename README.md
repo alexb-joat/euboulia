@@ -1,29 +1,50 @@
-# Εὐβουλία
+<div align="center">
 
-*Euboulia*: good counsel. A browser extension that watches the prompt you are typing on any LLM chat site and suggests the model that gives the best value for that task, with the cost next to it and a one-click "why?".
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/banner-dark.svg">
+  <img alt="Euboulia: good counsel for every prompt you type" src="docs/img/banner-light.svg" width="720">
+</picture>
 
-```
-claude.ai / chatgpt.com / gemini.google.com / grok.com / perplexity.ai / chat.mistral.ai /
-chat.deepseek.com / copilot.microsoft.com / poe.com / openrouter.ai / your own Open WebUI
-        │  you type…
-        ▼
-  [ Suggest: Haiku 5.5 · included (Pro) · why? ]      ← badge next to the composer
-                                                        ← "why?" opens a small cloud in the
-                                                           blank right margin (never over content)
-```
+**A browser extension that suggests the best-value model for the prompt you are typing, on any LLM chat site.** A badge next to the composer names the model, shows the cost (or "included" in your plan) and answers "why?" in one click. Nothing you type leaves the browser.
 
-Nothing you type leaves the browser. The classifier, the scoring and the catalog all run inside the extension; the only network call is a daily download of the catalog JSON from the public [euboulia-catalog](https://github.com/alexb-joat/euboulia-catalog) data repository (clear the URL on the options page to switch it off). See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md).
+[![ci](https://github.com/alexb-joat/euboulia/actions/workflows/ci.yml/badge.svg)](https://github.com/alexb-joat/euboulia/actions/workflows/ci.yml)
+[![codeql](https://github.com/alexb-joat/euboulia/actions/workflows/codeql.yml/badge.svg)](https://github.com/alexb-joat/euboulia/actions/workflows/codeql.yml)
+![typescript](https://img.shields.io/badge/TypeScript-Manifest%20V3-3178C6)
+![browsers](https://img.shields.io/badge/browsers-Chrome%20%7C%20Firefox-555)
+![dependencies](https://img.shields.io/badge/runtime%20dependencies-0-5fd6ae)
+![network](https://img.shields.io/badge/outbound%20requests-catalog%20only-5fd6ae)
+[![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-![Badge next to the composer](store/screenshots/1-badge.png)
-![Explanation cloud in the margin](store/screenshots/2-cloud.png)
+[Install](#install-unpacked-for-now) &nbsp;·&nbsp; [How it works](#how-it-works) &nbsp;·&nbsp; [Catalog](#catalog) &nbsp;·&nbsp; [Privacy](#security-and-privacy) &nbsp;·&nbsp; [Development](#development)
 
-## What it does
+<sub><i>Euboulia (Εὐβουλία): good counsel, the virtue of deciding well before acting.<br>Here it decides which model deserves the prompt, and tells you why.</i></sub>
 
-1. **Finds the chat UI.** Per-site adapters for Claude, ChatGPT and Gemini; experimental adapters for Grok, Perplexity, Le Chat, DeepSeek, Copilot, Poe and OpenRouter (selectors not yet verified on a signed-in session; a catalog update can fix them without a release); an Open WebUI adapter that recognises the app on any host; and a generic adapter for other self-hosted UIs. It finds every prompt composer on the page (Poe's compare mode gets one badge per pane), the model currently selected in the picker, and attached images or files. When you open the site's model picker it also notes which models the site really offers you, so a model missing from the bundled plan table still counts as included.
-2. **Reads the prompt as you type** (after 400 ms of idle). A keyword and regex classifier (the same signals as the [Trioditis](https://github.com/alexb-joat/trioditis) router) labels the task: code, reasoning, writing, quick chat, summarising, translation, data work, image understanding, long context. It also notices sensitive data (emails, keys, card numbers) without ever storing the matched text.
-3. **Scores the models the site offers.** Fit per task type comes from the catalog; cost is estimated from the prompt size and the model's API price, or shown as "included" when you told it which plan you have. Models with an effort setting (Claude's Low to Max) are scored once per level, so the suggestion can be "Sonnet 5.5 · High". Your preference slider (best quality … cheapest) sets the balance, and a quality floor keeps a much weaker model from winning on price alone. Custom rules can prefer or exclude models.
-4. **Shows the pick** in a badge styled from the site's own font and colours. "why?" opens the explanation: task, signals, the top three with fit (as a percentage) and cost, every other available model one click away, and the reason the winner won. If another service you enabled would be clearly better value, it says so.
-5. **Learns locally.** Thumbs up or down, and whether you followed the suggestion when you hit send, are stored in the browser only. When you keep overriding a suggestion with the same model for a task on a site (three or more times, most of the time), that model gets a small nudge and the explanation says "you usually pick X for this"; three net thumbs-downs nudge a model the other way. Export or clear the history on the options page.
+</div>
+
+<br>
+
+<table>
+<tr>
+<td width="50%"><img alt="The badge next to the composer, naming the suggested model and its cost." src="store/screenshots/1-badge.png"><br><sub><b>The badge.</b> Appears beside the composer in the site's own font and colours: model, cost or "included", and a "why?".</sub></td>
+<td width="50%"><img alt="The explanation cloud in the page margin: task, signals, top three models with fit and cost." src="store/screenshots/2-cloud.png"><br><sub><b>The "why?" cloud.</b> Opens in the blank right margin, never over content: task, signals, the top three with fit and cost, and the reason the winner won.</sub></td>
+</tr>
+</table>
+
+## Why Euboulia
+
+| Private by design | Knows your plan | Explains itself | Learns locally |
+|---|---|---|---|
+| The classifier, the scoring and the catalog run inside the extension. The only network call is a daily download of the catalog JSON from the public [euboulia-catalog](https://github.com/alexb-joat/euboulia-catalog) repository; clear the URL on the options page to switch it off. See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md). | Cost is shown both ways: "included" when the model is in the plan you set, otherwise the API-equivalent price for this prompt. When you open the site's model picker it notes which models the site really offers you. | Every suggestion carries the task it saw, the signals, the top three with fit and cost, every other available model one click away, and the sentence that explains the winner. | Thumbs up or down, and whether you followed the suggestion when you hit send, stay in the browser. Export or clear the history on the options page. |
+
+## How it works
+
+| Step | What happens |
+|---|---|
+| **Finds the chat UI** | Per-site adapters for Claude, ChatGPT and Gemini; experimental adapters for Grok, Perplexity, Le Chat, DeepSeek, Copilot, Poe and OpenRouter (selectors not yet verified on a signed-in session; a catalog update can fix them without a release); an Open WebUI adapter that recognises the app on any host; and a generic adapter for other self-hosted UIs. It finds every composer on the page (Poe's compare mode gets one badge per pane), the model currently selected, and attached images or files. |
+| **Reads the prompt** | After 400 ms of idle, a keyword and regex classifier (the same signals as the [Trioditis](https://github.com/alexb-joat/trioditis) router) labels the task: code, reasoning, writing, quick chat, summarising, translation, data work, image understanding, long context. It notices sensitive data (emails, keys, card numbers) without ever storing the matched text. |
+| **Scores the models** | Fit per task type comes from the catalog; cost is estimated from the prompt size and the model's API price, or shown as "included" for your plan. Models with an effort setting (Claude's Low to Max) are scored once per level, so the suggestion can be "Sonnet 5.5 · High". Your preference slider (best quality … cheapest) sets the balance, and a quality floor keeps a much weaker model from winning on price alone. Custom rules can prefer or exclude models. |
+| **Shows the pick** | A badge styled from the site's own font and colours. If another service you enabled would be clearly better value, it says so. |
+| **Learns** | When you keep overriding a suggestion with the same model for a task on a site (three or more times, most of the time), that model gets a small nudge and the explanation says "you usually pick X for this"; three net thumbs-downs nudge a model the other way. |
 
 ## Install (unpacked, for now)
 
