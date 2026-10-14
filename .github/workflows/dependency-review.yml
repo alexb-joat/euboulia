@@ -7,6 +7,8 @@ permissions:
 
 jobs:
   review:
+    # Dependency review is free on public repositories only; skip (instead of failing) while this one is private.
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
