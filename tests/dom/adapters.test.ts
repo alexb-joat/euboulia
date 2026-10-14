@@ -166,4 +166,12 @@ describe('site adapters', () => {
     form.insertAdjacentHTML('beforeend', '<div data-testid="file-attachment">report.pdf</div>');
     expect(a.attachments(c!).length).toBe(before + 1);
   });
+
+  it('content column is the composer\'s own form, not the first form on the page (ChatGPT sidebar)', () => {
+    document.body.innerHTML = '<nav><form id="sidebar-search"><input></form></nav><main><form id="composer-form"><div id="prompt-textarea" contenteditable="true" class="ProseMirror"></div><button data-testid="send-button"></button></form></main>';
+    Object.defineProperty(window, 'location', { value: new URL('https://chatgpt.com/'), writable: true, configurable: true });
+    const a = pickAdapter(deps);
+    const [c] = a.composers();
+    expect(a.contentColumn(c!).id).toBe('composer-form');
+  });
 });

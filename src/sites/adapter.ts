@@ -175,7 +175,13 @@ export function makeAdapter(spec: AdapterSpec, deps: AdapterDeps): SiteAdapter {
       return out;
     },
     anchor: (c) => ({ element: c.container, corner: 'top-right' }),
-    contentColumn: (c) => queryFirst(document, sel().contentColumn) ?? c.container.closest('main, form') ?? c.container,
+    contentColumn: (c) => {
+      // The composer's own ancestor first: pages like ChatGPT have several forms, and the first one is in the sidebar.
+      for (const s of sel().contentColumn ?? []) {
+        try { const a = c.element.closest(s); if (a) return a; } catch { /* bad selector */ }
+      }
+      return queryFirst(document, sel().contentColumn) ?? c.container.closest('main, form') ?? c.container;
+    },
   };
   return adapter;
 }

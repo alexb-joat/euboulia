@@ -86,9 +86,10 @@ export class ComposerWatcher {
       this.voted = true;
       record({ kind: 'feedback', site: this.shared.serviceId, task: s.classification.primary, suggested: s.here.modelId, vote: v });
     });
-    const content = adapter.contentColumn(this.c).getBoundingClientRect();
-    const composer = this.c.container.getBoundingClientRect();
-    cloud.open(explain(s, catalog), content, composer);
+    cloud.open(explain(s, catalog), () => ({
+      content: adapter.contentColumn(this.c).getBoundingClientRect(),
+      composer: this.c.container.getBoundingClientRect(),
+    }));
   }
 
   private onSent(): void {

@@ -17,6 +17,9 @@ export class Cloud {
   private onVote?: (v: 'up' | 'down') => void;
   private onCloseCb?: () => void;
   private collapsedByDefault: boolean;
+  private rects?: () => { content: Rect; composer: Rect };
+  private resizeQueued = false;
+  private expanded = false;        // "show all models" survives re-renders while typing
 
   constructor(theme: Theme, collapsedByDefault = false) {
     this.collapsedByDefault = collapsedByDefault;
@@ -31,32 +34,53 @@ export class Cloud {
     this.setTheme(theme);
     document.body.appendChild(this.host);
     addEventListener('keydown', this.onKey, true);
+    addEventListener('resize', this.onResize);
     addEventListener('pointerdown', this.onOutside, true);
   }
 
-  setTheme(t: Theme): void { this.host.style.cssText = themeVars(t); }
+  setTheme(t: Theme): void { this.host.style.cssText = themeVars(t); this.place(); }   // cssText wipes the geometry: put it back
   get isOpen(): boolean { return !this.host.hidden; }
 
-  open(x: Explanation, contentRect: Rect, composerRect: Rect): void {
+  /**
+   * Show the explanation. `rects` is called again on every window resize, so the panel follows the page
+   * layout (margin or dock) instead of keeping the geometry it had when it opened.
+   */
+  open(x: Explanation, rects: () => { content: Rect; composer: Rect }): void {
+    const wasOpen = this.isOpen;
+    this.rects = rects;
     this.render(x);
-    const p = computeCloudPlacement({ width: innerWidth, height: innerHeight }, contentRect, composerRect, { collapsedByDefault: this.collapsedByDefault });
-    const s = this.host.style;
-    s.width = `${p.width}px`;
-    if (p.mode === 'margin') { s.left = `${p.left}px`; s.top = `${p.top}px`; s.right = ''; s.bottom = ''; }
-    else { s.right = `${p.right}px`; s.bottom = `${p.bottom}px`; s.left = ''; s.top = ''; }
-    this.host.toggleAttribute('collapsed', p.collapsed);
-    this.host.dataset.mode = p.mode;
     this.host.hidden = false;
+    this.place(!wasOpen);
   }
 
-  /** After the content grows (full model list), move the panel up so its bottom stays on screen. */
-  private keepInView(): void {
-    const r = this.host.getBoundingClientRect();
-    const overflow = r.bottom - (innerHeight - 16);
-    if (overflow <= 0) return;
+  /** Position and size the panel for the current viewport; only the model list scrolls. */
+  private place(fresh = false): void {
+    if (!this.rects || this.host.hidden) return;
+    const { content, composer } = this.rects();
+    const GAP = 16;
+    const p = computeCloudPlacement({ width: innerWidth, height: innerHeight }, content, composer, { collapsedByDefault: this.collapsedByDefault });
     const s = this.host.style;
-    if (this.host.dataset.mode === 'margin') s.top = `${Math.max(16, r.top - overflow)}px`;
+    s.width = `${p.width}px`;
+    this.host.dataset.mode = p.mode;
+    if (fresh) this.host.toggleAttribute('collapsed', p.collapsed);
+    if (p.mode === 'margin') {
+      s.right = ''; s.bottom = ''; s.left = `${p.left}px`;
+      s.setProperty('--eu-maxh', `${Math.max(160, innerHeight - 2 * GAP)}px`);
+      s.top = `${GAP}px`;
+      const h = this.host.getBoundingClientRect().height;
+      // Aligned with the composer when it fits, otherwise moved up just enough to stay on screen.
+      s.top = `${Math.max(GAP, Math.min(p.top, innerHeight - GAP - h))}px`;
+    } else {
+      s.left = ''; s.top = ''; s.right = `${p.right}px`; s.bottom = `${p.bottom}px`;
+      s.setProperty('--eu-maxh', `${Math.max(160, innerHeight - p.bottom - GAP)}px`);
+    }
   }
+
+  private onResize = () => {
+    if (this.resizeQueued || !this.isOpen) return;
+    this.resizeQueued = true;
+    requestAnimationFrame(() => { this.resizeQueued = false; this.place(); });
+  };
 
   close(): void {
     if (this.host.hidden) return;
@@ -121,18 +145,20 @@ export class Cloud {
     };
     for (const r of x.rows) addRow(r);
     for (const r of x.more) addRow(r, true);
+    if (this.expanded) table.classList.add('all');
     table.append(body);
     const list = el('div', 'list');
     list.append(table);
     box.append(list);
     if (x.more.length) {
-      const toggle = el('button', 'more', `Show ${x.more.length} more model${x.more.length === 1 ? '' : 's'}`);
-      toggle.setAttribute('aria-expanded', 'false');
+      const label = (open: boolean) => open ? 'Show fewer' : `Show ${x.more.length} more model${x.more.length === 1 ? '' : 's'}`;
+      const toggle = el('button', 'more', label(this.expanded));
+      toggle.setAttribute('aria-expanded', String(this.expanded));
       toggle.addEventListener('click', () => {
-        const open = table.classList.toggle('all');
-        toggle.setAttribute('aria-expanded', String(open));
-        toggle.textContent = open ? 'Show fewer' : `Show ${x.more.length} more model${x.more.length === 1 ? '' : 's'}`;
-        this.keepInView();
+        this.expanded = table.classList.toggle('all');
+        toggle.setAttribute('aria-expanded', String(this.expanded));
+        toggle.textContent = label(this.expanded);
+        this.place();
       });
       box.append(toggle);
     }
