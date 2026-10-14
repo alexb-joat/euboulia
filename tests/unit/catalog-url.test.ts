@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_CATALOG_URL } from '../../src/background/catalogRefresh';
+import { DEFAULT_CATALOG_URL } from '../../src/shared/catalogUrl';
 
 describe('default catalog URL', () => {
   it('points at the public data repository over https', () => {

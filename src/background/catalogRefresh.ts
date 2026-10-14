@@ -1,8 +1,8 @@
 import { validateCatalog } from '../catalog/schema';
 import { getCatalogMeta, getPrefs, putCatalog, setCatalogMeta } from '../shared/storage';
 
-// The published catalog (data only, public repository). Clear the URL on the options page to stay on the bundled copy.
-export const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/alexb-joat/euboulia-catalog/main/catalog.json';
+import { DEFAULT_CATALOG_URL } from '../shared/catalogUrl';
+export { DEFAULT_CATALOG_URL };
 
 export async function refreshCatalog(): Promise<{ ok: boolean; message: string }> {
   const prefs = await getPrefs();
