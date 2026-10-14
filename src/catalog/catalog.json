@@ -661,6 +661,7 @@
           "button[aria-haspopup=\"menu\"]"
         ],
         "pickerOpen": [
+          "gem-menu-item[role=\"menuitem\"]",
           "[role=\"menu\"] [role=\"menuitem\"]",
           ".mat-mdc-menu-panel button"
         ],
@@ -681,62 +682,89 @@
           "price": 0,
           "capUnit": "prompts"
         },
+        "plus": {
+          "name": "AI Plus",
+          "price": 0,
+          "capUnit": "prompts",
+          "note": "price not verified from Google"
+        },
         "pro": {
           "name": "AI Pro",
           "price": 20,
-          "capUnit": "prompts"
+          "capUnit": "prompts",
+          "note": "price not verified from Google"
         },
         "ultra": {
           "name": "AI Ultra",
           "price": 250,
-          "capUnit": "prompts"
+          "capUnit": "prompts",
+          "note": "price not verified from Google"
         }
       },
       "models": [
+        {
+          "modelId": "google/gemini-3.6-flash",
+          "label": "3.6 Flash",
+          "aliases": [
+            "Flash",
+            "All-around help"
+          ],
+          "plans": [
+            "free",
+            "plus",
+            "pro",
+            "ultra"
+          ],
+          "capWeight": 1,
+          "note": "all Gemini app users (release notes 2026-07-21); API retirement 2026-11-19"
+        },
+        {
+          "modelId": "google/gemini-3.8-flash",
+          "label": "3.8 Thinking",
+          "aliases": [
+            "Thinking",
+            "Solves complex problems"
+          ],
+          "plans": [
+            "free",
+            "plus",
+            "pro",
+            "ultra"
+          ],
+          "capWeight": 2,
+          "note": "mode-to-model mapping inferred, see _verified"
+        },
         {
           "modelId": "google/gemini-3.1-pro-preview",
           "label": "3.1 Pro",
           "aliases": [
             "Pro",
-            "Thinking"
+            "Advanced reasoning"
           ],
           "plans": [
             "free",
+            "plus",
             "pro",
             "ultra"
           ],
-          "capWeight": 2
+          "capWeight": 3,
+          "note": "higher limits on AI Pro and Ultra (release notes 2026-02-19)"
         },
         {
-          "modelId": "google/gemini-3.8-flash",
-          "label": "3.8 Flash",
+          "modelId": "google/gemini-4-argon",
+          "label": "4 Argon",
           "aliases": [
-            "Flash",
-            "Fast"
+            "Argon"
           ],
           "plans": [
-            "free",
             "pro",
             "ultra"
           ],
-          "capWeight": 1
-        },
-        {
-          "modelId": "google/gemini-3.5-flash-lite",
-          "label": "3.5 Flash-Lite",
-          "aliases": [
-            "Flash-Lite",
-            "Lite"
-          ],
-          "plans": [
-            "free",
-            "pro",
-            "ultra"
-          ],
-          "capWeight": 0.3
+          "capWeight": 5,
+          "note": "not in Alex's picker 2026-10-14; Pro and Ultra subscribers (release notes 2026-10-13)"
         }
       ],
-      "_verified": "2026-10-12 logged out: composer, sendButton"
+      "_verified": "Selectors: 2026-10-13 signed-in capture (composer, mode button data-test-id=bard-mode-menu-button, menu items gem-menu-item[role=menuitem]). Picker entries read from Alex's signed-in session 2026-10-14: '3.6 Flash' (All-around help), '3.8 Thinking' (Solves complex problems), '3.1 Pro' (Advanced reasoning); button shows the current mode ('Flash'). Drop-down names '3.6 Flash' and 'Pro' confirmed by gemini.google/release-notes. '3.8 Thinking' -> gemini-3.8-flash is INFERRED (the only 3.8 text model Google lists), not stated by Google. Plan prices and which plan gets which mode are not verified from Google."
     },
     "grok": {
       "name": "Grok",
@@ -2752,40 +2780,59 @@
         }
       ]
     },
-    "google/gemini-3.1-pro-preview": {
+    "google/gemini-3.6-flash": {
       "provider": "google",
-      "name": "Gemini 3.1 Pro Preview",
+      "name": "Gemini 3.6 Flash",
+      "apiId": "gemini-3.6-flash",
       "strengths": {
         "code": 0.71,
-        "reasoning": 0.39,
-        "writing": 0.73,
-        "chat": 0.85,
-        "summarise": 0.82,
-        "translate": 0.79,
-        "data": 0.75,
-        "vision": 0.71,
-        "long_context": 0.91
+        "reasoning": 0.48,
+        "writing": 0.77,
+        "chat": 0.87,
+        "summarise": 0.84,
+        "translate": 0.82,
+        "data": 0.78,
+        "vision": 0.74,
+        "long_context": 0.92
       },
       "price": {
-        "input": 2,
-        "output": 12
+        "input": 0.75,
+        "output": 3.75
       },
       "context": 1048576,
+      "maxOutput": 65536,
+      "status": "deprecated",
+      "retiresAt": "2026-11-19",
       "capabilities": [
         "vision",
         "tools"
       ],
-      "released": "2026-02-19",
+      "released": "2026-07-21",
       "sources": [
         {
-          "url": "https://openrouter.ai/google/gemini-3.1-pro-preview",
+          "url": "https://ai.google.dev/gemini-api/docs/pricing",
           "date": "2026-10-14",
           "field": "price"
         },
         {
-          "url": "https://openrouter.ai/google/gemini-3.1-pro-preview",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/gemini-3.6-flash",
           "date": "2026-10-14",
           "field": "context"
+        },
+        {
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/gemini-3.6-flash",
+          "date": "2026-10-14",
+          "field": "maxOutput"
+        },
+        {
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/gemini-3.6-flash",
+          "date": "2026-10-14",
+          "field": "status"
+        },
+        {
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/gemini-3.6-flash",
+          "date": "2026-10-14",
+          "field": "released"
         },
         {
           "url": "https://artificialanalysis.ai/",
@@ -2797,6 +2844,7 @@
     "google/gemini-3.8-flash": {
       "provider": "google",
       "name": "Gemini 3.8 Flash",
+      "apiId": "gemini-3.8-flash",
       "strengths": {
         "code": 0.84,
         "reasoning": 0.62,
@@ -2813,6 +2861,14 @@
         "output": 3.75
       },
       "context": 1048576,
+      "maxOutput": 65536,
+      "status": "active",
+      "efforts": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "defaultEffort": "MEDIUM",
       "capabilities": [
         "vision",
         "tools"
@@ -2820,14 +2876,34 @@
       "released": "2026-09-02",
       "sources": [
         {
-          "url": "https://openrouter.ai/google/gemini-3.8-flash",
+          "url": "https://ai.google.dev/gemini-api/docs/pricing",
           "date": "2026-10-14",
           "field": "price"
         },
         {
-          "url": "https://openrouter.ai/google/gemini-3.8-flash",
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/gemini-3.8-flash",
           "date": "2026-10-14",
           "field": "context"
+        },
+        {
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/gemini-3.8-flash",
+          "date": "2026-10-14",
+          "field": "maxOutput"
+        },
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/models",
+          "date": "2026-10-14",
+          "field": "status"
+        },
+        {
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/gemini-3.8-flash",
+          "date": "2026-10-14",
+          "field": "efforts"
+        },
+        {
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/gemini-3.8-flash",
+          "date": "2026-10-14",
+          "field": "released"
         },
         {
           "url": "https://artificialanalysis.ai/",
@@ -2836,40 +2912,128 @@
         }
       ]
     },
-    "google/gemini-3.5-flash-lite": {
+    "google/gemini-3.1-pro-preview": {
       "provider": "google",
-      "name": "Gemini 3.5 Flash Lite",
+      "name": "Gemini 3.1 Pro Preview",
+      "apiId": "gemini-3.1-pro-preview",
       "strengths": {
-        "code": 0.35,
-        "reasoning": 0.24,
-        "writing": 0.66,
-        "chat": 0.81,
-        "summarise": 0.77,
-        "translate": 0.74,
-        "data": 0.61,
-        "vision": 0.65,
-        "long_context": 0.89
+        "code": 0.71,
+        "reasoning": 0.39,
+        "writing": 0.73,
+        "chat": 0.85,
+        "summarise": 0.82,
+        "translate": 0.79,
+        "data": 0.75,
+        "vision": 0.71,
+        "long_context": 0.91
       },
       "price": {
-        "input": 0.3,
-        "output": 2.5
+        "input": 2,
+        "output": 12,
+        "longContext": {
+          "threshold": 200000,
+          "input": 4,
+          "output": 18
+        }
       },
       "context": 1048576,
+      "maxOutput": 65536,
+      "status": "active",
       "capabilities": [
         "vision",
         "tools"
       ],
-      "released": "2026-07-21",
+      "released": "2026-02-19",
       "sources": [
         {
-          "url": "https://openrouter.ai/google/gemini-3.5-flash-lite",
+          "url": "https://ai.google.dev/gemini-api/docs/pricing",
           "date": "2026-10-14",
           "field": "price"
         },
         {
-          "url": "https://openrouter.ai/google/gemini-3.5-flash-lite",
+          "url": "https://ai.google.dev/gemini-api/docs/pricing",
+          "date": "2026-10-14",
+          "field": "longContext"
+        },
+        {
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/gemini-3.1-pro-preview",
           "date": "2026-10-14",
           "field": "context"
+        },
+        {
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/gemini-3.1-pro-preview",
+          "date": "2026-10-14",
+          "field": "maxOutput"
+        },
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/models",
+          "date": "2026-10-14",
+          "field": "status"
+        },
+        {
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/gemini-3.1-pro-preview",
+          "date": "2026-10-14",
+          "field": "released"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-14",
+          "field": "strengths"
+        }
+      ]
+    },
+    "google/gemini-4-argon": {
+      "provider": "google",
+      "name": "Gemini 4 Argon",
+      "apiId": "gemini-4-argon",
+      "strengths": {
+        "code": 0.31,
+        "reasoning": 0.5,
+        "writing": 0.78,
+        "chat": 0.88,
+        "summarise": 0.85,
+        "translate": 0.83,
+        "data": 0.67,
+        "vision": 0.75,
+        "long_context": 0.93
+      },
+      "price": {
+        "input": 2,
+        "output": 10
+      },
+      "context": 1000000,
+      "maxOutput": 1000000,
+      "status": "active",
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-10-13",
+      "sources": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing",
+          "date": "2026-10-14",
+          "field": "price"
+        },
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/models",
+          "date": "2026-10-14",
+          "field": "context"
+        },
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/models",
+          "date": "2026-10-14",
+          "field": "maxOutput"
+        },
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/models",
+          "date": "2026-10-14",
+          "field": "status"
+        },
+        {
+          "url": "https://gemini.google/release-notes/",
+          "date": "2026-10-14",
+          "field": "released"
         },
         {
           "url": "https://artificialanalysis.ai/",
@@ -3407,6 +3571,55 @@
           "url": "https://openrouter.ai/deepseek/deepseek-v4.1-flash",
           "date": "2026-10-14",
           "field": "context"
+        },
+        {
+          "url": "https://artificialanalysis.ai/",
+          "date": "2026-10-14",
+          "field": "strengths"
+        }
+      ]
+    },
+    "google/gemini-3.5-flash-lite": {
+      "provider": "google",
+      "name": "Gemini 3.5 Flash-Lite",
+      "apiId": "gemini-3.5-flash-lite",
+      "strengths": {
+        "code": 0.35,
+        "reasoning": 0.24,
+        "writing": 0.66,
+        "chat": 0.81,
+        "summarise": 0.77,
+        "translate": 0.74,
+        "data": 0.61,
+        "vision": 0.65,
+        "long_context": 0.89
+      },
+      "price": {
+        "input": 0.3,
+        "output": 2.5
+      },
+      "context": 1048576,
+      "status": "active",
+      "capabilities": [
+        "vision",
+        "tools"
+      ],
+      "released": "2026-07-21",
+      "sources": [
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing",
+          "date": "2026-10-14",
+          "field": "price"
+        },
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/models",
+          "date": "2026-10-14",
+          "field": "context"
+        },
+        {
+          "url": "https://ai.google.dev/gemini-api/docs/models",
+          "date": "2026-10-14",
+          "field": "status"
         },
         {
           "url": "https://artificialanalysis.ai/",

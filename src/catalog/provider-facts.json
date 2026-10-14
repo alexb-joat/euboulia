@@ -673,6 +673,150 @@
           "note": "Retired from ChatGPT, Work and Codex on 2026-10-14 (learn.chatgpt.com); still on the API."
         }
       }
+    },
+    "google": {
+      "sources": {
+        "models": {
+          "url": "https://ai.google.dev/gemini-api/docs/models",
+          "fetched": "2026-10-14",
+          "format": "html (updated 2026-10-13)"
+        },
+        "pricing": {
+          "url": "https://ai.google.dev/gemini-api/docs/pricing",
+          "fetched": "2026-10-14",
+          "format": "html"
+        },
+        "cloud-model-pages": {
+          "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/{id}",
+          "fetched": "2026-10-14",
+          "format": "html"
+        },
+        "app-release-notes": {
+          "url": "https://gemini.google/release-notes/",
+          "fetched": "2026-10-14",
+          "format": "html"
+        }
+      },
+      "effortLevels": {
+        "ids": [
+          "LOW",
+          "MEDIUM",
+          "HIGH"
+        ],
+        "source": "cloud-model-pages",
+        "note": "API thinking_level values on 3.8 Flash (MINIMAL rejected). The Gemini app exposes no effort control, so no service effort levels are modelled."
+      },
+      "models": {
+        "google/gemini-4-argon": {
+          "name": "Gemini 4 Argon",
+          "apiId": "gemini-4-argon",
+          "price": {
+            "input": 2,
+            "output": 10
+          },
+          "context": 1000000,
+          "maxOutput": 1000000,
+          "status": "active",
+          "released": "2026-10-13",
+          "sources": {
+            "price": "pricing",
+            "context": "models",
+            "maxOutput": "models",
+            "status": "models",
+            "released": "app-release-notes"
+          },
+          "note": "Promotional price through 2026-11-30, then $4 / $20. Gemini app: Google AI Pro and Ultra subscribers."
+        },
+        "google/gemini-3.8-flash": {
+          "name": "Gemini 3.8 Flash",
+          "apiId": "gemini-3.8-flash",
+          "price": {
+            "input": 0.75,
+            "output": 3.75
+          },
+          "context": 1048576,
+          "maxOutput": 65536,
+          "status": "active",
+          "released": "2026-09-02",
+          "efforts": [
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ],
+          "defaultEffort": "MEDIUM",
+          "sources": {
+            "price": "pricing",
+            "context": "cloud-model-pages",
+            "maxOutput": "cloud-model-pages",
+            "status": "models",
+            "efforts": "cloud-model-pages",
+            "released": "cloud-model-pages"
+          },
+          "note": "Promotional price through 2026-12-31, then $1.50 / $7.50."
+        },
+        "google/gemini-3.6-flash": {
+          "name": "Gemini 3.6 Flash",
+          "apiId": "gemini-3.6-flash",
+          "price": {
+            "input": 0.75,
+            "output": 3.75
+          },
+          "context": 1048576,
+          "maxOutput": 65536,
+          "status": "deprecated",
+          "retiresAt": "2026-11-19",
+          "released": "2026-07-21",
+          "sources": {
+            "price": "pricing",
+            "context": "cloud-model-pages",
+            "maxOutput": "cloud-model-pages",
+            "status": "cloud-model-pages",
+            "released": "cloud-model-pages"
+          },
+          "note": "Cloud model page states retirement date November 19, 2026; still listed on ai.google.dev and in the Gemini app on 2026-10-14. Promotional price through 2026-12-31."
+        },
+        "google/gemini-3.5-flash-lite": {
+          "name": "Gemini 3.5 Flash-Lite",
+          "apiId": "gemini-3.5-flash-lite",
+          "price": {
+            "input": 0.3,
+            "output": 2.5
+          },
+          "context": 1048576,
+          "status": "active",
+          "sources": {
+            "price": "pricing",
+            "context": "models",
+            "status": "models"
+          },
+          "note": "context not stated on ai.google.dev; taken from the OpenRouter seed"
+        },
+        "google/gemini-3.1-pro-preview": {
+          "name": "Gemini 3.1 Pro Preview",
+          "apiId": "gemini-3.1-pro-preview",
+          "price": {
+            "input": 2,
+            "output": 12,
+            "longContext": {
+              "threshold": 200000,
+              "input": 4,
+              "output": 18
+            }
+          },
+          "context": 1048576,
+          "maxOutput": 65536,
+          "status": "active",
+          "released": "2026-02-19",
+          "sources": {
+            "price": "pricing",
+            "longContext": "pricing",
+            "context": "cloud-model-pages",
+            "maxOutput": "cloud-model-pages",
+            "status": "models",
+            "released": "cloud-model-pages"
+          }
+        }
+      }
     }
   }
 }

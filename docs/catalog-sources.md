@@ -21,8 +21,12 @@ benchmark-derived strengths and for models the facts file does not cover).
 | OpenAI | developers.openai.com/changelog | dated API changelog (model releases, modes) | html |
 | OpenAI | learn.chatgpt.com/docs/models | models and effort labels in ChatGPT Work and Codex, retirements from ChatGPT | yes, `.md` |
 | OpenAI | openai.com/news/rss.xml | announcements | rss |
+| Google | ai.google.dev/gemini-api/docs/models | current Gemini API models | html |
+| Google | ai.google.dev/gemini-api/docs/pricing | prices, promotional periods, 200k long-context tier | html |
+| Google | docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/{id} | context, max output, thinking levels, release and retirement dates | html |
+| Google | gemini.google/release-notes | which drop-down names the Gemini app uses and which plans get them | html |
 
-`help.openai.com` (the ChatGPT help centre, with the Chat picker and plan tables) blocks automated readers, so its
+Google's pages are HTML only and read by hand so far (Ninshubur's adapter does not parse them yet). `help.openai.com` (the ChatGPT help centre, with the Chat picker and plan tables) blocks automated readers, so its
 facts were read once by hand on 2026-10-14 and are marked as such in `services.json`. Nothing is taken from
 third-party price trackers.
 
