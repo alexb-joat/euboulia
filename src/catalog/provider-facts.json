@@ -2,7 +2,7 @@
   "$schema": "provider-facts.v1",
   "schemaVersion": 1,
   "generatedAt": "2026-10-14",
-  "generatedBy": "hand, from the pages listed under sources (Ninshubur's provider_docs adapter produces this same file)",
+  "generatedBy": "hand, from the pages listed under sources; verified against Ninshubur's provider_docs export on 2026-10-14 (identical except the two fields noted above)",
   "providers": {
     "anthropic": {
       "sources": {
@@ -401,7 +401,8 @@
         "reasoning": {
           "url": "https://developers.openai.com/docs/guides/reasoning",
           "fetched": "2026-10-14",
-          "format": "html"
+          "format": "html",
+          "note": "HTML page; read by hand (GPT-6 models default to medium). Ninshubur does not parse it yet."
         },
         "deprecations": {
           "url": "https://developers.openai.com/docs/deprecations",
@@ -463,7 +464,8 @@
             "longContext": "model-pages",
             "context": "model-pages",
             "status": "deprecations",
-            "efforts": "model-pages"
+            "efforts": "model-pages",
+            "defaultEffort": "reasoning"
           },
           "efforts": [
             "low",
@@ -591,14 +593,14 @@
           },
           "context": 1050000,
           "maxOutput": 128000,
-          "status": "legacy",
+          "status": "active",
           "sources": {
             "price": "model-pages",
             "longContext": "model-pages",
             "context": "model-pages",
             "status": "deprecations"
           },
-          "note": "Model page lists no reasoning.effort values; the reasoning guide says GPT-5.6 defaults to medium."
+          "note": "Model page lists no reasoning.effort values; the reasoning guide says GPT-5.6 defaults to medium. Status \"active\": the model page and deprecations list say nothing else; ChatGPT lists it under older models (services.json legacy flag)."
         },
         "openai/gpt-5.6-terra": {
           "name": "GPT-5.6 Terra",
@@ -614,13 +616,14 @@
           },
           "context": 1050000,
           "maxOutput": 128000,
-          "status": "legacy",
+          "status": "active",
           "sources": {
             "price": "model-pages",
             "longContext": "model-pages",
             "context": "model-pages",
             "status": "deprecations"
-          }
+          },
+          "note": "Status \"active\": the model page and deprecations list say nothing else; ChatGPT lists it under older models (services.json legacy flag)."
         },
         "openai/gpt-5.6-luna": {
           "name": "GPT-5.6 Luna",
@@ -636,13 +639,14 @@
           },
           "context": 1050000,
           "maxOutput": 128000,
-          "status": "legacy",
+          "status": "active",
           "sources": {
             "price": "model-pages",
             "longContext": "model-pages",
             "context": "model-pages",
             "status": "deprecations"
-          }
+          },
+          "note": "Status \"active\": the model page and deprecations list say nothing else; ChatGPT lists it under older models (services.json legacy flag)."
         },
         "openai/gpt-5.5": {
           "name": "GPT-5.5",
