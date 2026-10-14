@@ -172,7 +172,7 @@ export interface Prefs {
   crossService: boolean;
   cloudCollapsedByDefault: boolean;
   services: Record<string, ServicePrefs>;
-  catalogUrl?: string;
+  catalogUrl?: string;        // undefined = the project's published catalog; '' = never download
 }
 
 export const DEFAULT_PREFS: Prefs = {

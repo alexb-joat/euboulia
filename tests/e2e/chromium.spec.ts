@@ -140,3 +140,19 @@ test('badge steps aside while a site menu covers it, and comes back when the men
   await expect.poll(visibility, { timeout: 2000 }).toBe('visible');
   await page.close();
 });
+
+test('options page: refresh downloads, validates and stores a catalog from the configured URL', async () => {
+  const sw = context.serviceWorkers()[0] ?? await context.waitForEvent('serviceworker');
+  const id = new URL(sw.url()).host;
+  const page = await context.newPage();
+  await page.goto(`chrome-extension://${id}/options.html`);
+  await page.fill('#catalogUrl', 'http://127.0.0.1:8099/catalog.json');
+  await page.click('#refreshCatalog');
+  await expect.poll(() => page.textContent('#catalogStatus'), { timeout: 5000 }).toMatch(/catalog .* loaded/);
+  await expect.poll(() => page.textContent('#catalogInfo'), { timeout: 2000 }).toContain('remote (http://127.0.0.1:8099/catalog.json)');
+  // Back to the bundled copy: an empty URL switches downloads off.
+  await page.fill('#catalogUrl', '');
+  await page.click('#refreshCatalog');
+  await expect.poll(() => page.textContent('#catalogStatus'), { timeout: 5000 }).toMatch(/switched off/);
+  await page.close();
+});

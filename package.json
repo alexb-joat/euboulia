@@ -19,7 +19,8 @@
     "catalog:build": "node scripts/build-catalog.mjs",
     "catalog:validate": "node scripts/validate-catalog.mjs",
     "fixture": "node scripts/snapshot-fixture.mjs",
-    "screenshots": "node scripts/build.mjs --target chrome --dev && node scripts/screenshots.mjs"
+    "screenshots": "node scripts/build.mjs --target chrome --dev && node scripts/screenshots.mjs",
+    "catalog:publish": "node scripts/validate-catalog.mjs && node scripts/publish-catalog.mjs"
   },
   "engines": {
     "node": ">=22"

@@ -1,13 +1,14 @@
 import { validateCatalog } from '../catalog/schema';
 import { getCatalogMeta, getPrefs, putCatalog, setCatalogMeta } from '../shared/storage';
 
-export const DEFAULT_CATALOG_URL = '';   // set once the crawler project publishes one
+// The published catalog (data only, public repository). Clear the URL on the options page to stay on the bundled copy.
+export const DEFAULT_CATALOG_URL = 'https://raw.githubusercontent.com/alexb-joat/euboulia-catalog/main/catalog.json';
 
 export async function refreshCatalog(): Promise<{ ok: boolean; message: string }> {
   const prefs = await getPrefs();
-  const url = prefs.catalogUrl || DEFAULT_CATALOG_URL;
+  const url = prefs.catalogUrl === '' ? '' : (prefs.catalogUrl ?? DEFAULT_CATALOG_URL);
   const meta = await getCatalogMeta();
-  if (!url) return { ok: false, message: 'no catalog URL configured' };
+  if (!url) return { ok: false, message: 'catalog download is switched off (empty URL); using the bundled catalog' };
   try {
     const headers: Record<string, string> = {};
     if (meta.etag && meta.url === url) headers['If-None-Match'] = meta.etag;
