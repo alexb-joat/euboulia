@@ -33,7 +33,7 @@ npm run build          # dist/chrome and dist/firefox
 ```
 
 - Chrome, Edge, Brave: open `chrome://extensions`, enable Developer mode, "Load unpacked", pick `dist/chrome`.
-- Firefox: `npm run run:ff` (temporary add-on through web-ext), or `about:debugging` → "Load Temporary Add-on" → `dist/firefox/manifest.json`. Firefox grants the chat sites at install; if you later switch a site off in the extensions menu, the options page shows an "Allow on these sites" banner to restore it.
+- Firefox: `npm run run:ff` (temporary add-on through web-ext, in a dev profile that keeps your logins between runs; works with Ubuntu's snap Firefox), or `about:debugging` → "Load Temporary Add-on" → `dist/firefox/manifest.json`. Firefox grants the chat sites at install; if you later switch a site off in the extensions menu, the options page shows an "Allow on these sites" banner to restore it.
 
 The manifest's host permissions are generated from the hosts in `src/catalog/services.json`, so adding a site means adding it there (plus an adapter under `src/sites`).
 
