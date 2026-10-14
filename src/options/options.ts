@@ -1,5 +1,5 @@
 import { BUNDLED } from '../catalog/index';
-import { DEFAULT_CATALOG_URL } from '../background/catalogRefresh';
+import { DEFAULT_CATALOG_URL } from '../shared/catalogUrl';
 import { validateRule } from '../analyser/rules';
 import { missingOrigins, requestMissing } from '../shared/access';
 import { ext, isFirefox } from '../shared/browser';
