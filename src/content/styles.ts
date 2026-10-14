@@ -29,6 +29,7 @@ export const BADGE_CSS = BASE_CSS + `
 .pill .shield { font-size: .9em; }
 .pill .alt { display: block; font-size: .92em; opacity: .85; }
 :host([hidden]) { display: none; }
+:host([obscured]) { visibility: hidden; }
 `;
 
 export const CLOUD_CSS = BASE_CSS + `

@@ -33,7 +33,7 @@ describe('catalog', () => {
   it('resolves picker labels through aliases', () => {
     expect(resolveModelLabel(BUNDLED, 'claude', 'Sonnet 5.5')).toBe('anthropic/claude-sonnet-5.5');
     expect(resolveModelLabel(BUNDLED, 'claude', 'Claude Haiku 5.5 ▾')).toBe('anthropic/claude-haiku-5.5');
-    expect(resolveModelLabel(BUNDLED, 'chatgpt', 'ChatGPT 6.1 Sol Pro')).toBe('openai/gpt-6.1-sol-pro');
+    expect(resolveModelLabel(BUNDLED, 'chatgpt', 'GPT-6 Astra Max')).toBe('openai/gpt-6-astra');
     expect(resolveModelLabel(BUNDLED, 'chatgpt', 'Auto')).toBeNull();
     expect(resolveModelLabel(BUNDLED, 'claude', '')).toBeNull();
   });

@@ -5,6 +5,10 @@ import { BADGE_CSS, adoptStyles } from './styles';
 import { themeVars, type Theme } from './theme';
 import type { Anchor } from '../sites/adapter';
 
+// Site popups (model menus, dropdowns, dialogs). When one covers the badge, the badge steps aside: the page's own
+// menu must never sit under our pill.
+const POPUP = '[role="menu"], [role="listbox"], [role="dialog"], [role="tooltip"], [data-radix-popper-content-wrapper], [data-side][data-state="open"]';
+
 export class Badge {
   readonly host: HTMLElement;
   private root: ShadowRoot;
@@ -97,6 +101,21 @@ export class Badge {
     left = Math.max(4, Math.min(left, innerWidth - w - 4));
     this.host.style.top = `${top + scrollY}px`;
     this.host.style.left = `${left + scrollX}px`;
+    this.host.toggleAttribute('obscured', this.coveredByPopup());
+  }
+
+  /** True when a site popup lies under (and visually would sit over) any part of the pill. */
+  private coveredByPopup(): boolean {
+    if (typeof document.elementsFromPoint !== 'function') return false;
+    const r = this.pill.getBoundingClientRect();
+    if (!r.width) return false;
+    const y = r.top + r.height / 2;
+    for (const x of [r.left + 4, r.left + r.width / 2, r.right - 4]) {
+      const under = document.elementsFromPoint(x, y).find(el => el !== this.host && !this.host.contains(el));
+      const popup = under?.closest(POPUP);
+      if (popup && !popup.contains(this.anchor.element)) return true;
+    }
+    return false;
   }
 
   destroy(): void {

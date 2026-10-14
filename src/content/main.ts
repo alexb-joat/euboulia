@@ -68,7 +68,7 @@ async function main(): Promise<void> {
   const registry = new ComposerRegistry<ComposerWatcher>(adapter, {
     attach: c => new ComposerWatcher(c, shared),
     detach: w => w.destroy(),
-    scanned: observePicker,
+    scanned: composers => { observePicker(composers); registry?.forEach(w => w.badge.place()); },
   });
   registry.start();
 

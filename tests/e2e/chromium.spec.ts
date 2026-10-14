@@ -117,3 +117,26 @@ test('cloud follows window resizes: header visible, panel inside the window, onl
   }
   await page.close();
 });
+
+test('badge steps aside while a site menu covers it, and comes back when the menu closes', async () => {
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.goto('http://127.0.0.1:8099/real/claude.html');
+  await page.locator('[data-testid="chat-input"]').first().click();
+  await page.keyboard.type('Why does this Python function raise KeyError? def f(d): return d["x"]');
+  await expect.poll(() => badgeText(page), { timeout: 3000 }).toMatch(/Suggest|Good pick/);
+  const visibility = () => page.evaluate(() => getComputedStyle(document.querySelector('euboulia-badge')!).visibility);
+  expect(await visibility()).toBe('visible');
+  // A model menu like ChatGPT's, opened right over the badge.
+  await page.evaluate(() => {
+    const r = document.querySelector('euboulia-badge')!.shadowRoot!.querySelector('.pill')!.getBoundingClientRect();
+    const m = document.createElement('div');
+    m.id = 'fake-menu'; m.setAttribute('role', 'menu');
+    Object.assign(m.style, { position: 'fixed', left: `${r.left - 40}px`, top: `${r.top - 60}px`, width: `${r.width + 80}px`, height: '200px', background: '#222', zIndex: '50' });
+    document.body.append(m);
+  });
+  await expect.poll(visibility, { timeout: 2000 }).toBe('hidden');
+  await page.evaluate(() => document.getElementById('fake-menu')!.remove());
+  await expect.poll(visibility, { timeout: 2000 }).toBe('visible');
+  await page.close();
+});
