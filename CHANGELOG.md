@@ -15,3 +15,4 @@ First release.
 - Prices, context windows, model status and effort levels come from the providers' own documentation, each figure with its source URL and date (`docs/catalog-sources.md`); long-context price tiers; retired models are never offered.
 - Remote catalog URL with daily refresh and validation; bundled catalog dated 2026-10-14.
 - Chrome and Firefox (142+) from one Manifest V3 codebase.
+
