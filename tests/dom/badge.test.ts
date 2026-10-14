@@ -17,7 +17,7 @@ function fakeSuggestion(): Suggestion {
 describe('badge and cloud', () => {
   beforeEach(() => {
     loadFixture('claude', 'claude.ai');
-    (globalThis as any).ResizeObserver = class { observe() {} disconnect() {} };
+    (globalThis as any).ResizeObserver = class { constructor(_cb: ResizeObserverCallback) {} observe() {} disconnect() {} };
     (globalThis as any).matchMedia = () => ({ matches: false, addEventListener() {}, removeEventListener() {} });
   });
 

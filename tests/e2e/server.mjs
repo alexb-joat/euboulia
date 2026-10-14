@@ -1,6 +1,6 @@
 // Serves tests/fixtures/pages on 127.0.0.1:8099 (no deps).
 import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -21,10 +21,14 @@ export function start(port = 8099) {
     // /real/<service>.html wraps a captured site fixture in a page that forces that service's adapter (dev builds only).
     const real = /^real\/([a-z]+)\.html$/.exec(name);
     if (real) {
+      // The service name is taken from the directory listing, never from the URL, so only existing captures are served.
+      const captures = (await readdir(siteDir).catch(() => [])).filter(f => f.endsWith('.html')).map(f => f.slice(0, -5));
+      const service = captures.find(s => s === real[1]);
+      if (!service) { res.writeHead(404); res.end('not found'); return; }
       try {
-        const body = await readFile(path.join(siteDir, `${real[1]}.html`), 'utf8');
+        const body = await readFile(path.join(siteDir, `${service}.html`), 'utf8');
         res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
-        res.end(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="euboulia-service" content="${real[1]}"><title>${real[1]} capture</title><style>body{margin:0;background:#fff;color:#111;font-family:sans-serif}</style></head><body>${body}</body></html>`);
+        res.end(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="euboulia-service" content="${service}"><title>${service} capture</title><style>body{margin:0;background:#fff;color:#111;font-family:sans-serif}</style></head><body>${body}</body></html>`);
       } catch { res.writeHead(404); res.end('not found'); }
       return;
     }
