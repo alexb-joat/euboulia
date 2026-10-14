@@ -171,7 +171,7 @@ export class Cloud {
     }
 
     const foot = el('div', 'foot');
-    foot.append(el('span', undefined, 'Estimates; nothing you type leaves the browser.'));
+    foot.append(el('span', undefined, `Estimates; prices from provider docs as of ${x.factsDate ?? 'the bundled catalog'}. Nothing you type leaves the browser.`));
     const votes = el('span', 'votes');
     const up = el('button', undefined, '👍');
     up.title = 'Good suggestion';

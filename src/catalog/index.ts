@@ -26,7 +26,7 @@ export function candidatesFor(catalog: Catalog, serviceId: string, prefs: Prefs,
   const efforts = new Map((svc.efforts ?? []).map(e => [e.id, e]));
   for (const m of svc.models) {
     const model = catalog.models[m.modelId];
-    if (!model) continue;
+    if (!model || model.status === 'retired') continue;
     const inPlan = plan !== undefined && ((m.plans ?? []).includes(plan) || seen.has(m.modelId));
     const base = { modelId: m.modelId, serviceId, model, plan: inPlan ? plan : undefined };
     const levels = (m.efforts ?? []).map(id => efforts.get(id)).filter((e): e is NonNullable<typeof e> => !!e);

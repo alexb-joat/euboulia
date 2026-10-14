@@ -12,5 +12,6 @@ First release.
 - Every model a site offers is listed, including older ones (Claude's "More models").
 - Cost shown as "included (plan)" with the API-equivalent price.
 - Reads the open model picker to learn which models your plan offers; learns your habits locally.
-- Remote catalog URL with daily refresh and validation; bundled catalog dated 2026-10-12.
+- Prices, context windows, model status and effort levels come from the providers' own documentation, each figure with its source URL and date (`docs/catalog-sources.md`); long-context price tiers; retired models are never offered.
+- Remote catalog URL with daily refresh and validation; bundled catalog dated 2026-10-14.
 - Chrome and Firefox (142+) from one Manifest V3 codebase.

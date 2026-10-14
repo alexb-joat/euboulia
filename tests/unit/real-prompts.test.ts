@@ -24,14 +24,14 @@ describe('suggestions on real prompts', () => {
   });
   it('quality-first (slider 0) picks the strongest model, cheapest-first (slider 1) the cheapest', () => {
     expect(pick(CRAWLER, 'claude', 0)).toMatch(/Fable|Opus/);
-    expect(pick(CRAWLER, 'claude', 1)).toBe('Haiku 5.5');
+    expect(pick(CRAWLER, 'claude', 1)).toMatch(/^Haiku 5\.5/);
   });
   it('"lean cheap" still will not drop to a model far weaker than the best', () => {
-    expect(pick(CRAWLER, 'claude', 0.7)).not.toBe('Haiku 5.5');
+    expect(pick(CRAWLER, 'claude', 0.7)).not.toMatch(/^Haiku 5\.5/);
   });
   it('a trivial question still gets the cheap model', () => {
     expect(pick('print hello world in one line', 'gemini')).toMatch(/Lite|Flash/);
-    expect(pick("What's the capital of Portugal?", 'claude')).toBe('Haiku 5.5');
+    expect(pick("What's the capital of Portugal?", 'claude')).toMatch(/^Haiku 5\.5/);
   });
   it('a long plain-language prompt is weighed for quality, not labelled quick chat', () => {
     const c = classify('Tell me about the history of the Roman republic and how its institutions changed over the centuries, and what lessons that holds for modern governments today. '.repeat(2));

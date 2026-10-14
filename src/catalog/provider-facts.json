@@ -1,0 +1,674 @@
+{
+  "$schema": "provider-facts.v1",
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-14",
+  "generatedBy": "hand, from the pages listed under sources (Ninshubur's provider_docs adapter produces this same file)",
+  "providers": {
+    "anthropic": {
+      "sources": {
+        "models-overview": {
+          "url": "https://platform.claude.com/docs/en/about-claude/models/overview",
+          "fetched": "2026-10-14",
+          "format": "markdown (.md)"
+        },
+        "pricing": {
+          "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+          "fetched": "2026-10-14",
+          "format": "markdown (.md)"
+        },
+        "effort": {
+          "url": "https://platform.claude.com/docs/en/build-with-claude/effort",
+          "fetched": "2026-10-14",
+          "format": "markdown (.md)"
+        },
+        "deprecations": {
+          "url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+          "fetched": "2026-10-14",
+          "format": "markdown (.md)"
+        },
+        "release-notes": {
+          "url": "https://platform.claude.com/docs/en/release-notes/overview",
+          "fetched": "2026-10-14",
+          "format": "markdown (.md)"
+        },
+        "plans-fable": {
+          "url": "https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan",
+          "fetched": "2026-10-14",
+          "format": "html (article dated 2026-09-02)"
+        },
+        "app-release-notes": {
+          "url": "https://support.claude.com/en/articles/12138966-release-notes",
+          "fetched": "2026-10-14",
+          "format": "html"
+        }
+      },
+      "effortLevels": {
+        "ids": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "source": "effort",
+        "note": "API values. claude.ai shows them as Light, Medium, High, Extra high, Max (user-observed 2026-10-14; the app's own labels are not documented)."
+      },
+      "models": {
+        "anthropic/claude-fable-5.1": {
+          "name": "Claude Fable 5.1",
+          "apiId": "claude-fable-5-1",
+          "price": {
+            "input": 10,
+            "output": 50
+          },
+          "context": 1000000,
+          "maxOutput": 128000,
+          "status": "active",
+          "sources": {
+            "price": "pricing",
+            "context": "models-overview",
+            "status": "deprecations",
+            "efforts": "effort",
+            "released": "release-notes"
+          },
+          "retiresAt": "not before 2027-09-01",
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "high",
+          "released": "2026-09-01"
+        },
+        "anthropic/claude-opus-5.5": {
+          "name": "Claude Opus 5.5",
+          "apiId": "claude-opus-5-5",
+          "price": {
+            "input": 4,
+            "output": 20
+          },
+          "context": 1000000,
+          "maxOutput": 128000,
+          "status": "active",
+          "sources": {
+            "price": "pricing",
+            "context": "models-overview",
+            "status": "deprecations",
+            "efforts": "effort",
+            "released": "release-notes"
+          },
+          "retiresAt": "not before 2027-09-22",
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "medium",
+          "released": "2026-09-22"
+        },
+        "anthropic/claude-sonnet-5.5": {
+          "name": "Claude Sonnet 5.5",
+          "apiId": "claude-sonnet-5-5",
+          "price": {
+            "input": 2,
+            "output": 10
+          },
+          "context": 1000000,
+          "maxOutput": 128000,
+          "status": "active",
+          "sources": {
+            "price": "pricing",
+            "context": "models-overview",
+            "status": "deprecations",
+            "efforts": "effort",
+            "released": "release-notes"
+          },
+          "retiresAt": "not before 2027-09-28",
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "high",
+          "released": "2026-09-28"
+        },
+        "anthropic/claude-haiku-5.5": {
+          "name": "Claude Haiku 5.5",
+          "apiId": "claude-haiku-5-5",
+          "price": {
+            "input": 0.1,
+            "output": 0.5,
+            "longContext": {
+              "threshold": 100000,
+              "input": 0.5,
+              "output": 2.5
+            }
+          },
+          "context": 1000000,
+          "maxOutput": 128000,
+          "status": "active",
+          "sources": {
+            "price": "pricing",
+            "context": "models-overview",
+            "status": "deprecations",
+            "efforts": "effort",
+            "longContext": "pricing",
+            "released": "release-notes"
+          },
+          "retiresAt": "not before 2027-10-07",
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "medium",
+          "released": "2026-10-07",
+          "note": "Tiered: $0.10/$0.50 up to 100,000 input tokens, $0.50/$2.50 above."
+        },
+        "anthropic/claude-fable-5": {
+          "name": "Claude Fable 5",
+          "apiId": "claude-fable-5",
+          "price": {
+            "input": 10,
+            "output": 50
+          },
+          "status": "legacy",
+          "sources": {
+            "price": "pricing",
+            "status": "deprecations",
+            "efforts": "effort"
+          },
+          "retiresAt": "not before 2027-06-09",
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "high"
+        },
+        "anthropic/claude-opus-5": {
+          "name": "Claude Opus 5",
+          "apiId": "claude-opus-5",
+          "price": {
+            "input": 5,
+            "output": 25
+          },
+          "status": "legacy",
+          "sources": {
+            "price": "pricing",
+            "status": "deprecations",
+            "efforts": "effort"
+          },
+          "retiresAt": "not before 2027-07-24",
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "high"
+        },
+        "anthropic/claude-opus-4.8": {
+          "name": "Claude Opus 4.8",
+          "apiId": "claude-opus-4-8",
+          "price": {
+            "input": 5,
+            "output": 25
+          },
+          "status": "legacy",
+          "sources": {
+            "price": "pricing",
+            "status": "deprecations",
+            "efforts": "effort"
+          },
+          "retiresAt": "not before 2027-05-28",
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "high"
+        },
+        "anthropic/claude-opus-4.7": {
+          "name": "Claude Opus 4.7",
+          "apiId": "claude-opus-4-7",
+          "price": {
+            "input": 5,
+            "output": 25
+          },
+          "status": "legacy",
+          "sources": {
+            "price": "pricing",
+            "status": "deprecations",
+            "efforts": "effort"
+          },
+          "retiresAt": "not before 2027-04-16",
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "high"
+        },
+        "anthropic/claude-opus-4.6": {
+          "name": "Claude Opus 4.6",
+          "apiId": "claude-opus-4-6",
+          "price": {
+            "input": 5,
+            "output": 25
+          },
+          "status": "legacy",
+          "sources": {
+            "price": "pricing",
+            "status": "deprecations",
+            "efforts": "effort"
+          },
+          "retiresAt": "not before 2027-02-05",
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "max"
+          ],
+          "defaultEffort": "high"
+        },
+        "anthropic/claude-opus-4.5": {
+          "name": "Claude Opus 4.5",
+          "apiId": "claude-opus-4-5",
+          "price": {
+            "input": 5,
+            "output": 25
+          },
+          "status": "legacy",
+          "sources": {
+            "price": "pricing",
+            "status": "deprecations",
+            "efforts": "effort"
+          },
+          "retiresAt": "not before 2026-11-24",
+          "efforts": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "defaultEffort": "high"
+        },
+        "anthropic/claude-sonnet-5": {
+          "name": "Claude Sonnet 5",
+          "apiId": "claude-sonnet-5",
+          "price": {
+            "input": 2,
+            "output": 10
+          },
+          "status": "legacy",
+          "sources": {
+            "price": "pricing",
+            "status": "deprecations",
+            "efforts": "effort"
+          },
+          "retiresAt": "not before 2027-06-30",
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "high"
+        },
+        "anthropic/claude-sonnet-4.6": {
+          "name": "Claude Sonnet 4.6",
+          "apiId": "claude-sonnet-4-6",
+          "price": {
+            "input": 3,
+            "output": 15
+          },
+          "status": "legacy",
+          "sources": {
+            "price": "pricing",
+            "status": "deprecations",
+            "efforts": "effort"
+          },
+          "retiresAt": "not before 2027-02-17",
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "max"
+          ],
+          "defaultEffort": "high"
+        },
+        "anthropic/claude-sonnet-4.5": {
+          "name": "Claude Sonnet 4.5",
+          "apiId": "claude-sonnet-4-5-20250929",
+          "price": {
+            "input": 3,
+            "output": 15
+          },
+          "status": "deprecated",
+          "sources": {
+            "price": "pricing",
+            "status": "deprecations",
+            "efforts": "effort"
+          },
+          "retiresAt": "2026-11-30"
+        },
+        "anthropic/claude-haiku-4.5": {
+          "name": "Claude Haiku 4.5",
+          "apiId": "claude-haiku-4-5-20251001",
+          "price": {
+            "input": 1,
+            "output": 5
+          },
+          "status": "legacy",
+          "sources": {
+            "price": "pricing",
+            "status": "deprecations",
+            "efforts": "effort"
+          },
+          "retiresAt": "not before 2026-10-15",
+          "note": "Not in the effort parameter's supported-model list."
+        }
+      }
+    },
+    "openai": {
+      "sources": {
+        "model-pages": {
+          "url": "https://developers.openai.com/docs/models/{id}",
+          "fetched": "2026-10-14",
+          "format": "markdown (.md per model)"
+        },
+        "pricing": {
+          "url": "https://developers.openai.com/docs/pricing",
+          "fetched": "2026-10-14",
+          "format": "html"
+        },
+        "reasoning": {
+          "url": "https://developers.openai.com/docs/guides/reasoning",
+          "fetched": "2026-10-14",
+          "format": "html"
+        },
+        "deprecations": {
+          "url": "https://developers.openai.com/docs/deprecations",
+          "fetched": "2026-10-14",
+          "format": "html"
+        },
+        "api-changelog": {
+          "url": "https://developers.openai.com/changelog",
+          "fetched": "2026-10-14",
+          "format": "html"
+        },
+        "chatgpt-models": {
+          "url": "https://learn.chatgpt.com/docs/models",
+          "fetched": "2026-10-14",
+          "format": "markdown (.md)"
+        },
+        "chatgpt-help-gpt6": {
+          "url": "https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt",
+          "fetched": "2026-10-14",
+          "format": "html (blocks crawlers; read once by hand, updated ~2026-10-10)"
+        },
+        "news-rss": {
+          "url": "https://openai.com/news/rss.xml",
+          "fetched": "2026-10-14",
+          "format": "rss"
+        }
+      },
+      "effortLevels": {
+        "ids": [
+          "none",
+          "minimal",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "source": "reasoning",
+        "note": "API values. ChatGPT Work/Codex show Light, Medium, High, Extra High, Max (chatgpt-models); Chat shows Instant, Medium, High, Extra High, Pro (chatgpt-help-gpt6). Ultra is a subagent mode, not an effort level."
+      },
+      "models": {
+        "openai/gpt-6-astra": {
+          "name": "GPT-6 Astra",
+          "apiId": "gpt-6-astra",
+          "price": {
+            "input": 10,
+            "output": 50,
+            "longContext": {
+              "threshold": 272000,
+              "input": 20,
+              "output": 75.0
+            }
+          },
+          "context": 1050000,
+          "maxOutput": 128000,
+          "status": "active",
+          "sources": {
+            "price": "model-pages",
+            "longContext": "model-pages",
+            "context": "model-pages",
+            "status": "deprecations",
+            "efforts": "model-pages"
+          },
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "medium",
+          "note": "reasoning.effort: low, medium, high, xhigh, max (no none); default not stated on the model page, 'medium' per the reasoning guide for GPT-6 models."
+        },
+        "openai/gpt-6.1-sol": {
+          "name": "GPT-6.1 Sol",
+          "apiId": "gpt-6.1-sol",
+          "price": {
+            "input": 2,
+            "output": 10,
+            "longContext": {
+              "threshold": 272000,
+              "input": 4,
+              "output": 15.0
+            }
+          },
+          "context": 1050000,
+          "maxOutput": 128000,
+          "status": "active",
+          "sources": {
+            "price": "model-pages",
+            "longContext": "model-pages",
+            "context": "model-pages",
+            "status": "deprecations",
+            "efforts": "model-pages",
+            "released": "api-changelog"
+          },
+          "efforts": [
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "medium",
+          "released": "2026-09-29",
+          "note": "none and minimal are not supported."
+        },
+        "openai/gpt-6-sol": {
+          "name": "GPT-6 Sol",
+          "apiId": "gpt-6-sol",
+          "price": {
+            "input": 2,
+            "output": 10,
+            "longContext": {
+              "threshold": 272000,
+              "input": 4,
+              "output": 15.0
+            }
+          },
+          "context": 1050000,
+          "maxOutput": 128000,
+          "status": "active",
+          "sources": {
+            "price": "model-pages",
+            "longContext": "model-pages",
+            "context": "model-pages",
+            "status": "deprecations",
+            "efforts": "model-pages",
+            "released": "api-changelog"
+          },
+          "efforts": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "medium",
+          "released": "2026-09-22"
+        },
+        "openai/gpt-6-luna": {
+          "name": "GPT-6 Luna",
+          "apiId": "gpt-6-luna",
+          "price": {
+            "input": 0.1,
+            "output": 0.5,
+            "longContext": {
+              "threshold": 272000,
+              "input": 0.2,
+              "output": 0.75
+            }
+          },
+          "context": 1050000,
+          "maxOutput": 128000,
+          "status": "active",
+          "sources": {
+            "price": "model-pages",
+            "longContext": "model-pages",
+            "context": "model-pages",
+            "status": "deprecations",
+            "efforts": "model-pages",
+            "released": "api-changelog"
+          },
+          "efforts": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "xhigh",
+            "max"
+          ],
+          "defaultEffort": "medium",
+          "released": "2026-09-22"
+        },
+        "openai/gpt-5.6-sol": {
+          "name": "GPT-5.6 Sol",
+          "apiId": "gpt-5.6-sol",
+          "price": {
+            "input": 4,
+            "output": 20,
+            "longContext": {
+              "threshold": 272000,
+              "input": 8,
+              "output": 30.0
+            }
+          },
+          "context": 1050000,
+          "maxOutput": 128000,
+          "status": "legacy",
+          "sources": {
+            "price": "model-pages",
+            "longContext": "model-pages",
+            "context": "model-pages",
+            "status": "deprecations"
+          },
+          "note": "Model page lists no reasoning.effort values; the reasoning guide says GPT-5.6 defaults to medium."
+        },
+        "openai/gpt-5.6-terra": {
+          "name": "GPT-5.6 Terra",
+          "apiId": "gpt-5.6-terra",
+          "price": {
+            "input": 2,
+            "output": 12,
+            "longContext": {
+              "threshold": 272000,
+              "input": 4,
+              "output": 18.0
+            }
+          },
+          "context": 1050000,
+          "maxOutput": 128000,
+          "status": "legacy",
+          "sources": {
+            "price": "model-pages",
+            "longContext": "model-pages",
+            "context": "model-pages",
+            "status": "deprecations"
+          }
+        },
+        "openai/gpt-5.6-luna": {
+          "name": "GPT-5.6 Luna",
+          "apiId": "gpt-5.6-luna",
+          "price": {
+            "input": 0.2,
+            "output": 1.2,
+            "longContext": {
+              "threshold": 272000,
+              "input": 0.4,
+              "output": 1.8
+            }
+          },
+          "context": 1050000,
+          "maxOutput": 128000,
+          "status": "legacy",
+          "sources": {
+            "price": "model-pages",
+            "longContext": "model-pages",
+            "context": "model-pages",
+            "status": "deprecations"
+          }
+        },
+        "openai/gpt-5.5": {
+          "name": "GPT-5.5",
+          "apiId": "gpt-5.5",
+          "price": {
+            "input": 5,
+            "output": 30,
+            "longContext": {
+              "threshold": 272000,
+              "input": 10,
+              "output": 45.0
+            }
+          },
+          "context": 1050000,
+          "maxOutput": 128000,
+          "status": "retired",
+          "sources": {
+            "price": "model-pages",
+            "longContext": "model-pages",
+            "context": "model-pages",
+            "status": "chatgpt-models"
+          },
+          "retiresAt": "2026-10-14",
+          "note": "Retired from ChatGPT, Work and Codex on 2026-10-14 (learn.chatgpt.com); still on the API."
+        }
+      }
+    }
+  }
+}

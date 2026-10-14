@@ -16,6 +16,7 @@ export interface Explanation {
   why: string;
   elsewhere?: { label: string; serviceName: string; cost: string; why: string };
   isCurrent: boolean;
+  factsDate?: string;          // when the prices and statuses were read from the providers' docs
 }
 
 export function planName(catalog: Catalog, r: Ranked): string | undefined {
@@ -84,7 +85,7 @@ export function explain(s: Suggestion, catalog: Catalog): Explanation {
   return {
     taskLabel: TASK_LABELS[s.classification.primary as TaskType],
     signals, tokens: s.classification.tokensIn, sensitive: s.classification.sensitive,
-    rows, more, why: dominantReason(s, catalog), isCurrent: s.isCurrent,
+    rows, more, why: dominantReason(s, catalog), isCurrent: s.isCurrent, factsDate: catalog.factsGeneratedAt ?? catalog.generatedAt,
     elsewhere: e ? {
       label: e.label, serviceName: catalog.services[e.serviceId]?.name ?? e.serviceId,
       cost: costStrings(catalog, e).cost, why: e.reasons[e.reasons.length - 1] ?? '',
