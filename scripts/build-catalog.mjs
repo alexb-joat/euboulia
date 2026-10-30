@@ -6,7 +6,7 @@
 //   OpenRouter models API  capabilities and benchmark indexes (strength heuristics), and prices or
 //                          context for models the facts file does not cover
 // Facts win over OpenRouter wherever both have a value.
-//   node scripts/build-catalog.mjs [--from models.json] [--facts provider-facts.json]
+//   node scripts/build-catalog.mjs [--from models.json] [--facts provider-facts.json] [--keep-strengths]
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -16,6 +16,9 @@ const args = process.argv.slice(2);
 const fromIdx = args.indexOf('--from');
 const OPENROUTER = 'https://openrouter.ai/api/v1/models';
 const today = new Date().toISOString().slice(0, 10);
+// A model whose exact shutdown date (YYYY-MM-DD) has passed is published as retired, so extension versions that
+// only read `status` stop offering it after the next rebuild. "not before …" dates are earliest dates and never count.
+const statusOn = (m) => (m?.retiresAt && /^\d{4}-\d{2}-\d{2}$/.test(m.retiresAt) && m.retiresAt <= today ? 'retired' : m?.status);
 
 const services = JSON.parse(await readFile(path.join(root, 'src/catalog/services.json'), 'utf8')).services;
 const factsIdx = args.indexOf('--facts');
@@ -28,6 +31,13 @@ if (fromIdx !== -1) raw = JSON.parse(await readFile(args[fromIdx + 1], 'utf8')).
 else raw = (await (await fetch(OPENROUTER)).json()).data;
 if (!Array.isArray(raw)) throw new Error('unexpected OpenRouter payload');
 const byId = new Map(raw.map(m => [m.id, m]));
+
+// Benchmark indexes come and go in OpenRouter's feed. When a model has none this time, keep the strengths the
+// previous catalog had for it instead of falling back to defaults, and say so; defaults would quietly reshuffle
+// the suggestions.
+let previous = {};
+try { previous = JSON.parse(await readFile(path.join(root, 'src/catalog/catalog.json'), 'utf8')).models ?? {}; } catch { /* first build */ }
+const carried = [];
 
 const num = x => (x === null || x === undefined || x === '' || !Number.isFinite(Number(x))) ? null : Number(x);
 const clamp = (x, lo = 0, hi = 1) => Math.max(lo, Math.min(hi, x));
@@ -50,6 +60,23 @@ function strengthsFrom(id, ai, code, ctx, image, baseline) {
     vision: image ? r2(0.55 + intel * 0.4) : 0,
     long_context: r2(ctx >= 1_000_000 ? 0.85 + intel * 0.15 : ctx >= 200_000 ? 0.6 + intel * 0.2 : 0.3),
   };
+}
+
+// --keep-strengths: refresh prices and facts only, keep every model's previous strengths (for when the
+// benchmark source changes its scale and the new numbers are not yet comparable with the old ones).
+const keepStrengths = args.includes('--keep-strengths');
+const kept = [];
+
+function strengthsOrPrevious(id, ai, code, ctx, image, baseline) {
+  const prev = previous[id]?.strengths;
+  if (keepStrengths && prev) { kept.push(id); return prev; }
+  if (!baseline && prev && (ai === null || code === null)) {
+    // Recover the missing index from the previous strengths (inverse of strengthsFrom's scaling).
+    if (ai === null) ai = prev.reasoning * 50 + 10;
+    if (code === null) code = prev.code * 55 + 30;
+    carried.push(id);
+  }
+  return strengthsFrom(id, ai, code, ctx, image, baseline);
 }
 
 const models = {};
@@ -78,11 +105,11 @@ for (const [sid, svc] of Object.entries(services)) {
       provider: sm.modelId.split('/')[0],
       name: f?.m.name ?? (mm.name?.replace(/^(Anthropic|OpenAI|Google):\s*/, '') || sm.modelId),
       apiId: f?.m.apiId,
-      strengths: strengthsFrom(sm.modelId, num(b.intelligence_index), num(b.coding_index), ctx, image, baseline),
+      strengths: strengthsOrPrevious(sm.modelId, num(b.intelligence_index), num(b.coding_index), ctx, image, baseline),
       price: f?.m.price ?? (p !== null && c !== null ? { input: r2(p * 1e6), output: r2(c * 1e6) } : undefined),
       context: ctx,
       maxOutput: f?.m.maxOutput,
-      status: f?.m.status,
+      status: f ? statusOn(f.m) : undefined,
       retiresAt: f?.m.retiresAt,
       efforts: f?.m.efforts,
       defaultEffort: f?.m.defaultEffort,
@@ -118,8 +145,8 @@ for (const prov of Object.values(facts.providers)) {
     const sources = Object.entries(fm.sources ?? {}).map(([field, key]) => prov.sources[key] && ({ url: prov.sources[key].url.replace('{id}', fm.apiId ?? ''), date: prov.sources[key].fetched, field })).filter(Boolean);
     models[id] = {
       provider: id.split('/')[0], name: fm.name, apiId: fm.apiId,
-      strengths: strengthsFrom(id, num(b.intelligence_index), num(b.coding_index), fm.context ?? seed?.context_length ?? 200000, true, undefined),
-      price: fm.price, context: fm.context ?? seed?.context_length ?? 200000, maxOutput: fm.maxOutput, status: fm.status, retiresAt: fm.retiresAt,
+      strengths: strengthsOrPrevious(id, num(b.intelligence_index), num(b.coding_index), fm.context ?? seed?.context_length ?? 200000, true, undefined),
+      price: fm.price, context: fm.context ?? seed?.context_length ?? 200000, maxOutput: fm.maxOutput, status: statusOn(fm), retiresAt: fm.retiresAt,
       efforts: fm.efforts, defaultEffort: fm.defaultEffort, capabilities: ['vision', 'tools'], released: fm.released, sources,
     };
     for (const k of Object.keys(models[id])) if (models[id][k] === undefined) delete models[id][k];
@@ -132,3 +159,5 @@ for (const [sid, svc] of Object.entries(services)) {
 }
 await writeFile(path.join(root, 'src/catalog/catalog.json'), JSON.stringify(out, null, 2) + '\n');
 console.log(`catalog.json: ${Object.keys(out.services).length} services, ${Object.keys(models).length} models`);
+if (kept.length) console.warn(`--keep-strengths: previous strengths kept for ${kept.length} models`);
+if (carried.length) console.warn(`no benchmark indexes this time; previous index values kept for ${carried.length}: ${carried.join(', ')}`);

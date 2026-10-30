@@ -12,12 +12,28 @@ export function serviceForHost(catalog: Catalog, hostname: string): string | nul
   return null;
 }
 
+/** Today's date as YYYY-MM-DD in UTC, the format provider docs use for shutdown dates. */
+export function isoToday(now: Date = new Date()): string {
+  return now.toISOString().slice(0, 10);
+}
+
+/**
+ * A model is gone when the catalog says so, or when its shutdown date (an exact YYYY-MM-DD) has passed,
+ * so a catalog published before the date stops offering the model on the day without a republish.
+ * Dates such as "not before 2027-06-09" are earliest dates, not shutdowns, and never retire a model.
+ */
+export function isRetired(model: { status?: string; retiresAt?: string }, today: string = isoToday()): boolean {
+  if (model.status === 'retired') return true;
+  return !!model.retiresAt && /^\d{4}-\d{2}-\d{2}$/.test(model.retiresAt) && model.retiresAt <= today;
+}
+
 /**
  * Candidates a service offers, annotated with the user's plan on that service.
  * A model seen in the site's own picker (`observed`) counts as included in the
  * user's plan even when the catalog's plan list says otherwise.
  */
-export function candidatesFor(catalog: Catalog, serviceId: string, prefs: Prefs, observed: ObservedMap = {}): Candidate[] {
+export function candidatesFor(catalog: Catalog, serviceId: string, prefs: Prefs, observed: ObservedMap = {},
+  today: string = isoToday()): Candidate[] {
   const svc = catalog.services[serviceId];
   if (!svc) return [];
   const plan = prefs.services[serviceId]?.plan;
@@ -26,7 +42,7 @@ export function candidatesFor(catalog: Catalog, serviceId: string, prefs: Prefs,
   const efforts = new Map((svc.efforts ?? []).map(e => [e.id, e]));
   for (const m of svc.models) {
     const model = catalog.models[m.modelId];
-    if (!model || model.status === 'retired') continue;
+    if (!model || isRetired(model, today)) continue;
     const inPlan = plan !== undefined && ((m.plans ?? []).includes(plan) || seen.has(m.modelId));
     const base = { modelId: m.modelId, serviceId, model, plan: inPlan ? plan : undefined };
     const levels = (m.efforts ?? []).map(id => efforts.get(id)).filter((e): e is NonNullable<typeof e> => !!e);

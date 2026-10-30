@@ -1,8 +1,8 @@
 {
   "$schema": "provider-facts.v1",
   "schemaVersion": 1,
-  "generatedAt": "2026-10-14",
-  "generatedBy": "hand, from the pages listed under sources; verified against Ninshubur's provider_docs export on 2026-10-14 (identical except the two fields noted above)",
+  "generatedAt": "2026-10-30",
+  "generatedBy": "hand, from the pages listed under sources; re-verified against Ninshubur's provider_docs export on 2026-10-30: prices, status, context, output limits and effort levels unchanged since 2026-10-14 (the export still lacks release dates and lists Mythos and long-retired models the catalog leaves out)",
   "providers": {
     "anthropic": {
       "sources": {
@@ -453,7 +453,7 @@
             "longContext": {
               "threshold": 272000,
               "input": 20,
-              "output": 75.0
+              "output": 75
             }
           },
           "context": 1050000,
@@ -486,7 +486,7 @@
             "longContext": {
               "threshold": 272000,
               "input": 4,
-              "output": 15.0
+              "output": 15
             }
           },
           "context": 1050000,
@@ -520,7 +520,7 @@
             "longContext": {
               "threshold": 272000,
               "input": 4,
-              "output": 15.0
+              "output": 15
             }
           },
           "context": 1050000,
@@ -588,7 +588,7 @@
             "longContext": {
               "threshold": 272000,
               "input": 8,
-              "output": 30.0
+              "output": 30
             }
           },
           "context": 1050000,
@@ -611,7 +611,7 @@
             "longContext": {
               "threshold": 272000,
               "input": 4,
-              "output": 18.0
+              "output": 18
             }
           },
           "context": 1050000,
@@ -657,7 +657,7 @@
             "longContext": {
               "threshold": 272000,
               "input": 10,
-              "output": 45.0
+              "output": 45
             }
           },
           "context": 1050000,

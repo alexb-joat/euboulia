@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { validateCatalog } from '../../src/catalog/schema';
-import { BUNDLED, candidatesElsewhere, candidatesFor, serviceForHost } from '../../src/catalog/index';
+import { BUNDLED, candidatesElsewhere, candidatesFor, isRetired, serviceForHost } from '../../src/catalog/index';
 import { resolveModelLabel } from '../../src/catalog/aliases';
 import { validateRule } from '../../src/analyser/rules';
 import { prefs } from './helpers';
@@ -21,6 +21,13 @@ describe('catalog', () => {
     expect(fable(seen).plan).toBe('free');
     expect(fable(seen).capWeight).toBe(5);
     expect(candidatesFor(BUNDLED, 'claude', prefs(), seen).find(c => c.modelId === 'anthropic/claude-fable-5.1')!.plan).toBeUndefined();   // no plan set: still pay per use
+  });
+  it('a model drops out on its shutdown date without a new catalog', () => {
+    const offered = (today: string) => candidatesFor(BUNDLED, 'gemini', prefs(), {}, today).some(c => c.modelId === 'google/gemini-3.6-flash');
+    expect(offered('2026-11-18')).toBe(true);
+    expect(offered('2026-11-19')).toBe(false);                 // Google's API shutdown date for Gemini 3.6 Flash
+    expect(isRetired({ status: 'legacy', retiresAt: 'not before 2026-10-15' }, '2027-01-01')).toBe(false);   // earliest date, not a shutdown
+    expect(isRetired({ status: 'retired' }, '2000-01-01')).toBe(true);
   });
   it.each([
     [{ ...BUNDLED, schemaVersion: 2 }, /schemaVersion/],
