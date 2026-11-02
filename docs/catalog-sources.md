@@ -39,15 +39,37 @@ are observed in the apps, not documented. Both are labelled as such in the files
 ## The Ninshubur feed
 
 The Ninshubur crawler's `provider_docs` adapter reads the Markdown pages above on a schedule through its trust policy
-(hard-coded pages only, declared fields, taint checks, quarantine on structure changes) and exports this same file:
+(hard-coded pages only, declared fields, taint checks, quarantine on structure changes) and exports the same format:
 
 ```bash
 ninshubur sources test provider-docs-anthropic     # admission checklist against the live page
 ninshubur run --source provider-docs-anthropic --source provider-docs-openai
-ninshubur export euboulia-facts -o provider-facts.json
-npm run catalog:build -- --facts provider-facts.json   # in this repo; then publish catalog.json
+ninshubur export euboulia-facts -o docs-export.json
 ```
 
-Verified on 2026-10-14: the exported file rebuilt this catalog identically to the hand-entered one, apart from GPT-6
-Astra's default effort, which comes from OpenAI's reasoning guide (HTML, not yet parsed). The extension's daily
-catalog refresh then downloads the published `catalog.json` from the URL set on the options page.
+The export is an alarm, not an input. It has no Google figures and no release dates, and it lists models this catalog
+leaves out on purpose (Mythos, long-retired Claude models), so building from it would lose facts and add models. The
+daily refresh compares it with `provider-facts.json` and reports any difference in price, context, output limit, status,
+shutdown date or effort levels; a person then checks the provider's page and edits the file. Checked on 2026-11-02: the
+two files agree on those six fields for every model they share.
+
+## The daily refresh
+
+`deploy/linux/install.sh` installs a systemd user timer that runs `scripts/refresh-catalog.mjs` once a day from its own
+clone at `origin/main`, so local edits and unpushed commits never reach the public catalog. It also means a pushed change
+to `services.json` or `provider-facts.json` goes live with the next run. Each run builds, validates, compares with what is
+published, and then does one of three things:
+
+- **Publishes** ordinary news, with a desktop notification: a model retired on its shutdown date, a price or context
+  change from OpenRouter, a new model.
+- **Publishes nothing** when only dates changed, so a quiet day adds no commit to the public repository.
+- **Holds** everything when a model or service vanished, a price moved by more than half (and more than 10 cents per
+  million tokens) or went to zero, or strengths changed. One notification says why, and another only if more news piles
+  up behind it. Nothing goes out until a person runs `npm run catalog:refresh -- --accept` in that clone
+  (`~/.cache/euboulia/catalog-build`).
+
+Strengths stay as published: the benchmark feed behind them changed scale in October 2026 and needs a person to re-map it.
+A failed run tries again twice, 30 minutes apart, and then sends a notification. Every completed run adds one line to
+`~/.local/state/euboulia/catalog-refresh.jsonl`, and `npm run catalog:refresh -- --dry-run` shows what a run would do.
+
+The network calls are the OpenRouter models API, `github.com` to update the clone, and the push to the data repository.

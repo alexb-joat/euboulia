@@ -4,6 +4,7 @@
 
 - A model drops out of the suggestions on its shutdown date, even when the downloaded catalog was published before that date. Earliest dates such as "not before 2027-06-09" never remove a model.
 - Bundled catalog dated 2026-10-30.
+- The published catalog refreshes daily, so a retired model or a price change reaches the extension within a day without a new release.
 
 ## 0.1.0 (2026-10-14)
 

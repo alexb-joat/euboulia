@@ -69,7 +69,7 @@ Then open the extension's options page, set your plan on each service and move t
 - `npm run catalog:build` regenerates the bundled file from `src/catalog/services.json` plus the OpenRouter models API (prices, context, capabilities, benchmark indexes mapped to initial strengths); `--from models.json` uses a saved copy of that API response instead of fetching.
 - Each service in `services.json` carries a `_verified` note saying which selectors were read from the live site and when. Sites behind a sign-in wall (Claude, DeepSeek, Copilot, Poe) still have best-guess selectors; the catalog can patch them later without a release.
 - `npm run catalog:validate` runs the same validation the extension applies to a downloaded catalog.
-- Prices, context, status and effort levels are read from the providers' documentation into `src/catalog/provider-facts.json`, every figure with its source; see [docs/catalog-sources.md](docs/catalog-sources.md). The Ninshubur crawler produces that file on a schedule; `npm run catalog:publish` pushes the built catalog to the public data repository the extension reads.
+- Prices, context, status and effort levels are read from the providers' documentation into `src/catalog/provider-facts.json`, every figure with its source; see [docs/catalog-sources.md](docs/catalog-sources.md). `npm run catalog:publish` pushes the built catalog to the public data repository the extension reads, and a daily timer does the same on its own: it publishes routine changes and holds anything that looks wrong for a person to check ([how it decides](docs/catalog-sources.md#the-daily-refresh)).
 
 ## Development
 
