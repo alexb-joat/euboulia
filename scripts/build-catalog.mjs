@@ -7,6 +7,7 @@
 //                          context for models the facts file does not cover
 // Facts win over OpenRouter wherever both have a value.
 //   node scripts/build-catalog.mjs [--from models.json] [--facts provider-facts.json] [--keep-strengths]
+//                                  [--out catalog.json] [--previous catalog.json]
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,6 +15,10 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
 const fromIdx = args.indexOf('--from');
+const outIdx = args.indexOf('--out');
+const outFile = outIdx !== -1 ? args[outIdx + 1] : path.join(root, 'src/catalog/catalog.json');
+const prevIdx = args.indexOf('--previous');
+const previousFile = prevIdx !== -1 ? args[prevIdx + 1] : outFile;
 const OPENROUTER = 'https://openrouter.ai/api/v1/models';
 const today = new Date().toISOString().slice(0, 10);
 // A model whose exact shutdown date (YYYY-MM-DD) has passed is published as retired, so extension versions that
@@ -28,7 +33,10 @@ if (facts.schemaVersion !== 1 || !facts.providers) throw new Error('provider-fac
 const factFor = id => { for (const prov of Object.values(facts.providers)) if (prov.models?.[id]) return { prov, m: prov.models[id] }; return null; };
 let raw;
 if (fromIdx !== -1) raw = JSON.parse(await readFile(args[fromIdx + 1], 'utf8')).data;
-else raw = (await (await fetch(OPENROUTER)).json()).data;
+else {
+  try { raw = (await (await fetch(OPENROUTER, { signal: AbortSignal.timeout(60_000) })).json()).data; }
+  catch (e) { console.error(`cannot read ${OPENROUTER}: ${e.cause?.code ?? e.message}. Try again, or use --from models.json.`); process.exit(1); }
+}
 if (!Array.isArray(raw)) throw new Error('unexpected OpenRouter payload');
 const byId = new Map(raw.map(m => [m.id, m]));
 
@@ -36,7 +44,7 @@ const byId = new Map(raw.map(m => [m.id, m]));
 // previous catalog had for it instead of falling back to defaults, and say so; defaults would quietly reshuffle
 // the suggestions.
 let previous = {};
-try { previous = JSON.parse(await readFile(path.join(root, 'src/catalog/catalog.json'), 'utf8')).models ?? {}; } catch { /* first build */ }
+try { previous = JSON.parse(await readFile(previousFile, 'utf8')).models ?? {}; } catch { /* first build */ }
 const carried = [];
 
 const num = x => (x === null || x === undefined || x === '' || !Number.isFinite(Number(x))) ? null : Number(x);
@@ -129,7 +137,9 @@ for (const [sid, svc] of Object.entries(services)) {
       if (!backed.has('price') && entry.price) entry.sources.push({ url: `https://openrouter.ai/${m.id}`, date: today, field: 'price' });
       if (!backed.has('context')) entry.sources.push({ url: `https://openrouter.ai/${m.id}`, date: today, field: 'context' });
     }
-    entry.sources.push({ url: 'https://artificialanalysis.ai/', date: today, field: 'strengths' });
+    // Kept strengths keep the date they were last derived, not today's.
+    const keptSource = keepStrengths && previous[sm.modelId]?.sources?.find(x => x.field === 'strengths');
+    entry.sources.push(keptSource || { url: 'https://artificialanalysis.ai/', date: today, field: 'strengths' });
     for (const k of Object.keys(entry)) if (entry[k] === undefined) delete entry[k];
     models[sm.modelId] = entry;
   }
@@ -157,7 +167,7 @@ const out = { schemaVersion: 1, generatedAt: today, factsGeneratedAt: facts.gene
 for (const [sid, svc] of Object.entries(services)) {
   out.services[sid] = { ...svc, models: svc.models.filter(sm => models[sm.modelId]) };
 }
-await writeFile(path.join(root, 'src/catalog/catalog.json'), JSON.stringify(out, null, 2) + '\n');
+await writeFile(outFile, JSON.stringify(out, null, 2) + '\n');
 console.log(`catalog.json: ${Object.keys(out.services).length} services, ${Object.keys(models).length} models`);
 if (kept.length) console.warn(`--keep-strengths: previous strengths kept for ${kept.length} models`);
 if (carried.length) console.warn(`no benchmark indexes this time; previous index values kept for ${carried.length}: ${carried.join(', ')}`);

@@ -2,6 +2,7 @@
 // daily refresh reads (raw.githubusercontent.com serves it with an ETag). Data only: no code, no secrets.
 //   npm run catalog:build && npm run catalog:publish            (uses ~/.cache/euboulia/catalog-repo)
 //   CATALOG_REPO=git@github.com:alexb-joat/euboulia-catalog.git node scripts/publish-catalog.mjs [--dry-run]
+//   --catalog file publishes that file instead of the bundled one; --sync-only just clones or pulls the data repo.
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
@@ -12,6 +13,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const repo = process.env.CATALOG_REPO ?? 'git@github.com:alexb-joat/euboulia-catalog.git';
 const dir = process.env.CATALOG_DIR ?? path.join(os.homedir(), '.cache/euboulia/catalog-repo');
 const dry = process.argv.includes('--dry-run');
+const catIdx = process.argv.indexOf('--catalog');
+const catalogFile = catIdx !== -1 ? process.argv[catIdx + 1] : path.join(root, 'src/catalog/catalog.json');
 const git = (...a) => { try { return execFileSync('git', a, { cwd: dir, stdio: ['ignore', 'pipe', 'inherit'] }).toString().trim(); } catch (e) { if (a[0] === 'rev-parse') return ''; throw e; } };
 
 if (!existsSync(path.join(dir, '.git'))) {
@@ -20,9 +23,10 @@ if (!existsSync(path.join(dir, '.git'))) {
 } else if (git('rev-parse', '--verify', '--quiet', 'HEAD') !== '') {
   git('pull', '--quiet', '--ff-only');
 }
-const catalog = JSON.parse(readFileSync(path.join(root, 'src/catalog/catalog.json'), 'utf8'));
+if (process.argv.includes('--sync-only')) process.exit(0);
+const catalog = JSON.parse(readFileSync(catalogFile, 'utf8'));
 if (catalog.schemaVersion !== 1 || !catalog.services || !catalog.models) throw new Error('catalog.json does not look valid; run npm run catalog:validate');
-copyFileSync(path.join(root, 'src/catalog/catalog.json'), path.join(dir, 'catalog.json'));
+copyFileSync(catalogFile, path.join(dir, 'catalog.json'));
 copyFileSync(path.join(root, 'src/catalog/provider-facts.json'), path.join(dir, 'provider-facts.json'));
 writeFileSync(path.join(dir, 'README.md'), `# Euboulia catalog
 
