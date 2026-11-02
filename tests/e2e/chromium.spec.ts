@@ -146,6 +146,7 @@ test('options page: refresh downloads, validates and stores a catalog from the c
   const id = new URL(sw.url()).host;
   const page = await context.newPage();
   await page.goto(`chrome-extension://${id}/options.html`);
+  await page.waitForSelector('html[data-ready]', { state: 'attached' });   // a click before init finishes does nothing
   await page.fill('#catalogUrl', 'http://127.0.0.1:8099/catalog.json');
   await page.click('#refreshCatalog');
   await expect.poll(() => page.textContent('#catalogStatus'), { timeout: 5000 }).toMatch(/catalog .* loaded/);

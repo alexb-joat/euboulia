@@ -74,7 +74,7 @@ try {
   const tabs = await driver.getAllWindowHandles();
   if (tabs.length !== 1) throw new Error(`install opened ${tabs.length - 1} extra tab(s) although access was granted`);
   await driver.get(await optionsUrl());
-  const hiddenWhenGranted = await waitFor(() => driver.executeScript('const b = document.getElementById("accessBanner"); return b ? String(b.hidden) : null'), 'options page', 3000);
+  const hiddenWhenGranted = await waitFor(() => driver.executeScript('return document.documentElement.dataset.ready ? String(document.getElementById("accessBanner").hidden) : null'), 'options page', 3000);
   if (hiddenWhenGranted !== 'true') throw new Error('access banner shown although every site is granted');
   await driver.setContext(firefox.Context.CHROME);
   await driver.executeScript(`

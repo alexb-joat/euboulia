@@ -224,6 +224,8 @@ async function init(): Promise<void> {
   $('clearUsage').addEventListener('click', async () => { await clearUsage(); await renderUsage(); });
 
   onChanged(keys => { if (keys.includes('usage')) renderUsage(); });
+  // Every control is wired from here on; the browser tests wait for this before they click.
+  document.documentElement.dataset.ready = 'true';
 }
 
 init().catch(e => console.error('[euboulia options]', e));
