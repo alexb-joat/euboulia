@@ -9,3 +9,7 @@ updates:
     directory: /
     schedule: { interval: weekly }
     cooldown: { default-days: 7 }
+    groups:
+      # codeql-action/init and /analyze must run the same version, so they update in one PR.
+      codeql-action:
+        patterns: ["github/codeql-action*"]
