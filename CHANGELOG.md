@@ -1,8 +1,13 @@
 # Changelog
 
-## 0.1.0 (unreleased)
+## Unreleased
 
-First release.
+- A model drops out of the suggestions on its shutdown date, even when the downloaded catalog was published before that date. Earliest dates such as "not before 2027-06-09" never remove a model.
+- Bundled catalog dated 2026-10-30.
+
+## 0.1.0 (2026-10-14)
+
+First release, on [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/euboulia/).
 
 - Badge next to the prompt box on Claude, ChatGPT and Gemini; experimental on Grok, Perplexity, Le Chat, DeepSeek, Copilot, Poe and OpenRouter; Open WebUI on any host; generic adapter for other self-hosted UIs.
 - Local classifier (code, reasoning, writing, quick chat, summarising, translation, data, images, long context) and sensitive-data detector; nothing typed leaves the browser.

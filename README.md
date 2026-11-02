@@ -15,7 +15,7 @@
 ![network](https://img.shields.io/badge/outbound%20requests-catalog%20only-5fd6ae)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-[Install](#install-unpacked-for-now) &nbsp;·&nbsp; [How it works](#how-it-works) &nbsp;·&nbsp; [Catalog](#catalog) &nbsp;·&nbsp; [Privacy](#security-and-privacy) &nbsp;·&nbsp; [Development](#development)
+[Install](#install) &nbsp;·&nbsp; [How it works](#how-it-works) &nbsp;·&nbsp; [Catalog](#catalog) &nbsp;·&nbsp; [Privacy](#security-and-privacy) &nbsp;·&nbsp; [Development](#development)
 
 <sub><i>Euboulia (Εὐβουλία): good counsel, the virtue of deciding well before acting.<br>Here it decides which model deserves the prompt, and tells you why.</i></sub>
 
@@ -46,15 +46,17 @@
 | **Shows the pick** | A badge styled from the site's own font and colours. If another service you enabled would be clearly better value, it says so. |
 | **Learns** | When you keep overriding a suggestion with the same model for a task on a site (three or more times, most of the time), that model gets a small nudge and the explanation says "you usually pick X for this"; three net thumbs-downs nudge a model the other way. |
 
-## Install (unpacked, for now)
+## Install
+
+- **Firefox 142+:** [Euboulia on Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/euboulia/). Firefox grants the chat sites at install; if you later switch a site off in the extensions menu, the options page shows an "Allow on these sites" banner to restore it.
+- **Chrome, Edge, Brave:** not in the Chrome Web Store yet, so load it unpacked: build it as below, open `chrome://extensions`, enable Developer mode, "Load unpacked", pick `dist/chrome`.
 
 ```bash
 npm install
 npm run build          # dist/chrome and dist/firefox
 ```
 
-- Chrome, Edge, Brave: open `chrome://extensions`, enable Developer mode, "Load unpacked", pick `dist/chrome`.
-- Firefox: `npm run run:ff` (temporary add-on through web-ext, in a dev profile that keeps your logins between runs; works with Ubuntu's snap Firefox), or `about:debugging` → "Load Temporary Add-on" → `dist/firefox/manifest.json`. Firefox grants the chat sites at install; if you later switch a site off in the extensions menu, the options page shows an "Allow on these sites" banner to restore it.
+To try a development build in Firefox: `npm run run:ff` (temporary add-on through web-ext, in a dev profile that keeps your logins between runs; works with Ubuntu's snap Firefox), or `about:debugging` → "Load Temporary Add-on" → `dist/firefox/manifest.json`.
 
 The manifest's host permissions are generated from the hosts in `src/catalog/services.json`, so adding a site means adding it there (plus an adapter under `src/sites`).
 
