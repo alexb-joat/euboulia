@@ -15,7 +15,7 @@ Euboulia is a browser extension that reads the prompt you are typing on a chat s
 - Runtime dependencies: none. Everything under `node_modules` is build and test tooling.
 - Dev dependencies are pinned to exact versions in `package.json` and locked in `package-lock.json`; Dependabot proposes updates weekly with a seven-day cooldown.
 - GitHub Actions are pinned by commit SHA and run with `permissions: contents: read`. CodeQL and dependency review run on pull requests.
-- `npm audit` findings in `web-ext`'s transitive dependencies (a Firefox packaging tool) are handled with `overrides` where a fixed version exists (`shell-quote`). Known exception as of 2026-10-13: `node-forge` (GHSA-86w9-cpqp-85rv) reached through `@devicefarmer/adbkit`, web-ext's Android support, which this project never invokes; no fixed release exists. None of that code ships in the extension, and CI audits the shipped tree (`npm audit --omit=dev`).
+- `npm audit` findings in `web-ext`'s transitive dependencies (a Firefox packaging tool) are handled with `overrides` where a fixed version exists (`shell-quote`). Known exceptions as of 2026-11-02, both inside `web-ext`, which only ever reads this project's own build output: `minimatch` 3 (GHSA-g3hv-75wg-m249), whose fix is major version 11 while ESLint and `multimatch` require version 3, and `deepmerge` (GHSA-gcqx-w48m-w2h4), which has no fixed release. None of that code ships in the extension, and CI audits the shipped tree (`npm audit --omit=dev`).
 
 ## Reporting a vulnerability
 
