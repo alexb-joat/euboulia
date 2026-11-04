@@ -34,7 +34,7 @@
     "selenium-webdriver": "4.51.0",
     "typescript": "7.0.2",
     "vitest": "5.0.5",
-    "web-ext": "10.7.0"
+    "web-ext": "10.8.0"
   },
   "overrides": {
     "shell-quote": "1.12.0"
