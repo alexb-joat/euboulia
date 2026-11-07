@@ -9,6 +9,15 @@ const CONTEXT_MARGIN = 1.2;
 export const FLOOR_BASE = 0.1;
 export const FLOOR_PER_COST = 0.3;
 const FLOOR_PENALTY = 6;
+// Plan options: the cost score falls with the share of your limit one send takes (cap weight, Sonnet at Medium = 1).
+// Half the score at 2.5× Sonnet. Up to 3× this stays within 0.06 of the old straight line, and past it the score
+// keeps falling where the old one stopped at 0.4, so a heavier effort never ties a lighter one at equal fit.
+export const CAP_HALF = 2.5;
+export const CAP_STEEPNESS = 3;
+
+export function capScore(capWeight: number): number {
+  return 1 / (1 + Math.pow(Math.max(0, capWeight) / CAP_HALF, CAP_STEEPNESS));
+}
 
 export function fitScore(cls: Classification, strengths: Candidate['model']['strengths'], delta: Partial<Record<TaskType, number>> = {}): number {
   let fit = 0;
@@ -28,10 +37,7 @@ function costScores(ranked: Omit<Ranked, 'costScore' | 'total'>[]): number[] {
   const span = min > 0 ? Math.log(max / min) : 0;
   return ranked.map((r, i) => {
     const c = r.cost;
-    if (c.kind === 'included') {
-      // Already paid for; a heavier cap weight costs a little.
-      return Math.max(0.4, Math.min(1, 1 - 0.3 * (c.capWeight - 1)));
-    }
+    if (c.kind === 'included') return capScore(c.capWeight);
     if (c.kind === 'unknown') return 0.5;
     const u = usds[i]!;
     if (u === 0 || span === 0) return 1;

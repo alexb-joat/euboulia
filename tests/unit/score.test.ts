@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { scoreCandidates } from '../../src/analyser/score';
+import { CAP_HALF, capScore, scoreCandidates } from '../../src/analyser/score';
+import { BUNDLED, candidatesFor } from '../../src/catalog/index';
 import { estimateCost, formatUsd, outputTokensFor } from '../../src/analyser/cost';
 import { cand, cls, model, prefs } from './helpers';
 
@@ -66,8 +67,36 @@ describe('scoreCandidates', () => {
     expect(r[0]!.reasons[0]).toContain('love-cheap');
   });
   it('included models score well on cost regardless of api price', () => {
-    const inc = cand('inc', { price: { input: 10, output: 50 } }, 'svc', { plan: 'pro', capWeight: 1 });
-    const r = scoreCandidates(cls('code'), [inc, cheap], prefs(), [], 'svc');
-    expect(r.find(x => x.modelId === 'inc')!.costScore).toBe(1);
+    const dear = cand('dear', { price: { input: 10, output: 50 } }, 'svc', { plan: 'pro', capWeight: 1 });
+    const thrifty = cand('thrifty', { price: { input: 0.1, output: 0.5 } }, 'svc', { plan: 'pro', capWeight: 1 });
+    const r = scoreCandidates(cls('code'), [dear, thrifty, cheap], prefs(), [], 'svc');
+    const score = (id: string) => r.find(x => x.modelId === id)!.costScore;
+    expect(score('dear')).toBe(score('thrifty'));
+    expect(score('dear')).toBeGreaterThan(0.9);
+  });
+});
+
+describe('plan limit weight', () => {
+  it('the cost score falls with every step up in cap weight, light to heaviest', () => {
+    const weights = [0.06, 0.1, 0.3, 0.6, 1, 1.6, 2, 3.2, 4.4, 6, 11, 15];
+    const scores = weights.map(capScore);
+    for (let i = 1; i < scores.length; i++) expect(scores[i]!, `weight ${weights[i]}`).toBeLessThan(scores[i - 1]!);
+    expect(capScore(CAP_HALF)).toBeCloseTo(0.5, 10);
+  });
+  it('at equal fit a heavier effort ranks lower (Max below Extra high)', () => {
+    const same = { strengths: { code: 0.9 }, price: { input: 5, output: 25 } };
+    const xhigh = cand('xhigh', same, 'svc', { plan: 'max', capWeight: 4.4 });
+    const max = cand('max', same, 'svc', { plan: 'max', capWeight: 6 });
+    const r = scoreCandidates(cls('code'), [max, xhigh], prefs(), [], 'svc');
+    expect(r.map(x => x.modelId)).toEqual(['xhigh', 'max']);
+    expect(r[0]!.total - r[1]!.total).toBeGreaterThan(0.01);
+  });
+  it('on the real catalog, each Opus 5.5 effort costs more of the limit than the one below', () => {
+    const p = prefs({ services: { claude: { enabled: true, plan: 'max' } } });
+    const r = scoreCandidates(cls('reasoning'), candidatesFor(BUNDLED, 'claude', p), p, [], 'claude');
+    const opus = ['low', 'medium', 'high', 'xhigh', 'max'].map(e => r.find(x => x.key === `anthropic/claude-opus-5.5@${e}`)!);
+    for (let i = 1; i < opus.length; i++) expect(opus[i]!.costScore, opus[i]!.label).toBeLessThan(opus[i - 1]!.costScore);
+    // Max's estimated fit gain over Extra high does not pay for its extra limit at the default slider.
+    expect(opus[4]!.total).toBeLessThan(opus[3]!.total);
   });
 });
