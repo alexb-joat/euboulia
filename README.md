@@ -32,9 +32,9 @@
 
 ## Why Euboulia
 
-| Private by design | Knows your plan | Explains itself | Learns locally |
+| Private by design | Knows your plan | Explains itself | Your clicks don't steer it |
 |---|---|---|---|
-| The classifier, the scoring and the catalog run inside the extension. The only network call is a daily download of the catalog JSON from the public [euboulia-catalog](https://github.com/alexb-joat/euboulia-catalog) repository; clear the URL on the options page to switch it off. See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md). | Cost is shown both ways: "included" when the model is in the plan you set, otherwise the API-equivalent price for this prompt. When you open the site's model picker it notes which models the site really offers you. | Every suggestion carries the task it saw, the signals, the top three with fit and cost, every other available model one click away, and the sentence that explains the winner. | Thumbs up or down, and whether you followed the suggestion when you hit send, stay in the browser. Export or clear the history on the options page. |
+| The classifier, the scoring and the catalog run inside the extension. The only network call is a daily download of the catalog JSON from the public [euboulia-catalog](https://github.com/alexb-joat/euboulia-catalog) repository; clear the URL on the options page to switch it off. See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md). | Cost is shown both ways: "included" when the model is in the plan you set, otherwise the API-equivalent price for this prompt. When you open the site's model picker it notes which models the site really offers you. | Every suggestion carries the task it saw, the signals, the top three with fit and cost, every other available model one click away, and the sentence that explains the winner. | A suggestion rests on the prompt and the providers' documentation, never on what you picked before. Thumbs up or down, and whether you followed the suggestion, stay in the browser for you to export or clear on the options page. |
 
 ## How it works
 
@@ -44,7 +44,6 @@
 | **Reads the prompt** | After 400 ms of idle, a keyword and regex classifier (the same signals as the [Trioditis](https://github.com/alexb-joat/trioditis) router) labels the task: code, reasoning, writing, quick chat, summarising, translation, data work, image understanding, long context. It notices sensitive data (emails, keys, card numbers) without ever storing the matched text. |
 | **Scores the models** | Fit per task type comes from the catalog; cost is estimated from the prompt size and the model's API price, or shown as "included" for your plan. Models with an effort setting (Claude's Low to Max) are scored once per level, so the suggestion can be "Sonnet 5.5 · High". Your preference slider (best quality … cheapest) sets the balance, and a quality floor keeps a much weaker model from winning on price alone. Custom rules can prefer or exclude models. |
 | **Shows the pick** | A badge styled from the site's own font and colours. If another service you enabled would be clearly better value, it says so. |
-| **Learns** | When you keep overriding a suggestion with the same model for a task on a site (three or more times, most of the time), that model gets a small nudge and the explanation says "you usually pick X for this"; three net thumbs-downs nudge a model the other way. |
 
 ## Install
 
@@ -75,7 +74,7 @@ Then open the extension's options page, set your plan on each service and move t
 
 ```bash
 npm run typecheck
-npm test                     # vitest: analyser, scoring, learning, catalog, DOM fixtures
+npm test                     # vitest: analyser, scoring, catalog, DOM fixtures, privacy guards
 npm run test:e2e             # Playwright + Chromium with the unpacked extension on fixture pages
 npm run test:ff              # Firefox: temporary add-on through geckodriver on the same fixture page
 npm run build:dev && npm run lint:ff
@@ -96,7 +95,7 @@ The script keeps structure, ids, classes, roles and short control labels, and st
 ## Layout
 
 ```
-src/analyser    classify, sensitive, cost, score, decide, explain, learn  (pure, unit-tested)
+src/analyser    classify, sensitive, cost, score, decide, explain  (pure, unit-tested)
 src/catalog     catalog.json, schema validation, alias resolution
 src/sites       adapter interface, one adapter per site, openwebui, generic
 src/content     registry (SPA survival), watcher, badge, cloud, placement, theme
@@ -113,6 +112,6 @@ src/options     settings page
 
 ## Status
 
-Milestones 1 and 2 are done (ten sites plus Open WebUI and generic; badge; cloud; options; picker observation; Firefox and Chromium smokes) and the local-learning part of milestone 3. Still open: real-session selector checks on the sites behind sign-in walls, the optional click-through that switches the site's model for you, and pointing the catalog URL at the crawler's published file.
+Milestones 1 and 2 are done (ten sites plus Open WebUI and generic; badge; cloud; options; picker observation; Firefox and Chromium smokes). Learning from clicks was built in milestone 3 and taken out again after 0.1.0, so that suggestions rest on documentation only. Still open: real-session selector checks on the sites behind sign-in walls, the optional click-through that switches the site's model for you, and pointing the catalog URL at the crawler's published file.
 
 MIT licensed.

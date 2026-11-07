@@ -1,12 +1,11 @@
 import { classify } from '../analyser/classify';
 import { decide } from '../analyser/decide';
 import { explain } from '../analyser/explain';
-import { learnBiases } from '../analyser/learn';
 import { scoreCandidates } from '../analyser/score';
 import { candidatesElsewhere, candidatesFor } from '../catalog/index';
 import { resolveModelLabel, resolveOptionKey } from '../catalog/aliases';
 import { debounce } from '../shared/debounce';
-import type { Catalog, ObservedMap, Prefs, Rule, Suggestion, UsageEvent } from '../shared/types';
+import type { Catalog, ObservedMap, Prefs, Rule, Suggestion } from '../shared/types';
 import type { ComposerHandle, SiteAdapter } from '../sites/adapter';
 import { Badge } from './badge';
 import type { Cloud } from './cloud';
@@ -19,7 +18,6 @@ export const IDLE_MS = 400;
 export interface Shared {
   catalog: Catalog; prefs: Prefs; rules: Rule[]; adapter: SiteAdapter; cloud: Cloud; serviceId: string;
   observed: ObservedMap;      // models seen in each service's picker
-  usage: UsageEvent[];        // local outcome/feedback history for learned biases
 }
 
 /** One per composer: listens to typing, runs the pipeline, owns a badge. */
@@ -49,16 +47,15 @@ export class ComposerWatcher {
   reanalyse(): void { this.suggestion = undefined; this.analyse(); }
 
   private analyse(): void {
-    const { adapter, catalog, prefs, rules, serviceId, observed, usage } = this.shared;
+    const { adapter, catalog, prefs, rules, serviceId, observed } = this.shared;
     const text = adapter.readText(this.c).trim();
     const attachments = adapter.attachments(this.c);
     if (!text && !attachments.some(a => a.kind === 'image')) { this.badge.hide(); this.suggestion = undefined; if (this.shared.cloud.isOpen) this.shared.cloud.close(); return; }
     const cls = classify(text, attachments);
     const currentLabel = adapter.currentModel(this.c);
     const current = resolveOptionKey(catalog, serviceId, currentLabel) ?? undefined;
-    const labelOf = (id: string) => catalog.services[serviceId]?.models.find(m => m.modelId === id)?.label ?? catalog.models[id]?.name ?? id;
-    const biases = learnBiases(usage, serviceId, cls.primary, labelOf);
-    let here = scoreCandidates(cls, candidatesFor(catalog, serviceId, prefs, observed), prefs, rules, serviceId, biases);
+    // What you picked or voted before never enters the ranking: it rests on the prompt and the documented facts.
+    let here = scoreCandidates(cls, candidatesFor(catalog, serviceId, prefs, observed), prefs, rules, serviceId);
     let elsewhere = scoreCandidates(cls, candidatesElsewhere(catalog, serviceId, prefs, observed), prefs, rules, serviceId);
     if (!here.length && !(serviceId in catalog.services)) {
       // Unknown site (generic adapter): rank the services the user enabled instead.

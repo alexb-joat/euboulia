@@ -1,7 +1,9 @@
 // Guards the privacy promise: the bundles that run on chat pages (content) and in
 // the options page must contain no network API at all; only the background script
-// may fetch, and only the user-configured catalog URL. Bundled with esbuild in
-// memory so the test does not depend on a prior build.
+// may fetch, and only the user-configured catalog URL. It also guards that a
+// suggestion rests on the prompt and the documented facts: the content script
+// never reads the click history. Bundled with esbuild in memory so the test does
+// not depend on a prior build.
 import { build } from 'esbuild';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -35,5 +37,13 @@ describe('no network from the page side', () => {
     const hits = [...js.matchAll(/\bfetch\s*\(/g)].length;
     expect(hits).toBe(1);
     expect(js.match(DYNAMIC)).toBeNull();
+  });
+});
+
+describe('no click history in the ranking', () => {
+  it('content script never reads the usage history', async () => {
+    const js = await bundle('content/main.ts');
+    expect(js.length).toBeGreaterThan(10_000);
+    expect(js.match(/\bgetUsage\d*\b/)).toBeNull();
   });
 });

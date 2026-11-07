@@ -1,6 +1,5 @@
 import type { Candidate, Classification, Prefs, Ranked, Rule, TaskType } from '../shared/types';
 import { estimateCost } from './cost';
-import type { Bias } from './learn';
 import { applyRules } from './rules';
 
 const DEFAULT_STRENGTH = 0.5;
@@ -41,10 +40,9 @@ function costScores(ranked: Omit<Ranked, 'costScore' | 'total'>[]): number[] {
 }
 
 export function scoreCandidates(
-  cls: Classification, candidates: Candidate[], prefs: Prefs, rules: Rule[], site: string, biases: Bias[] = [],
+  cls: Classification, candidates: Candidate[], prefs: Prefs, rules: Rule[], site: string,
 ): Ranked[] {
   const effects = applyRules(rules, { cls, site });
-  const biasFor = new Map(biases.map(b => [b.modelId, b]));
   const partial: Omit<Ranked, 'costScore' | 'total'>[] = [];
   for (const c of candidates) {
     const reasons: string[] = [];
@@ -61,12 +59,10 @@ export function scoreCandidates(
   const floor = bestFit - (FLOOR_BASE + FLOOR_PER_COST * lambda);
   const ranked: Ranked[] = partial.map((p, i) => {
     const boost = effects.boosts.get(p.modelId);
-    const bias = biasFor.get(p.modelId);
     // Your own rules outrank the automatic floor: a model you told it to prefer is not penalised.
     const shortfall = boost && boost.boost > 0 ? 0 : Math.max(0, floor - p.fit);
-    const total = (1 - lambda) * p.fit + lambda * cs[i]! + (boost?.boost ?? 0) + (bias?.boost ?? 0) - FLOOR_PENALTY * shortfall;
+    const total = (1 - lambda) * p.fit + lambda * cs[i]! + (boost?.boost ?? 0) - FLOOR_PENALTY * shortfall;
     if (boost) p.reasons.push(`your rule "${boost.ruleId}" prefers it`);
-    if (bias && bias.boost > 0) p.reasons.push(bias.reason);
     return { ...p, costScore: cs[i]!, total };
   });
   ranked.sort((a, b) => b.total - a.total);

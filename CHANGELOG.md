@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Suggestions no longer learn from your clicks. Before, a model you kept picking over the suggestion got a small nudge, and repeated thumbs-downs pushed a model down. Now a suggestion rests on the prompt and the providers' documentation only. Your picks and votes stay in the local history, which you can still export or clear on the options page.
 - A model drops out of the suggestions on its shutdown date, even when the downloaded catalog was published before that date. Earliest dates such as "not before 2027-06-09" never remove a model.
 - Bundled catalog dated 2026-10-30.
 - The published catalog refreshes daily, so a retired model or a price change reaches the extension within a day without a new release.

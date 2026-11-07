@@ -15,7 +15,7 @@ Euboulia (Greek: good counsel) watches the prompt you are typing on a chat site 
 - Cost shown both ways: "included in your plan" and the equivalent API price, so you can see what a message really costs.
 - A slider from "best quality" to "cheapest", plus your own rules ("prefer Haiku for quick chat").
 - When another service you use would be clearly better value for this prompt, it says so.
-- Learns your habits locally: "you usually pick X for this".
+- Suggestions rest on the prompt and the providers' documentation, never on what you clicked before.
 
 Everything runs inside the extension. The classifier, the scoring and the catalog live in your browser; the only network request is an optional daily catalog download from a URL you choose.
 

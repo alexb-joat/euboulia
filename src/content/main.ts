@@ -1,9 +1,9 @@
 import { BUNDLED, serviceForHost } from '../catalog/index';
 import { resolveModelLabel } from '../catalog/aliases';
 import {
-  getObserved, getPrefs, getRegistrations, getRules, getStoredCatalog, getUsage, onChanged, setObserved,
+  getObserved, getPrefs, getRegistrations, getRules, getStoredCatalog, onChanged, setObserved,
 } from '../shared/storage';
-import type { Catalog, ObservedMap, Prefs, Rule, UsageEvent } from '../shared/types';
+import type { Catalog, ObservedMap, Prefs, Rule } from '../shared/types';
 import type { ComposerHandle, SiteAdapter } from '../sites/adapter';
 import { allAdapters, pickAdapter } from '../sites/registry';
 import { Cloud } from './cloud';
@@ -32,7 +32,6 @@ async function main(): Promise<void> {
   let prefs: Prefs = await getPrefs();
   let rules: Rule[] = await getRules();
   const observed: ObservedMap = await getObserved().catch(() => ({}));
-  const usage: UsageEvent[] = await getUsage().catch(() => []);
 
   // Dev builds honour <meta name="euboulia-service" content="claude"> so fixture
   // pages on localhost exercise a real site adapter.
@@ -42,7 +41,7 @@ async function main(): Promise<void> {
     || pickAdapter({ catalog });
   const serviceId = forced ?? serviceForHost(catalog, location.hostname) ?? adapter.id;
   const shared: Shared = {
-    catalog, prefs, rules, adapter, serviceId, observed, usage,
+    catalog, prefs, rules, adapter, serviceId, observed,
     cloud: new Cloud(readTheme(document.body), prefs.cloudCollapsedByDefault),
   };
 
@@ -79,7 +78,7 @@ async function main(): Promise<void> {
     if (keys.includes('prefs')) shared.prefs = await getPrefs();
     if (keys.includes('rules')) shared.rules = await getRules();
     if (keys.includes('observed')) shared.observed = await getObserved();
-    if (keys.includes('usage')) { shared.usage = await getUsage(); return; }   // our own send; no re-analysis needed
+    if (keys.includes('usage')) return;   // our own send or vote; the ranking never reads it
     registry.forEach(w => w.reanalyse());
   });
 
