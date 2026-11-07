@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from 'vitest';
 import { pickAdapter } from '../../src/sites/registry';
-import { resolveModelLabel } from '../../src/catalog/aliases';
+import { resolveModelLabel, resolveOptionKey } from '../../src/catalog/aliases';
 import { BUNDLED } from '../../src/catalog/index';
 import { deps, loadFixture } from './helpers';
 
@@ -19,6 +19,7 @@ describe('site adapters', () => {
     expect(c!.sendButton?.getAttribute('data-testid')).toBe('chat-input-send');
     expect(a.currentModel(c!)).toBe('Opus 5.5 Max');   // the real picker appends the effort level
     expect(resolveModelLabel(BUNDLED, 'claude', a.currentModel(c!))).toBe('anthropic/claude-opus-5.5');
+    expect(resolveOptionKey(BUNDLED, 'claude', a.currentModel(c!))).toBe('anthropic/claude-opus-5.5@max');
     expect(a.contentColumn(c!).tagName).toBe('FIELDSET');
     expect(a.attachments(c!)).toEqual([]);
     c!.element.innerHTML = '<p>fix this bug</p>';
