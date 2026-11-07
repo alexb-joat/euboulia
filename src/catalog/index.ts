@@ -58,6 +58,18 @@ export function candidatesFor(catalog: Catalog, serviceId: string, prefs: Prefs,
   return out;
 }
 
+/**
+ * The option a service's cap weights are measured against: its first live model with weight 1, at Medium when the
+ * model has effort levels (Medium's multiplier is 1). Undefined when there is none, so no weight is shown.
+ */
+export function capUnit(catalog: Catalog, serviceId: string, today: string = isoToday()): { short: string; full: string } | undefined {
+  const svc = catalog.services[serviceId];
+  const m = svc?.models.find(x => x.capWeight === 1 && !isRetired(catalog.models[x.modelId] ?? {}, today));
+  if (!m) return undefined;
+  const medium = (m.efforts ?? []).includes('medium') ? svc!.efforts?.find(e => e.id === 'medium') : undefined;
+  return { short: m.label, full: medium ? `${m.label} · ${medium.label}` : m.label };
+}
+
 /** Candidates from every other service the user enabled for cross-service suggestions. */
 export function candidatesElsewhere(catalog: Catalog, hereId: string, prefs: Prefs, observed: ObservedMap = {}): Candidate[] {
   const out: Candidate[] = [];

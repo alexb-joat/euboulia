@@ -1,6 +1,5 @@
 import type { Catalog, Suggestion } from '../shared/types';
-import { formatCost } from '../analyser/cost';
-import { planName } from '../analyser/explain';
+import { costLabel, effortNotice, limitTitle } from '../analyser/explain';
 import { BADGE_CSS, adoptStyles } from './styles';
 import { themeVars, type Theme } from './theme';
 import type { Anchor } from '../sites/adapter';
@@ -16,6 +15,7 @@ export class Badge {
   private main: HTMLSpanElement;
   private alt: HTMLSpanElement;
   private shield: HTMLSpanElement;
+  private note: HTMLSpanElement;
   private anchor: Anchor;
   private ro?: ResizeObserver;
   private onWhyCb?: () => void;
@@ -36,6 +36,9 @@ export class Badge {
     this.shield.title = 'Sensitive data detected in the prompt';
     this.shield.textContent = '⚿';
     this.shield.hidden = true;
+    this.note = document.createElement('span');
+    this.note.className = 'note';
+    this.note.hidden = true;
     this.main = document.createElement('span');
     this.main.className = 'main';
     const why = document.createElement('span');
@@ -44,7 +47,7 @@ export class Badge {
     this.alt = document.createElement('span');
     this.alt.className = 'alt';
     this.alt.hidden = true;
-    this.pill.append(this.shield, this.main, why, this.alt);
+    this.pill.append(this.shield, this.note, this.main, why, this.alt);
     this.pill.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); this.onWhyCb?.(); });
     this.root.appendChild(this.pill);
     this.setTheme(theme);
@@ -60,16 +63,22 @@ export class Badge {
   setTheme(t: Theme): void { this.host.style.cssText = themeVars(t); }
 
   update(s: Suggestion, catalog: Catalog, serviceId?: string): void {
-    const costStr = formatCost(s.here.cost, planName(catalog, s.here));
+    const costStr = costLabel(catalog, s.here, true);
     this.main.replaceChildren();
     const b = document.createElement('b');
     b.textContent = s.here.label;
     const where = serviceId && s.here.serviceId !== serviceId ? ` on ${catalog.services[s.here.serviceId]?.name ?? s.here.serviceId}` : '';
     this.main.append(s.isCurrent ? 'Good pick: ' : 'Suggest: ', b, `${where} · ${costStr}`);
     this.shield.hidden = s.classification.sensitive.length === 0;
+    const notice = effortNotice(s, catalog);
+    this.note.hidden = !notice;
+    this.note.textContent = notice?.text ?? '';
+    this.note.title = notice?.title ?? '';
+    const title = limitTitle(catalog, s.here);
+    if (title) this.pill.title = title; else this.pill.removeAttribute('title');
     if (s.elsewhere) {
       const svc = catalog.services[s.elsewhere.serviceId]?.name ?? s.elsewhere.serviceId;
-      this.alt.textContent = `or ${s.elsewhere.label} on ${svc} · ${formatCost(s.elsewhere.cost, planName(catalog, s.elsewhere))}`;
+      this.alt.textContent = `or ${s.elsewhere.label} on ${svc} · ${costLabel(catalog, s.elsewhere, true)}`;
       this.alt.hidden = false;
     } else {
       this.alt.hidden = true;

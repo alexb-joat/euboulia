@@ -1,6 +1,7 @@
 import type { Catalog, Ranked, Suggestion, TaskType } from '../shared/types';
 import { TASK_LABELS } from '../shared/types';
-import { formatCost, formatUsd } from './cost';
+import { capUnit } from '../catalog/index';
+import { formatCost, formatUsd, formatWeight } from './cost';
 
 export interface ExplainRow {
   key: string; modelId: string; label: string; serviceName: string; fit: number; cost: string; apiCost?: string; isWinner: boolean; isCurrent?: boolean;
@@ -24,8 +25,56 @@ export function planName(catalog: Catalog, r: Ranked): string | undefined {
   return r.plan ? (svc?.plans?.[r.plan]?.name ?? r.plan) : undefined;
 }
 
+/** "≈4.4× Sonnet 5.5": the share of the plan's limit one send takes, against the service's weight-1 option. */
+export function limitWeight(catalog: Catalog, r: Ranked): string | undefined {
+  if (r.cost.kind !== 'included' || r.capWeight === undefined) return undefined;
+  const unit = capUnit(catalog, r.serviceId);
+  return unit ? `${formatWeight(r.capWeight)} ${unit.short}` : undefined;
+}
+
+/** The badge's tooltip for a plan option with a known weight. */
+export function limitTitle(catalog: Catalog, r: Ranked): string | undefined {
+  const unit = capUnit(catalog, r.serviceId);
+  if (!limitWeight(catalog, r) || !unit) return undefined;
+  const n = Math.round(r.capWeight! * 10) / 10;
+  return `${r.label} takes about ${n}× the share of your ${planName(catalog, r) ?? ''} plan's limit that ${unit.full} takes per send. ` +
+    `Euboulia's estimate, from the extra output each model and level writes.`;
+}
+
+export interface EffortNotice { text: string; title: string }
+
+/**
+ * When the picker is on Max and a lighter option won: how much more of the limit Max takes than the level below it
+ * (Extra high, or High where a model has no Extra high). Switching stays your click.
+ */
+export function effortNotice(s: Suggestion, catalog: Catalog): EffortNotice | undefined {
+  const cur = s.current;
+  if (!cur?.endsWith('@max') || s.here.key === cur) return undefined;
+  const max = s.ranked.find(r => r.key === cur);
+  if (!max?.capWeight || !limitWeight(catalog, max)) return undefined;
+  const below = ['xhigh', 'high'].map(id => s.ranked.find(r => r.modelId === max.modelId && r.effort?.id === id)).find(r => r?.capWeight);
+  if (!below) return undefined;
+  const ratio = max.capWeight / below.capWeight!;
+  const lbl = below.effort!.label;
+  return {
+    text: `Max ${formatWeight(ratio)} ${lbl}`,
+    title: `Max takes about ${Math.round(ratio * 10) / 10}× the share of your plan's limit that ${lbl} takes per send, ` +
+      `for a small gain in fit. Euboulia's estimate, from the extra output each level writes.`,
+  };
+}
+
+/**
+ * The cost as the rows show it: a price, or "included (plan)" with the limit weight when known. The badge drops the
+ * plan name when the weight is shown (the tooltip names it), since Claude's plan and its top effort are both "Max".
+ */
+export function costLabel(catalog: Catalog, r: Ranked, badge = false): string {
+  const weight = badge ? limitWeight(catalog, r) : undefined;
+  return weight ? `included · ${weight}` : costStrings(catalog, r).cost;
+}
+
 function costStrings(catalog: Catalog, r: Ranked): { cost: string; apiCost?: string } {
-  const cost = formatCost(r.cost, planName(catalog, r));
+  const weight = limitWeight(catalog, r);
+  const cost = formatCost(r.cost, planName(catalog, r)) + (weight ? ` · ${weight}` : '');
   const apiCost = r.cost.kind === 'included' && r.cost.apiUsd !== undefined
     ? `API equivalent ${formatUsd(r.cost.apiUsd)}` : undefined;
   return { cost, apiCost };

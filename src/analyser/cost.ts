@@ -40,6 +40,12 @@ export function formatUsd(usd: number): string {
   return `~$${usd.toFixed(1)}`;
 }
 
+/** A cap weight or a ratio of two, as people read it: <0.1×, ≈0.3×, ≈4.4×, ≈15×. */
+export function formatWeight(w: number): string {
+  if (w < 0.095) return '<0.1×';
+  return `≈${w >= 10 ? Math.round(w) : Math.round(w * 10) / 10}×`;
+}
+
 export function formatCost(c: CostEstimate, planName?: string): string {
   switch (c.kind) {
     case 'api': return formatUsd(c.usd);

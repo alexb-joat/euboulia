@@ -5,7 +5,11 @@ import { Cloud } from '../../src/content/cloud';
 import { readTheme } from '../../src/content/theme';
 import { BUNDLED } from '../../src/catalog/index';
 import { explain } from '../../src/analyser/explain';
-import type { Suggestion } from '../../src/shared/types';
+import { classify } from '../../src/analyser/classify';
+import { decide } from '../../src/analyser/decide';
+import { scoreCandidates } from '../../src/analyser/score';
+import { candidatesFor } from '../../src/catalog/index';
+import { DEFAULT_PREFS, type Suggestion } from '../../src/shared/types';
 import { loadFixture } from './helpers';
 
 function fakeSuggestion(): Suggestion {
@@ -38,6 +42,26 @@ describe('badge and cloud', () => {
     expect(why).toHaveBeenCalled();
     badge.destroy();
     expect(document.body.contains(badge.host)).toBe(false);
+  });
+
+  it('a plan option shows its limit weight, and Max gets a labelled notice when a lighter option won', () => {
+    const fieldset = document.querySelector('fieldset')!;
+    const badge = new Badge({ element: fieldset, corner: 'top-right' }, readTheme(fieldset, fieldset));
+    const p = { ...DEFAULT_PREFS, services: { claude: { enabled: true, plan: 'max' } } };
+    const cls = classify('Refactor this TypeScript function and add unit tests:\nfunction f(x) { return x; }');
+    const here = scoreCandidates(cls, candidatesFor(BUNDLED, 'claude', p), p, [], 'claude');
+    const s = decide({ here, elsewhere: [], current: 'anthropic/claude-opus-5.5@max', classification: cls, trustedServices: new Set(), crossService: false })!;
+    badge.update(s, BUNDLED, 'claude');
+    const root = badge.host.shadowRoot!;
+    const note = root.querySelector<HTMLElement>('.note')!;
+    expect(note.hidden).toBe(false);
+    expect(note.textContent).toBe('Max ≈1.4× Extra high');
+    expect(note.title).toContain('estimate');
+    expect(root.querySelector('.main')!.textContent).toMatch(/· included · ≈[\d.]+× Sonnet 5\.5$/);   // the plan name would be a second Max
+    expect(root.querySelector('button')!.title).toContain("share of your Max plan's limit");
+    badge.update({ ...s, current: 'anthropic/claude-opus-5.5@xhigh' }, BUNDLED, 'claude');
+    expect(note.hidden).toBe(true);
+    badge.destroy();
   });
 
   it('cloud renders the explanation, places itself and closes on Escape', () => {

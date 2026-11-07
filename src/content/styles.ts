@@ -27,6 +27,9 @@ export const BADGE_CSS = BASE_CSS + `
 .pill .main b { font-weight: 600; color: var(--eu-fg); }
 .pill .why { text-decoration: underline; text-underline-offset: 2px; opacity: .85; }
 .pill .shield { font-size: .9em; }
+.pill .note { flex: none; padding: 0 .5em; border-radius: 999px; font-size: .9em; color: var(--eu-fg);
+  background: color-mix(in srgb, #d97706 20%, var(--eu-bg)); border: 1px solid color-mix(in srgb, #d97706 60%, var(--eu-bg)); }
+.pill .note[hidden] { display: none; }
 .pill .alt { display: block; font-size: .92em; opacity: .85; }
 :host([hidden]) { display: none; }
 :host([obscured]) { visibility: hidden; }
