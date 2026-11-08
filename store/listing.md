@@ -45,3 +45,6 @@ Productivity (Chrome) / Other, Privacy & Security (Firefox)
 
 ## Screenshots
 `store/screenshots/` is produced by `node scripts/screenshots.mjs` (1280x800): the badge while typing a code prompt and the explanation cloud in the margin. Taken on the fixture pages, so no account or conversation is shown.
+
+## Promo tile
+`store/promo-440x280.png` (Chrome small promo tile) is rendered from `store/promo/tile.html` by `node scripts/promo-tile.mjs`, which also writes a half-size preview to `test-results/` for checking it still reads when the store shrinks it. The badge on it quotes the screenshot's real text.

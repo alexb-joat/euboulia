@@ -1,0 +1,32 @@
+<!doctype html>
+<!-- Chrome Web Store small promo tile, 440x280. Rendered to store/promo-440x280.png by scripts/promo-tile.mjs.
+     Chrome shows it at half size too, so only the name, one line and the badge are on it. -->
+<html lang="en">
+<meta charset="utf-8">
+<title>Euboulia promo tile</title>
+<style>
+  :root { --bg: #f3f3f1; --fg: #1f1f23; --soft: #55555c; --pill: #ffffff; --pill-fg: #1f1f23; --pill-muted: #66666e; --line: #d6d6da; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 440px; height: 280px; overflow: hidden; }
+  body { background: var(--bg); color: var(--fg); font-family: 'Noto Sans', 'DejaVu Sans', sans-serif;
+    display: flex; flex-direction: column; justify-content: center; gap: 26px; padding: 0 34px; }
+  .head { display: flex; align-items: center; gap: 18px; }
+  .head img { width: 72px; height: 72px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,.18); }
+  h1 { font-size: 38px; font-weight: 600; letter-spacing: -.01em; line-height: 1; }
+  p { font-size: 17px; color: var(--soft); line-height: 1.3; margin-top: 6px; }
+  .pill { align-self: flex-start; display: inline-flex; gap: .45em; align-items: baseline; font-size: 15px; padding: .5em 1em;
+    border-radius: 999px; background: var(--pill); color: var(--pill-muted); border: 1px solid var(--line); box-shadow: 0 4px 14px rgba(0,0,0,.10); white-space: nowrap; }
+  .pill b { color: var(--pill-fg); font-weight: 600; }
+  .pill u { text-underline-offset: 3px; }
+</style>
+<body>
+  <div class="head">
+    <img src="../../icons/128.png" alt="">
+    <div>
+      <h1>Euboulia</h1>
+      <p>The right model, before you send</p>
+    </div>
+  </div>
+  <div class="pill">Suggest: <b>Sonnet 5.5 · Medium</b> · ~$0.007 <u>why?</u></div>
+</body>
+</html>
