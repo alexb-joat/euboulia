@@ -15,6 +15,7 @@
     "test:ff": "node scripts/build.mjs --target firefox --dev && node tests/e2e/firefox.mjs",
     "lint:ff": "web-ext lint --source-dir dist/firefox",
     "run:ff": "node scripts/run-firefox.mjs",
+    "run:webkit": "node scripts/run-webkit.mjs",
     "package": "node scripts/package.mjs",
     "catalog:build": "node scripts/build-catalog.mjs",
     "catalog:validate": "node scripts/validate-catalog.mjs",

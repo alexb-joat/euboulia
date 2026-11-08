@@ -57,6 +57,8 @@ npm run build          # dist/chrome and dist/firefox
 
 To try a development build in Firefox: `npm run run:ff` (temporary add-on through web-ext, in a dev profile that keeps your logins between runs; works with Ubuntu's snap Firefox), or `about:debugging` → "Load Temporary Add-on" → `dist/firefox/manifest.json`.
 
+To see the badge and cloud in Safari's engine on Linux: `npm run run:webkit` (Playwright's WebKit with the built content script injected and a stand-in for the extension APIs; `--help` lists what it does and doesn't prove). It is not a Safari build.
+
 The manifest's host permissions are generated from the hosts in `src/catalog/services.json`, so adding a site means adding it there (plus an adapter under `src/sites`).
 
 Then open the extension's options page, set your plan on each service and move the slider.
