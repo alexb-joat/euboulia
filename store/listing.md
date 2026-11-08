@@ -4,17 +4,18 @@
 Euboulia
 
 ## Summary (132 characters max, Chrome)
-Suggests the best-value model for the prompt you are typing, right inside Claude, ChatGPT, Gemini and more. Nothing you type leaves the browser.
+Suggests the best-value model for the prompt you're typing in Claude, ChatGPT, Gemini and more. Nothing you type leaves the browser.
 
 ## Description
 
 Euboulia (Greek: good counsel) watches the prompt you are typing on a chat site and suggests the model that gives the best result for the least cost, before you press send.
 
-- A small badge next to the prompt box: "Suggest: Haiku 5.5 · included (Pro) · why?"
+- A small badge next to the prompt box: "Suggest: Sonnet 5.5 · Medium · ~$0.007 · why?" On a subscription plan it shows "included" and, as an estimate, how much of your limit the option takes per send compared with Sonnet 5.5.
 - "why?" opens a compact explanation in the blank margin: the task it detected, the top three models with fit and cost, and the reason the winner won.
 - Cost shown both ways: "included in your plan" and the equivalent API price, so you can see what a message really costs.
 - A slider from "best quality" to "cheapest", plus your own rules ("prefer Haiku for quick chat").
 - When another service you use would be clearly better value for this prompt, it says so.
+- When Claude is set to Max and a lighter level would do, a small notice says how much more Max takes.
 - Suggestions rest on the prompt and the providers' documentation, never on what you clicked before.
 
 Everything runs inside the extension. The classifier, the scoring and the catalog live in your browser; the only network request is an optional daily catalog download from a URL you choose.

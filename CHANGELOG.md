@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 (2026-11-08)
 
 - On a plan, the badge shows how much of your limit the suggested option takes per send, against Sonnet 5.5 at Medium on Claude: "included · ≈0.6× Sonnet 5.5". The "why?" rows show it for every option, and the badge's tooltip names your plan. It is Euboulia's estimate, from the extra output each model and level writes, not a figure from Anthropic.
 - When Claude's picker is set to Max and the suggestion is something else, a small notice says how much more Max takes than the next level down, for example "Max ≈1.4× Extra high". Its tooltip says it is an estimate.
