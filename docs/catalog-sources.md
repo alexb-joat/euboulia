@@ -11,11 +11,13 @@ benchmark-derived strengths and for models the facts file does not cover).
 |---|---|---|---|
 | Anthropic | platform.claude.com/docs/en/about-claude/models/overview | current models, API ids, context, max output, default effort, retirement commitments | yes, append `.md` |
 | Anthropic | platform.claude.com/docs/en/about-claude/pricing | prices for current and legacy models, Haiku 5.5 tiers, cache rates | yes, `.md` |
-| Anthropic | platform.claude.com/docs/en/build-with-claude/effort | effort values `low, medium, high, xhigh, max` and which models accept which | yes, `.md` |
+| Anthropic | platform.claude.com/docs/en/build-with-claude/effort | effort values `low, medium, high, xhigh, max`, which models accept which, what each level is for and where to start on each model | yes, `.md` |
 | Anthropic | platform.claude.com/docs/en/about-claude/model-deprecations | active / legacy / deprecated / retired, retirement dates | yes, `.md` |
 | Anthropic | platform.claude.com/docs/en/release-notes/overview | dated release notes (new models, price changes) | yes, `.md` |
 | Anthropic | support.claude.com article 15424964 | which claude.ai plans include the Fable models | html |
 | OpenAI | developers.openai.com/docs/models/{id} | per model: price, long-context surcharge, context, max output, `reasoning.effort` values | yes, `.md` |
+| OpenAI | developers.openai.com/docs/guides/reasoning | what each `reasoning.effort` level is for | html |
+| OpenAI | developers.openai.com/api/docs/guides/latest-model | current models in one page with their default effort (GPT-6 Astra's is stated only here) | yes, `.md` |
 | OpenAI | developers.openai.com/docs/pricing | the full price table | html |
 | OpenAI | developers.openai.com/docs/deprecations | API deprecations with shutdown dates and replacements | html |
 | OpenAI | developers.openai.com/changelog | dated API changelog (model releases, modes) | html |
@@ -24,6 +26,7 @@ benchmark-derived strengths and for models the facts file does not cover).
 | Google | ai.google.dev/gemini-api/docs/models | current Gemini API models | html |
 | Google | ai.google.dev/gemini-api/docs/pricing | prices, promotional periods, 200k long-context tier | html |
 | Google | docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/{id} | context, max output, thinking levels, release and retirement dates | html |
+| Google | ai.google.dev/gemini-api/docs/thinking | `thinking_level` values and default per model, and when to use less or more thinking | html |
 | Google | gemini.google/release-notes | which drop-down names the Gemini app uses and which plans get them | html |
 
 Google's pages are HTML only and read by hand so far (Ninshubur's adapter does not parse them yet). `help.openai.com` (the ChatGPT help centre, with the Chat picker and plan tables) blocks automated readers, so its
@@ -35,6 +38,20 @@ third-party price trackers.
 How much each effort level changes output tokens and fit (`outputMultiplier`, `fitDelta` in `services.json`) is
 Euboulia's own modelling; no provider publishes it. The picker labels of the chat apps (Light, Extra high, Instant)
 are observed in the apps, not documented. Both are labelled as such in the files.
+
+## Effort advice from the docs
+
+`provider-facts.json` also keeps what each provider says about choosing an effort level, in our own words and with a
+source, so nothing about it is guessed:
+
+- `effortGuidance` per provider: one line per level on what it is for (Anthropic's effort page, OpenAI's reasoning
+  guide, Google's thinking guide). Google describes only its lowest and highest levels; the rest is in its note.
+- `effortAdvice` per model, where the provider gives any: the level to `start` at and, under `when`, the levels it
+  points to for which kind of work. Anthropic gives this for ten models. OpenAI and Google give a default per model and
+  nothing more, so their models carry `defaultEffort` only.
+
+All of it is written for API developers. The chat apps publish no advice of their own, so using it for a claude.ai or
+ChatGPT pick is Euboulia's reading.
 
 ## The Ninshubur feed
 

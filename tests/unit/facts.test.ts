@@ -18,6 +18,40 @@ describe('provider facts', () => {
       }
     }
   });
+  it('effort advice is sourced and names only levels the model accepts', () => {
+    let advised = 0;
+    for (const [pid, prov] of Object.entries(facts.providers) as [string, any][]) {
+      const ids: string[] = prov.effortLevels.ids;
+      const g = prov.effortGuidance;
+      expect(g, `${pid} effortGuidance`).toBeDefined();
+      expect(prov.sources[g.source], `${pid} effortGuidance source`).toBeDefined();
+      for (const id of Object.keys(g.levels)) expect(ids, `${pid} guidance level ${id}`).toContain(id);
+      for (const [id, m] of Object.entries(prov.models) as [string, any][]) {
+        if (m.defaultEffort) expect(m.sources.defaultEffort ?? m.sources.efforts, `${id} defaultEffort source`).toBeDefined();
+        for (const e of m.efforts ?? []) expect(ids, `${id} effort ${e}`).toContain(e);
+        const a = m.effortAdvice;
+        if (!a) continue;
+        advised++;
+        expect(m.sources.effortAdvice, `${id} effortAdvice source`).toBeDefined();
+        expect(m.efforts, `${id} start`).toContain(a.start);
+        for (const w of a.when ?? []) {
+          expect(w.for, `${id} when.for`).toMatch(/\S/);
+          for (const e of w.efforts) expect(m.efforts, `${id} advice ${e}`).toContain(e);
+        }
+      }
+    }
+    expect(advised).toBeGreaterThanOrEqual(10);
+  });
+  it('the effort advice agrees with the documented defaults it was read alongside', () => {
+    const a = facts.providers.anthropic.models as any;
+    expect(a['anthropic/claude-opus-5.5'].effortAdvice.start).toBe(a['anthropic/claude-opus-5.5'].defaultEffort);
+    expect(a['anthropic/claude-sonnet-5.5'].effortAdvice.start).toBe('high');
+    expect(a['anthropic/claude-sonnet-4.6'].effortAdvice.start).toBe('medium'); // docs recommend medium over the high default
+    const g = facts.providers.google.models as any;
+    expect(g['google/gemini-4-argon'].efforts).toEqual(['LOW', 'MEDIUM', 'HIGH']);
+    expect(g['google/gemini-3.5-flash-lite'].defaultEffort).toBe('MINIMAL');
+    expect((facts.providers.openai.models as any)['openai/gpt-6-astra'].sources.defaultEffort).toBe('latest-model');
+  });
   it('the bundled catalog carries the facts: prices, tiers, status, efforts, sources', () => {
     const haiku = BUNDLED.models['anthropic/claude-haiku-5.5']!;
     expect(haiku.price).toEqual({ input: 0.1, output: 0.5, longContext: { threshold: 100000, input: 0.5, output: 2.5 } });
