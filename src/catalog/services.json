@@ -26,6 +26,7 @@
           "button[aria-haspopup=\"menu\"]"
         ],
         "pickerOpen": [
+          "div[role=\"menu\"] [role=\"menuitemradio\"]",
           "div[role=\"menu\"] [role=\"menuitem\"]",
           "div[role=\"menu\"] [role=\"option\"]"
         ],
@@ -277,15 +278,15 @@
           "legacy": true
         }
       ],
-      "_verified": "Selectors: 2026-10-13 signed-in capture. Models: platform.claude.com models overview + 'More models' list in claude.ai (Alex, 2026-10-14). Prices/efforts/status: provider docs via provider-facts.json. Plans: Fable 5/5.1 per support article 15424964 (Max: included, up to 50% of weekly usage; Pro: usage credits, not included; Free: not available); other plan memberships and plan prices are NOT verified from Anthropic.",
-      "_efforts": "Ids are the Claude API effort values (platform.claude.com/docs/en/build-with-claude/effort, 2026-10-14); which models accept which level comes from the same page. Labels: Alex sees Light/Medium/High/Extra high/Max in claude.ai (2026-10-14). outputMultiplier and fitDelta are Euboulia's own estimates of each level's effect; providers publish no figures.",
+      "_verified": "Selectors: 2026-10-13 signed-in capture; model menu 2026-11-08 (models are menuitemradio items with data-model-id = API id, efforts data-effort-id = API effort value). Models: platform.claude.com models overview + 'More models' list in claude.ai (Alex, 2026-10-14). Prices/efforts/status: provider docs via provider-facts.json. Plans: Fable 5/5.1 per support article 15424964 (Max: included, up to 50% of weekly usage; Pro: usage credits, not included; Free: not available); other plan memberships and plan prices are NOT verified from Anthropic.",
+      "_efforts": "Ids are the Claude API effort values (platform.claude.com/docs/en/build-with-claude/effort, 2026-10-14); which models accept which level comes from the same page. Labels as claude.ai's effort menu shows them in a signed-in capture (2026-11-08): Low/Medium/High/Extra/Max, and the picker button reads e.g. \"Opus 5.5 Extra\"; the 2026-10-14 names Light and Extra high stay as aliases. outputMultiplier and fitDelta are Euboulia's own estimates of each level's effect; providers publish no figures.",
       "efforts": [
         {
           "id": "low",
-          "label": "Light",
+          "label": "Low",
           "outputMultiplier": 0.6,
           "aliases": [
-            "Low"
+            "Light"
           ],
           "fitDelta": {
             "code": -0.04,
@@ -312,9 +313,10 @@
         },
         {
           "id": "xhigh",
-          "label": "Extra high",
+          "label": "Extra",
           "outputMultiplier": 2.2,
           "aliases": [
+            "Extra high",
             "Extra-high",
             "XHigh",
             "Extra High"

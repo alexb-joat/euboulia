@@ -45,8 +45,8 @@ describe('Max notice', () => {
     const s = suggest('anthropic/claude-opus-5.5@max');
     expect(s.here.key).not.toBe('anthropic/claude-opus-5.5@max');
     const n = effortNotice(s, BUNDLED)!;
-    expect(n.text).toBe('Max ≈1.4× Extra high');
-    expect(n.title).toMatch(/^Max takes about 1\.4× the share of your plan's limit that Extra high takes per send/);
+    expect(n.text).toBe('Max ≈1.4× Extra');
+    expect(n.title).toMatch(/^Max takes about 1\.4× the share of your plan's limit that Extra takes per send/);
     expect(n.title).toContain('estimate');
   });
   it('compares with High on a model without Extra high', () => {

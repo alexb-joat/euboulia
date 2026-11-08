@@ -55,7 +55,7 @@ describe('badge and cloud', () => {
     const root = badge.host.shadowRoot!;
     const note = root.querySelector<HTMLElement>('.note')!;
     expect(note.hidden).toBe(false);
-    expect(note.textContent).toBe('Max ≈1.4× Extra high');
+    expect(note.textContent).toBe('Max ≈1.4× Extra');
     expect(note.title).toContain('estimate');
     expect(root.querySelector('.main')!.textContent).toMatch(/· included · ≈[\d.]+× Sonnet 5\.5$/);   // the plan name would be a second Max
     expect(root.querySelector('button')!.title).toContain("share of your Max plan's limit");

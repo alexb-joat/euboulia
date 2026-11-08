@@ -14,7 +14,7 @@ describe('effort levels', () => {
   it('expands models with efforts into one option per level, and lists the older models', () => {
     const c = candidatesFor(BUNDLED, 'claude', prefs);
     const opus = c.filter(x => x.modelId === 'anthropic/claude-opus-5.5').map(x => x.label);
-    expect(opus).toEqual(['Opus 5.5 · Light', 'Opus 5.5 · Medium', 'Opus 5.5 · High', 'Opus 5.5 · Extra high', 'Opus 5.5 · Max']);
+    expect(opus).toEqual(['Opus 5.5 · Low', 'Opus 5.5 · Medium', 'Opus 5.5 · High', 'Opus 5.5 · Extra', 'Opus 5.5 · Max']);
     expect(c.find(x => x.modelId === 'anthropic/claude-haiku-4.5')!.key).toBe('anthropic/claude-haiku-4.5');   // no effort control documented
     expect(c.filter(x => x.modelId === 'anthropic/claude-opus-4.6').map(x => x.effort!.id)).toEqual(['low', 'medium', 'high', 'max']);   // no xhigh on 4.6
     for (const old of ['Fable 5 · High', 'Opus 4.8 · Max', 'Sonnet 4.6 · Max', 'Haiku 4.5']) expect(c.some(x => x.label === old), old).toBe(true);
@@ -38,6 +38,9 @@ describe('effort levels', () => {
     expect(resolveOptionKey(BUNDLED, 'claude', 'Opus 5.5')).toBe('anthropic/claude-opus-5.5');
     expect(resolveOptionKey(BUNDLED, 'claude', 'Haiku 5.5 Low')).toBe('anthropic/claude-haiku-5.5@low');
     expect(resolveOptionKey(BUNDLED, 'claude', 'Sonnet 5.5 Extra high')).toBe('anthropic/claude-sonnet-5.5@xhigh');
+    // claude.ai's button since November: "Opus 5.5\n Extra" (aria-label "Model: Opus 5.5 Extra").
+    expect(resolveOptionKey(BUNDLED, 'claude', 'Opus 5.5 Extra')).toBe('anthropic/claude-opus-5.5@xhigh');
+    expect(resolveOptionKey(BUNDLED, 'claude', 'Sonnet 4.6 High')).toBe('anthropic/claude-sonnet-4.6@high');
     expect(resolveOptionKey(BUNDLED, 'claude', 'Opus 4.8')).toBe('anthropic/claude-opus-4.8');
     expect(resolveOptionKey(BUNDLED, 'claude', 'Opus 5')).toBe('anthropic/claude-opus-5');
   });
