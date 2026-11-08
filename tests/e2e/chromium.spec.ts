@@ -157,3 +157,44 @@ test('options page: refresh downloads, validates and stores a catalog from the c
   await expect.poll(() => page.textContent('#catalogStatus'), { timeout: 5000 }).toMatch(/switched off/);
   await page.close();
 });
+
+test('Choose for me: switches the menu before the send, sends once, and sends unchanged when the menu fails', async () => {
+  // Turned on the way a person would: the checkbox on the options page.
+  const sw = context.serviceWorkers()[0] ?? await context.waitForEvent('serviceworker');
+  const options = await context.newPage();
+  await options.goto(`chrome-extension://${new URL(sw.url()).host}/options.html`);
+  await options.waitForSelector('html[data-ready]', { state: 'attached' });
+  await options.check('#autoSwitch');
+  await options.close();
+
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.goto('http://127.0.0.1:8099/switch.html');
+  await page.locator('.ProseMirror').click();
+  await page.keyboard.type('Translate into French: good morning, see you tomorrow');
+  await expect.poll(() => badgeText(page), { timeout: 3000 }).toMatch(/Sending with: /);
+  const target = await page.evaluate(() => document.querySelector('euboulia-badge')!.shadowRoot!.querySelector('.main b')!.textContent!);
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Enter');   // impatient: must not send twice
+  await expect.poll(() => page.evaluate(() => (window as any).__sent.length), { timeout: 3000 }).toBe(1);
+  await page.waitForTimeout(300);
+  expect(await page.evaluate(() => (window as any).__sent)).toEqual([`Model: ${target.replace(' · ', ' ')}`]);
+  expect(await page.evaluate(() => document.querySelectorAll('[role="menu"]').length)).toBe(0);
+  expect(await badgeText(page)).toContain(`Sent with ${target}`);
+
+  // A menu that never opens: the message still goes, once, with the model shown, and the badge says so.
+  await page.goto('http://127.0.0.1:8099/switch.html?broken');
+  await page.locator('.ProseMirror').click();
+  await page.keyboard.type('Translate into French: good morning, see you tomorrow');
+  await expect.poll(() => badgeText(page), { timeout: 3000 }).toMatch(/Sending with: /);
+  await page.keyboard.press('Enter');
+  await expect.poll(() => page.evaluate(() => (window as any).__sent), { timeout: 3000 }).toEqual(['Model: Opus 5.5 Extra']);
+  await expect.poll(() => badgeText(page), { timeout: 1000 }).toMatch(/Couldn't switch \(the menu took too long\), sent with Opus 5\.5 · Extra/);
+  await page.close();
+
+  const reset = await context.newPage();   // later tests expect the default
+  await reset.goto(`chrome-extension://${new URL(sw.url()).host}/options.html`);
+  await reset.waitForSelector('html[data-ready]', { state: 'attached' });
+  await reset.uncheck('#autoSwitch');
+  await reset.close();
+});

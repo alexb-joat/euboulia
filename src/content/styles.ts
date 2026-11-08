@@ -31,6 +31,15 @@ export const BADGE_CSS = BASE_CSS + `
   background: color-mix(in srgb, #d97706 20%, var(--eu-bg)); border: 1px solid color-mix(in srgb, #d97706 60%, var(--eu-bg)); }
 .pill .note[hidden] { display: none; }
 .pill .alt { display: block; font-size: .92em; opacity: .85; }
+.pill[hidden] { display: none; }
+.stack { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.status { pointer-events: auto; display: inline-flex; align-items: center; gap: .6em; max-width: 46vw; padding: .28em .7em;
+  border-radius: 999px; background: var(--eu-bg); border: 1px solid var(--eu-border); color: var(--eu-fg); box-shadow: var(--eu-shadow); }
+.status[hidden] { display: none; }
+.status span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.status button { flex: none; text-decoration: underline; text-underline-offset: 2px; color: var(--eu-fg); white-space: nowrap; }
+.status button:hover, .status button:focus-visible { text-decoration-thickness: 2px; }
+.status button:focus-visible, .pill:focus-visible { outline: 2px solid var(--eu-fg); outline-offset: 2px; }
 :host([hidden]) { display: none; }
 :host([obscured]) { visibility: hidden; }
 `;

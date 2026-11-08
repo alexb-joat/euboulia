@@ -33,8 +33,10 @@ export function start(port = 8099) {
       return;
     }
     try {
-      const body = await readFile(path.join(dir, path.basename(name)));
-      res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
+      const file = path.basename(name);
+      const body = await readFile(path.join(dir, file));
+      const type = file.endsWith('.js') ? 'text/javascript' : 'text/html';
+      res.writeHead(200, { 'content-type': `${type}; charset=utf-8`, 'cache-control': 'no-store' });
       res.end(body);
     } catch { res.writeHead(404); res.end('not found'); }
   });

@@ -16,6 +16,7 @@ Euboulia (Greek: good counsel) watches the prompt you are typing on a chat site 
 - A slider from "best quality" to "cheapest", plus your own rules ("prefer Haiku for quick chat").
 - When another service you use would be clearly better value for this prompt, it says so.
 - When Claude is set to Max and a lighter level would do, a small notice says how much more Max takes.
+- Optional "Choose for me" (off by default): clicks the site's model menu for you before sending, only when you turn it on. Claude for now; it says what it picked and offers to switch back.
 - Suggestions rest on the prompt and the providers' documentation, never on what you clicked before.
 
 Everything runs inside the extension. The classifier, the scoring and the catalog live in your browser; the only network request is an optional daily catalog download from a URL you choose.

@@ -17,6 +17,7 @@
     "run:ff": "node scripts/run-firefox.mjs",
     "run:webkit": "node scripts/run-webkit.mjs",
     "package": "node scripts/package.mjs",
+    "package:team": "node scripts/package.mjs --team",
     "catalog:build": "node scripts/build-catalog.mjs",
     "catalog:validate": "node scripts/validate-catalog.mjs",
     "fixture": "node scripts/snapshot-fixture.mjs",

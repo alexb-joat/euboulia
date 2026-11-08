@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- "Choose for me", off by default (options page): when you send on Claude and the suggestion differs from the model menu, Euboulia clicks the menu to the suggested model and effort, then sends. The badge reads "Sending with: …" beforehand and "Sent with … · Switch back" after. Switch back sets the menu back for your next message and offers "Don't switch in this chat". A model you picked yourself in the menu always wins, and a model the menu does not list is never picked. If the menu does not respond within 1.5 s, the message goes unchanged and the badge says "Couldn't switch …, sent with …". A message is never held for longer than that and never sent twice. ChatGPT and the other sites keep suggesting only.
+- Claude's effort levels carry the names the site now shows: Low, Medium, High, Extra, Max (Extra was "Extra high"). The menu selectors follow claude.ai's current model menu.
+- `npm run package:team` also builds a Chrome zip with "Choose for me" on by default, for a team that wants it without visiting the options page.
+
 ## 0.1.1 (2026-11-08)
 
 - On a plan, the badge shows how much of your limit the suggested option takes per send, against Sonnet 5.5 at Medium on Claude: "included · ≈0.6× Sonnet 5.5". The "why?" rows show it for every option, and the badge's tooltip names your plan. It is Euboulia's estimate, from the extra output each model and level writes, not a figure from Anthropic.

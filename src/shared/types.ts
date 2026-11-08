@@ -170,14 +170,20 @@ export interface ServicePrefs {
 export interface Prefs {
   costWeight: number;         // 0 = best quality, 1 = cheapest
   crossService: boolean;
+  autoSwitch: boolean;        // "Choose for me": set the site's model picker to the suggestion before each send
   cloudCollapsedByDefault: boolean;
   services: Record<string, ServicePrefs>;
   catalogUrl?: string;        // undefined = the project's published catalog; '' = never download
 }
 
+/** `node scripts/build.mjs --team` sets this, so the team's build has "Choose for me" on; store builds keep it off. */
+declare const __TEAM__: boolean | undefined;
+export const TEAM_BUILD = typeof __TEAM__ !== 'undefined' && __TEAM__ === true;
+
 export const DEFAULT_PREFS: Prefs = {
   costWeight: 0.35,
   crossService: true,
+  autoSwitch: TEAM_BUILD,
   cloudCollapsedByDefault: false,
   services: {},
 };
@@ -191,6 +197,7 @@ export interface UsageEvent {
   selected?: string;
   followed?: boolean;
   vote?: 'up' | 'down';
+  autoSwitch?: 'switched' | 'failed';   // "Choose for me" set the picker before this send, or tried and sent unchanged
 }
 
 export interface Registration { pattern: string; adapter: 'generic' | 'openwebui' }

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="euboulia-service" content="claude"><title>claude switch fixture</title>
+<style>body{margin:0;font-family:Inter,sans-serif;background:#fff;color:#1e1e1e} main{max-width:800px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:24px}
+fieldset{border:1px solid #ddd;border-radius:16px;padding:12px;font-size:16px} .ProseMirror{min-height:48px;outline:0} .toolbar{display:flex;justify-content:space-between;margin-top:8px}
+[role="menu"]{font-size:14px}</style></head>
+<body><main>
+  <ol class="conversation" style="flex:1"></ol>
+  <fieldset class="composer">
+    <div class="ProseMirror" contenteditable="true" data-testid="chat-input" role="textbox" aria-label="Write your prompt to Claude"><p></p></div>
+    <div class="toolbar">
+      <button type="button" data-testid="model-selector-dropdown"></button>
+      <button type="button" aria-label="Send message">Send</button>
+    </div>
+  </fieldset>
+</main>
+<!-- "Choose for me": a stand-in for claude.ai's model menu (?broken: it never opens). Each send is logged with the
+     model the picker showed at that moment, in window.__sent. -->
+<script src="fake-claude-menu.js"></script>
+<script>
+  window.__sent = [];
+  const box = document.querySelector('.ProseMirror');
+  const send = () => {
+    const text = box.textContent.trim();
+    if (!text) return;
+    window.__sent.push(document.querySelector('[data-testid="model-selector-dropdown"]').getAttribute('aria-label'));
+    const li = document.createElement('li'); li.textContent = text; document.querySelector('.conversation').append(li);
+    box.innerHTML = '<p></p>';
+  };
+  document.querySelector('[aria-label="Send message"]').addEventListener('click', send);
+  box.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
+</script>
+</body></html>

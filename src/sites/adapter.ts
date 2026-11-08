@@ -1,4 +1,5 @@
 import type { Attachment, Catalog, ServiceSelectors } from '../shared/types';
+import { SwitchError, type SwitchTarget } from './drive';
 
 export interface ComposerHandle {
   id: string;
@@ -22,6 +23,13 @@ export interface SiteAdapter {
   attachments(c: ComposerHandle): Attachment[];
   anchor(c: ComposerHandle): Anchor;
   contentColumn(c: ComposerHandle): Element;
+  /** The send button as it is now (sites re-render it as the prompt fills); absent = use the handle's. */
+  sendButton?(c: ComposerHandle): HTMLElement | null;
+  /**
+   * Set the site's own model picker to the target ("Choose for me"). Only sites whose picker was captured signed in
+   * have this. Throws SwitchError; must leave no menu open. `deadline` is a Date.now() value.
+   */
+  switchTo?(c: ComposerHandle, t: SwitchTarget, deadline: number): Promise<void>;
 }
 
 export interface AdapterDeps {
@@ -126,12 +134,25 @@ export interface AdapterSpec {
   id: string;
   hosts: string[];
   selectors: ServiceSelectors;   // compiled fallback; the catalog's copy wins when present
+  /** Drives the open picker (see claude.ts); the adapter finds the picker button for it. */
+  switcher?: (picker: HTMLElement, t: SwitchTarget, deadline: number) => Promise<void>;
 }
 
 export function makeAdapter(spec: AdapterSpec, deps: AdapterDeps): SiteAdapter {
   const visible = deps.isVisible ?? isVisibleDefault;
   const sel = (): ServiceSelectors => ({ ...spec.selectors, ...(deps.catalog.services[spec.id]?.selectors ?? {}) });
   const hosts = () => [...spec.hosts, ...(deps.catalog.services[spec.id]?.hosts ?? [])];
+
+  // Nearest picker first, so each pane of a multi-composer page reads its own model.
+  const pickerFor = (c: ComposerHandle): HTMLElement | null => {
+    let scope: Element | null = c.container;
+    for (let i = 0; i < 8 && scope && scope !== document.body; i++) {
+      const btn = queryFirst<HTMLElement>(scope, sel().modelPicker);
+      if (btn) return btn;
+      scope = scope.parentElement;
+    }
+    return queryFirst<HTMLElement>(document, sel().modelPicker);
+  };
 
   const adapter: SiteAdapter = {
     id: spec.id,
@@ -148,23 +169,14 @@ export function makeAdapter(spec: AdapterSpec, deps: AdapterDeps): SiteAdapter {
     },
     readText: readComposerText,
     currentModel: (c) => {
-      // Nearest picker first, so each pane of a multi-composer page reads its own model.
-      const label = (btn: Element): string | null => {
-        // ChatGPT's model button carries the selected effort as data and lists every effort in its text; the
-        // button's first text line is the model, the attribute the effort.
-        const eff = btn.getAttribute('data-selected-reasoning-effort');
-        const text = textOf(btn);
-        if (eff) { const first = (btn as HTMLElement).innerText?.split('\n')[0]?.trim() || text; return `${first.replace(/\s+(none|minimal|light|low|medium|high|extra high|xhigh|max)$/i, '')} ${eff}`.trim(); }
-        return text || null;
-      };
-      let scope: Element | null = c.container;
-      for (let i = 0; i < 8 && scope && scope !== document.body; i++) {
-        const btn = queryFirst(scope, sel().modelPicker);
-        if (btn) return label(btn);
-        scope = scope.parentElement;
-      }
-      const btn = queryFirst(document, sel().modelPicker);
-      return btn ? label(btn) : null;
+      // ChatGPT's model button carries the selected effort as data and lists every effort in its text; the
+      // button's first text line is the model, the attribute the effort.
+      const btn = pickerFor(c);
+      if (!btn) return null;
+      const eff = btn.getAttribute('data-selected-reasoning-effort');
+      const text = textOf(btn);
+      if (eff) { const first = (btn as HTMLElement).innerText?.split('\n')[0]?.trim() || text; return `${first.replace(/\s+(none|minimal|light|low|medium|high|extra high|xhigh|max)$/i, '')} ${eff}`.trim(); }
+      return text || null;
     },
     models: () => {
       const items = queryAll(document, sel().pickerOpen);
@@ -183,6 +195,12 @@ export function makeAdapter(spec: AdapterSpec, deps: AdapterDeps): SiteAdapter {
       return out;
     },
     anchor: (c) => ({ element: c.container, corner: 'top-right' }),
+    sendButton: (c) => queryFirst<HTMLElement>(c.element.closest('form, fieldset') ?? c.container, sel().sendButton) ?? nearestSendButton(c.element),
+    switchTo: spec.switcher && (async (c, t, deadline) => {
+      const picker = pickerFor(c);
+      if (!picker) throw new SwitchError('no-picker');
+      await spec.switcher!(picker, t, deadline);
+    }),
     contentColumn: (c) => {
       // The composer's own ancestor first: pages like ChatGPT have several forms, and the first one is in the sidebar.
       for (const s of sel().contentColumn ?? []) {

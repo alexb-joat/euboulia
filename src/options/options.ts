@@ -30,6 +30,7 @@ function renderPreference(): void {
   $('costWeightHint').textContent = hint(prefs.costWeight);
   $<HTMLInputElement>('crossService').checked = prefs.crossService;
   $<HTMLInputElement>('cloudCollapsed').checked = prefs.cloudCollapsedByDefault;
+  $<HTMLInputElement>('autoSwitch').checked = prefs.autoSwitch;
 }
 
 async function renderServices(): Promise<void> {
@@ -168,6 +169,7 @@ async function init(): Promise<void> {
   $<HTMLInputElement>('costWeight').addEventListener('change', savePrefs);
   $<HTMLInputElement>('crossService').addEventListener('change', e => { prefs.crossService = (e.target as HTMLInputElement).checked; savePrefs(); });
   $<HTMLInputElement>('cloudCollapsed').addEventListener('change', e => { prefs.cloudCollapsedByDefault = (e.target as HTMLInputElement).checked; savePrefs(); });
+  $<HTMLInputElement>('autoSwitch').addEventListener('change', e => { prefs.autoSwitch = (e.target as HTMLInputElement).checked; savePrefs(); });
 
   $('saveRules').addEventListener('click', async () => {
     try {

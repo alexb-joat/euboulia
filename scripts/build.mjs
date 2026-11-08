@@ -1,6 +1,7 @@
 // Build the extension for Chrome and/or Firefox: bundle with esbuild, merge
 // manifests, copy static files. Usage:
-//   node scripts/build.mjs --target chrome|firefox|all [--dev] [--watch]
+//   node scripts/build.mjs --target chrome|firefox|all [--dev] [--watch] [--team]
+// --team: "Choose for me" (switch the site's model before sending) starts on. Store builds leave it off.
 import { build, context } from 'esbuild';
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -14,6 +15,7 @@ const opt = (name, fallback) => {
 };
 const dev = args.includes('--dev');
 const watch = args.includes('--watch');
+const team = args.includes('--team');
 const targetArg = opt('--target', 'all');
 const targets = targetArg === 'all' ? ['chrome', 'firefox'] : [targetArg];
 
@@ -68,7 +70,7 @@ async function buildTarget(target) {
     sourcemap: dev ? 'inline' : false,
     minify: false,
     legalComments: 'none',
-    define: { __DEV__: String(dev), __TARGET__: JSON.stringify(target) },
+    define: { __DEV__: String(dev), __TARGET__: JSON.stringify(target), __TEAM__: String(team) },
     logLevel: 'info',
   };
   await writeFile(path.join(out, 'manifest.json'), JSON.stringify(await manifestFor(target), null, 2));

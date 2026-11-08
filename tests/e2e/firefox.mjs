@@ -109,6 +109,24 @@ try {
   await waitFor(async () => /Suggest:|Good pick/.test(await badgeText()), 'badge after re-render');
   const count = await driver.executeScript('return document.querySelectorAll("euboulia-badge").length');
   if (count !== 1) throw new Error(`expected 1 badge, found ${count}`);
+
+  // Choose for me: on through the options page, then Enter (twice) on a stand-in claude.ai menu.
+  await driver.get(await optionsUrl());
+  await waitFor(() => driver.executeScript('return !!document.documentElement.dataset.ready'), 'options page', 3000);
+  await driver.executeScript('const b = document.getElementById("autoSwitch"); if (!b.checked) b.click()');
+  await new Promise(r => setTimeout(r, 300));
+  await driver.get('http://127.0.0.1:8099/switch.html');
+  const box = await driver.wait(until.elementLocated(By.css('.ProseMirror')), 5000);
+  await box.click();
+  await box.sendKeys('Translate into French: good morning, see you tomorrow');
+  await waitFor(async () => /Sending with: /.test(await badgeText()), 'Sending with');
+  const target = await driver.executeScript('return document.querySelector("euboulia-badge").shadowRoot.querySelector(".main b").textContent');
+  await driver.actions().sendKeys(Key.ENTER).sendKeys(Key.ENTER).perform();
+  await waitFor(() => driver.executeScript('return window.__sent.length === 1'), 'one send', 3000);
+  await new Promise(r => setTimeout(r, 300));
+  const sent = await driver.executeScript('return window.__sent');
+  if (JSON.stringify(sent) !== JSON.stringify([`Model: ${target.replace(' · ', ' ')}`])) throw new Error(`choose for me: expected one send with ${target}, got ${JSON.stringify(sent)}`);
+  console.log('choose for me:', sent[0], '|', (await driver.executeScript('return document.querySelector("euboulia-badge").shadowRoot.querySelector(".status").textContent')).trim());
   console.log('firefox smoke: ok');
 } catch (e) {
   failed = true;
