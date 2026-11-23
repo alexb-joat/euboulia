@@ -116,4 +116,4 @@ src/options     settings page
 
 Milestones 1 and 2 are done (ten sites plus Open WebUI and generic; badge; cloud; options; picker observation; Firefox and Chromium smokes). Learning from clicks was built in milestone 3 and taken out again after 0.1.0, so that suggestions rest on documentation only. The optional click-through that switches the site's model for you ("Choose for me") works on Claude. Still open: the same on ChatGPT, real-session selector checks on the sites behind sign-in walls, and pointing the catalog URL at the crawler's published file.
 
-MIT licensed.
+MIT licensed. Copyright (C) 2026 Alex Bubnov. "Euboulia" is the project name, not part of the licence — a fork must use a different name and must not imply endorsement.
