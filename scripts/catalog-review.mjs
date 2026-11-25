@@ -3,6 +3,8 @@
 //   node scripts/catalog-review.mjs --published catalog.json --next catalog.json --log catalog-refresh.jsonl \
 //     --openrouter models.json --docs docs-export.json --facts provider-facts.json --quotes review/quotes.json --out sheet.md
 //     [--pages dir-of-saved-pages] [--behaviour behaviour.json] [--extra more.md]
+// behaviour.json maps an item's heading, or its field name ("service.<field>" for a service), to the text of the line saying what
+// the live and the next build do with that field; extra.md is appended after the blocks (calls, commands).
 // All inputs are read from copies you pass in; the tool never touches ~/.cache/euboulia or ~/.local/state/euboulia and
 // writes only inside this checkout or the job's temp folder ($CLAUDE_JOB_DIR/tmp). The rules for what counts as news come
 // from catalog-diff.mjs, the same module the refresh uses.
@@ -178,7 +180,7 @@ export function buildSheet({ published, next, record, history = [record], openro
     const lines = [...it.changes, ...it.holds, ...it.drift];
     const seenIn = history.filter(r => [...(r.changes ?? []), ...(r.holds ?? []), ...(r.drift ?? [])].some(l => lines.includes(l)));
     if (seenIn.length) out.push(`- In the job's log: first in the record of ${seenIn[0].at}, and in ${seenIn.length} of ${history.length} records read (the most recent is ${history.at(-1).at}).`);
-    out.push(`- What the live 0.1.0 and the next build do with this field: ${behaviour[it.field] ?? 'not filled in'}`);
+    out.push(`- What the live 0.1.0 and the next build do with this field: ${behaviour[it.key] ?? behaviour[it.subject.startsWith('service ') ? `service.${it.field}` : it.field] ?? 'not filled in'}`);
 
     const entries = byItem.get(it.key) ?? [];
     const good = [], bad = [];

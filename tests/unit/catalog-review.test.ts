@@ -63,6 +63,14 @@ describe('catalog-review', () => {
     expect(r.stdout.trimEnd().split('\n').at(-1)).toBe('<!-- items 3 · quoted 1 · unchecked 2 -->');
   });
 
+  it('fills the behaviour line by heading first, then by field name', () => {
+    const behaviour = { 'a/m: price': 'by heading', name: 'by field' };
+    const { text } = buildSheet({ published, next, record, openrouter: JSON.parse(openrouter), openrouterSha: 'x', docs, facts, quotes: [], behaviour });
+    expect(text).toContain('next build do with this field: by heading');
+    expect(text).toContain('next build do with this field: by field');
+    expect(text).toContain('next build do with this field: not filled in');
+  });
+
   it('says when an item first appeared in the log', () => {
     const sheet = readFileSync(run([good]).out, 'utf8');
     expect(sheet).toContain('- In the job\'s log: first in the record of 2026-11-24, and in 2 of 2 records read (the most recent is 2026-11-25T10:46:56.796Z).');
