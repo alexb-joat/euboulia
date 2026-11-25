@@ -131,7 +131,7 @@ function guardOut(p) {
 }
 
 /** Pure part: everything but argument parsing and file I/O. Returns { text, errors, counts }. */
-export function buildSheet({ published, next, record, openrouter, openrouterSha, docs, facts, quotes, pages = new Map(), behaviour = {}, extra = '' }) {
+export function buildSheet({ published, next, record, history = [record], openrouter, openrouterSha, docs, facts, quotes, pages = new Map(), behaviour = {}, extra = '' }) {
   const errors = [];
   const items = itemsFrom(record);
   const known = new Set(items.map(i => i.key));
@@ -175,6 +175,9 @@ export function buildSheet({ published, next, record, openrouter, openrouterSha,
       out.push(`- provider-facts.json has: ${fm ? (it.field in fm ? `${it.field} ${clip(canon(fm[it.field]))}` : 'the model, without that field') : 'no entry for this model'}${fsrc ? `; its source ${fsrc.url} fetched ${fsrc.fetched}` : ''}`);
       out.push(`- The docs crawl (${docs?.generatedAt ?? 'undated'}) has: ${dm ? clip(canon(dm), 400) : 'no entry for this model'}`);
     }
+    const lines = [...it.changes, ...it.holds, ...it.drift];
+    const seenIn = history.filter(r => [...(r.changes ?? []), ...(r.holds ?? []), ...(r.drift ?? [])].some(l => lines.includes(l)));
+    if (seenIn.length) out.push(`- In the job's log: first in the record of ${seenIn[0].at}, and in ${seenIn.length} of ${history.length} records read (the most recent is ${history.at(-1).at}).`);
     out.push(`- What the live 0.1.0 and the next build do with this field: ${behaviour[it.field] ?? 'not filled in'}`);
 
     const entries = byItem.get(it.key) ?? [];
@@ -261,7 +264,8 @@ function main(argv) {
   }
   const behaviour = get('--behaviour') ? readJson('--behaviour') : {};
   const extra = get('--extra') ? readText('--extra') : '';
-  const { text, errors } = buildSheet({ published, next, record, openrouter: JSON.parse(orText), openrouterSha: sha256(orText), docs, facts, quotes, pages, behaviour, extra });
+  const history = lines.map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+  const { text, errors } = buildSheet({ published, next, record, history, openrouter: JSON.parse(orText), openrouterSha: sha256(orText), docs, facts, quotes, pages, behaviour, extra });
   if (errors.length) { for (const e of errors) console.error(`catalog-review: ${e}`); console.error(`catalog-review: ${errors.length} problem(s); no sheet written`); process.exit(1); }
   mkdirSync(path.dirname(out), { recursive: true });
   writeFileSync(out, text);
