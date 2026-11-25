@@ -209,7 +209,7 @@ export function buildSheet({ published, next, record, history = [record], openro
       if (!bad.length) bad.push('UNCHECKED: no source page was quoted for this item');
     }
     for (const b of bad) out.push(`- ${b}`);
-    glance.push(`| ${it.key} | ${it.cls} | ${good.length ? `yes, ${[...new Set(good.map(q => hostOf(q.url)))].join(', ')}` : 'no'}${bad.length ? `; ${bad.length} UNCHECKED` : ''} |`);
+    glance.push(`| ${it.key} | ${it.cls} | ${good.length ? `yes, ${[...new Set(good.map(q => (/^(file|git):/.test(q.url) ? 'repo file or commit' : hostOf(q.url))))].join(', ')}` : 'no'}${bad.length ? `; ${bad.length} UNCHECKED` : ''} |`);
     out.push(`- Source quoted: ${good.length ? `yes, from ${[...new Set(good.map(q => hostOf(q.url)))].join(', ')}` : 'no'}`);
     return out.join('\n');
   });
