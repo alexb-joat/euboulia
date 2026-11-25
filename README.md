@@ -112,6 +112,19 @@ src/options     settings page
 - Dev dependencies pinned; GitHub Actions pinned by SHA with read-only permissions; CodeQL and dependency review on pull requests.
 - Vulnerability reports: see [SECURITY.md](SECURITY.md).
 
+## Known limits
+
+What has not been checked, so you know how far to trust it:
+
+- **Site selectors.** Claude, ChatGPT and Gemini were captured signed in (Claude 2026-10-13, its model menu again 2026-11-08; ChatGPT 2026-10-14; Gemini 2026-10-13). Grok, Perplexity, Le Chat and OpenRouter were last captured logged out on 2026-10-12 (Le Chat's model menu was not visible logged out; OpenRouter's capture is the composer only). DeepSeek, Copilot and Poe were never captured signed in; their selectors come from the public page. Grok, Perplexity, Le Chat, DeepSeek, Copilot, Poe and OpenRouter are the sites marked experimental ([`src/catalog/services.json`](src/catalog/services.json) `_verified` notes, [CHANGELOG.md](CHANGELOG.md) 0.1.0).
+- **Grok's models.** Grok's picker shows modes, not model names. The mode-to-model mapping in the catalog is a best guess (`services.json`, `grok._comment`).
+- **Plans.** What each plan includes and what it costs is only partly verified from the providers; the `_verified` notes for Claude, ChatGPT and Gemini in `services.json` say which parts are not.
+- **Effort levels are estimates.** How much each effort level changes the output and the fit is Euboulia's own modelling; no provider publishes it, so figures such as "≈1.4×" are estimates ([docs/catalog-sources.md](docs/catalog-sources.md), "What stays an estimate").
+- **Strengths are not refreshed.** The daily catalog refresh leaves each model's strengths as published, because the benchmark feed behind them changed scale in October 2026 and needs a person to re-map it ([docs/catalog-sources.md](docs/catalog-sources.md), "The daily refresh").
+- **"Choose for me".** Off by default (options page) and on Claude only; ChatGPT and the other sites keep suggesting only. It was tested against a stand-in for Claude's model menu built from the 2026-11-08 signed-in capture, and in the Chromium and Firefox smokes; it has not yet been confirmed in a real send on claude.ai ([`tests/fixtures/pages/fake-claude-menu.js`](tests/fixtures/pages/fake-claude-menu.js), `tests/dom/switch.test.ts`, [CHANGELOG.md](CHANGELOG.md) 0.1.2).
+- **The "why?" cloud with a plan set.** With Claude's Max plan set, the cost column takes most of the cloud's width and model names wrap onto two or three lines. Seen in Chromium, Firefox and WebKit at 1440×900; no cost text is cut off. This is a layout flaw, not a wrong figure.
+- **Safari.** There is no Safari build. `npm run run:webkit` shows the badge and cloud in WebKit, Safari's engine, with a stand-in for the extension APIs; it does not test Safari's packaging, permissions or toolbar button ([`scripts/run-webkit.mjs`](scripts/run-webkit.mjs)).
+
 ## Status
 
 Milestones 1 and 2 are done (ten sites plus Open WebUI and generic; badge; cloud; options; picker observation; Firefox and Chromium smokes). Learning from clicks was built in milestone 3 and taken out again after 0.1.0, so that suggestions rest on documentation only. The optional click-through that switches the site's model for you ("Choose for me") works on Claude. Still open: the same on ChatGPT, real-session selector checks on the sites behind sign-in walls, and pointing the catalog URL at the crawler's published file.
