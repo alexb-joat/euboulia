@@ -1,6 +1,6 @@
 {
   "name": "euboulia",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "Browser extension that suggests the best-value LLM for the prompt you are typing, on any chat site.",
   "author": "Alex <beyondpeaksolstice@gmail.com>",

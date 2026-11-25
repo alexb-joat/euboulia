@@ -1,10 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.1.2 (2026-11-25)
 
 - "Choose for me", off by default (options page): when you send on Claude and the suggestion differs from the model menu, Euboulia clicks the menu to the suggested model and effort, then sends. The badge reads "Sending with: …" beforehand and "Sent with … · Switch back" after. Switch back sets the menu back for your next message and offers "Don't switch in this chat". A model you picked yourself in the menu always wins, and a model the menu does not list is never picked. If the menu does not respond within 1.5 s, the message goes unchanged and the badge says "Couldn't switch …, sent with …". A message is never held for longer than that and never sent twice. ChatGPT and the other sites keep suggesting only.
 - Claude's effort levels carry the names the site now shows: Low, Medium, High, Extra, Max (Extra was "Extra high"). The menu selectors follow claude.ai's current model menu.
 - `npm run package:team` also builds a Chrome zip with "Choose for me" on by default, for a team that wants it without visiting the options page.
+- Development, nothing changes in the extension: `npm run run:webkit` shows the badge and cloud in WebKit (Safari's engine) with a stand-in for the extension APIs; the Chrome promo tile is rendered by `scripts/promo-tile.mjs`; the licence names its holder and says a fork must use a different project name; the dev-only dependency node-forge is at 1.4.3.
 
 ## 0.1.1 (2026-11-08)
 
