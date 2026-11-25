@@ -7,7 +7,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import os from 'node:os';
 import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { pageText, parseLine, perMillion } from '../../scripts/catalog-review.mjs';
+import { buildSheet, pageText, parseLine, perMillion } from '../../scripts/catalog-review.mjs';
 
 const root = path.resolve(__dirname, '../..');
 const sha = (s: string) => createHash('sha256').update(s).digest('hex');
@@ -66,6 +66,7 @@ describe('catalog-review', () => {
   it('shows a quote only after finding it in the saved page, whitespace-normalised and with tags stripped', () => {
     const sheet = readFileSync(run([good]).out, 'utf8');
     expect(sheet).toContain('> Price is $1.28 per million tokens.');
+    expect(sheet).toContain('- Source quoted: yes, from example.test');
     expect(sheet).toContain(`page SHA-256 ${sha(page)}`);
   });
 
@@ -101,6 +102,13 @@ describe('catalog-review', () => {
     expect(sheet).toContain("OpenRouter's per-token dollar string × 1,000,000");
     expect(sheet).toContain('input 1.28 (1.28), output 2.56 (2.56); published catalog: input 0.5, output 1');
     expect(sheet).toContain('Rigor: method OpenRouter per-token price × 1e6');
+    expect(sheet).toContain("OpenRouter's current record gives the same price as the job's record.");
+  });
+
+  it('says where the feed has moved since the job’s record', () => {
+    const moved = JSON.stringify({ data: [{ id: 'a/m', name: 'Maker: M', pricing: { prompt: '0.00000082', completion: '0.00000155' } }] });
+    const { text } = buildSheet({ published, next, record, openrouter: JSON.parse(moved), openrouterSha: sha(moved), docs, facts, quotes: [] });
+    expect(text).toContain("OpenRouter's feed has moved since the job's record: the record says input 1.28, output 2.56; the feed now gives input 0.82, output 1.55.");
   });
 
   it('refuses an --out outside the checkout and the job folder, and a log from the live refresh folders', () => {

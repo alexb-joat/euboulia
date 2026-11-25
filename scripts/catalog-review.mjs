@@ -154,6 +154,11 @@ export function buildSheet({ published, next, record, openrouter, openrouterSha,
       if (it.field === 'price') {
         const inM = perMillion(p.prompt), outM = perMillion(p.completion);
         out.push(`- Per million tokens (OpenRouter's per-token dollar string × 1,000,000; the catalog rounds to the cent): input ${inM} (${roundToCent(Number(inM))}), output ${outM} (${roundToCent(Number(outM))}); published catalog: input ${published?.models?.[it.subject]?.price?.input ?? 'none'}, output ${published?.models?.[it.subject]?.price?.output ?? 'none'}`);
+        const after = it.changes.map(l => l.match(/-> (\{.*\})$/)?.[1]).find(Boolean);
+        if (after) {
+          const a = JSON.parse(after), now = { input: roundToCent(Number(inM)), output: roundToCent(Number(outM)) };
+          out.push(a.input === now.input && a.output === now.output ? "- OpenRouter's current record gives the same price as the job's record." : `- OpenRouter's feed has moved since the job's record: the record says input ${a.input}, output ${a.output}; the feed now gives input ${now.input}, output ${now.output}.`);
+        }
         out.push(`- Rigor: method OpenRouter per-token price × 1e6; data response SHA-256 ${openrouterSha ?? 'unknown'}, fetched ${fetchedAtFor(openrouterSha) ?? 'time not recorded'}; n one model record; baseline the published catalog value; limits OpenRouter shows one endpoint's price, not necessarily the maker's own.`);
       }
     } else if (it.cls === 'docs-vs-facts') {
@@ -183,7 +188,7 @@ export function buildSheet({ published, next, record, openrouter, openrouterSha,
       if (!bad.length) bad.push('UNCHECKED: no source page was quoted for this item');
     }
     for (const b of bad) out.push(`- ${b}`);
-    out.push(`- Source quoted: ${good.length ? 'yes' : 'no'}`);
+    out.push(`- Source quoted: ${good.length ? `yes, from ${[...new Set(good.map(q => new URL(q.url).host))].join(', ')}` : 'no'}`);
     return out.join('\n');
   });
 
@@ -201,6 +206,7 @@ export function buildSheet({ published, next, record, openrouter, openrouterSha,
     '## What is waiting and why',
     '',
     `- The refresh of ${record.at} ended "${record.outcome}" with ${(record.changes ?? []).length} changes, ${(record.holds ?? []).length} held lines and ${(record.drift ?? []).length} docs-versus-facts lines.`,
+    `- Accepting rebuilds from OpenRouter's feed at that moment, so what it publishes can differ from the lines below where the feed has moved; the blocks say where it has.`,
     `- The job holds everything while any held line exists, so accepting publishes all ${(record.changes ?? []).length} changes together; the ${(record.holds ?? []).length} held lines flag ${heldItems} of them. There is no way to accept some.`,
     '- Held lines as logged:',
     list(record.holds ?? []),
