@@ -84,6 +84,18 @@ describe('catalog-review', () => {
     expect(sheet).toContain(`page SHA-256 ${sha(page)}`);
   });
 
+  it('lists every item in an at-a-glance table, and cuts a very long quote for reading only', () => {
+    const long = `Price is $1.28 per million tokens. ${'Filler words follow. '.repeat(100)}`;
+    const longPage = `<p>${long}</p>`;
+    const { text, errors } = buildSheet({ published, next, record, openrouter: JSON.parse(openrouter), openrouterSha: 'x', docs, facts,
+      quotes: [{ ...good, pageSha256: sha(longPage), quote: long }], pages: new Map([[sha(longPage), longPage]]) });
+    expect(errors).toEqual([]);
+    expect(text).toContain('| a/m: price | held | yes, example.test |');
+    expect(text).toContain('| a/n: name | routine | no; 1 UNCHECKED |');
+    expect(text).toContain('[the quote continues in quotes.json]');
+    expect(text.length).toBeLessThan(6000);
+  });
+
   it('exits 1, and writes no sheet, when a quote is not in the page it names', () => {
     const out = path.join(dir, 'wrong.md');
     const r = run([{ ...good, quote: 'Price is $0.12 per million tokens.' }], [], out);

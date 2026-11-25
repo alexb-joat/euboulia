@@ -40,6 +40,12 @@ const roundToCent = x => Math.round(x * 100) / 100;
 
 const canon = v => JSON.stringify(v);
 const hostOf = u => { try { return new URL(u).host || u; } catch { return u; } };
+const QUOTE_SHOWN = 1100;
+/** A long quote is cut at a word for reading; the whole text stays in quotes.json, and the check ran on the whole. */
+const shown = quote => {
+  const t = quote.replace(/\s+/g, ' ').trim();
+  return t.length <= QUOTE_SHOWN ? t : `${t.slice(0, t.lastIndexOf(' ', QUOTE_SHOWN))} … [the quote continues in quotes.json]`;
+};
 const clip = (s, n = 200) => (s.length > n ? `${s.slice(0, n - 3)}...` : s);
 
 /** Which item a log line belongs to: holds attach to the change they flag, so one price move is one block. */
@@ -148,6 +154,7 @@ export function buildSheet({ published, next, record, history = [record], openro
   const fetchedAtFor = sha => quotes.find(q => q.pageSha256 === sha)?.fetchedAt;
 
   let quoted = 0, unchecked = 0, onlyOpenRouter = 0, partly = 0;
+  const glance = [];
   const blocks = items.map(it => {
     const out = [`### ${it.key}`, '', `- Class: ${it.cls}`];
     for (const d of describeChange(it, published, next)) out.push(`- What changed: ${d}`);
@@ -196,12 +203,13 @@ export function buildSheet({ published, next, record, history = [record], openro
       quoted++;
       if (good.every(q => hostOf(q.url).endsWith('openrouter.ai'))) onlyOpenRouter++;
       if (bad.length) partly++;
-      for (const q of good) out.push(`- Quoted from ${q.url} (fetched ${q.fetchedAt}, page SHA-256 ${q.pageSha256})${q.note ? ` (${q.note})` : ''}:`, '', `  > ${q.quote.replace(/\s+/g, ' ').trim()}`, '');
+      for (const q of good) out.push(`- Quoted from ${q.url} (fetched ${q.fetchedAt}, page SHA-256 ${q.pageSha256})${q.note ? ` (${q.note})` : ''}:`, '', `  > ${shown(q.quote)}`, '');
     } else {
       unchecked++;
       if (!bad.length) bad.push('UNCHECKED: no source page was quoted for this item');
     }
     for (const b of bad) out.push(`- ${b}`);
+    glance.push(`| ${it.key} | ${it.cls} | ${good.length ? `yes, ${[...new Set(good.map(q => hostOf(q.url)))].join(', ')}` : 'no'}${bad.length ? `; ${bad.length} UNCHECKED` : ''} |`);
     out.push(`- Source quoted: ${good.length ? `yes, from ${[...new Set(good.map(q => hostOf(q.url)))].join(', ')}` : 'no'}`);
     return out.join('\n');
   });
@@ -226,6 +234,12 @@ export function buildSheet({ published, next, record, history = [record], openro
     list(record.holds ?? []),
     '',
     `- What "quoted" means below: ${quoted} of ${items.length} items have at least one quote found in a saved page; ${onlyOpenRouter} of those are quoted from OpenRouter only (an aggregator, not the maker); ${partly} have a quote and also an UNCHECKED line for something that could not be quoted; ${unchecked} have no quote at all.`,
+    '',
+    '## At a glance',
+    '',
+    '| Item | Class | Source quoted |',
+    '| --- | --- | --- |',
+    ...glance,
     '',
     '## The log against a fresh rebuild',
     '',
