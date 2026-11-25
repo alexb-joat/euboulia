@@ -111,6 +111,16 @@ describe('catalog-review', () => {
     expect(text).toContain("OpenRouter's feed has moved since the job's record: the record says input 1.28, output 2.56; the feed now gives input 0.82, output 1.55.");
   });
 
+  it('describes a changed service field key by key, effort lists by effort id', () => {
+    const svc = (label: string, pick: string) => ({ claude: { host: 'x', models: [], efforts: [{ id: 'xhigh', label, outputMultiplier: 2.2 }, { id: 'max', label: 'Max' }], selectors: { pickerOpen: [pick], composer: ['c'] } } });
+    const rec = { at: 'now', outcome: 'held', changes: ['service claude: efforts changed', 'service claude: selectors changed'], holds: [], drift: [] };
+    const { text } = buildSheet({ published: { ...published, services: svc('Extra high', 'a') }, next: { ...next, services: svc('Extra', 'b') }, record: rec, openrouter: { data: [] }, openrouterSha: 'x', docs, facts, quotes: [] });
+    expect(text).toContain('- What changed: efforts[xhigh].label: "Extra high" → "Extra"');
+    expect(text).not.toContain('efforts[max]');
+    expect(text).toContain('- What changed: selectors.pickerOpen: ["a"] → ["b"]');
+    expect(text).not.toContain('selectors.composer');
+  });
+
   it('refuses an --out outside the checkout and the job folder, and a log from the live refresh folders', () => {
     const outside = run([good], [], path.join(os.tmpdir(), 'catalog-review-should-not-exist.md'));
     expect(outside.status).toBe(1);

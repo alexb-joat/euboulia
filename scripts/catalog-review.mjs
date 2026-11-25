@@ -37,6 +37,7 @@ export const perMillion = perToken => Number((Number(perToken) * 1e6).toPrecisio
 const roundToCent = x => Math.round(x * 100) / 100;
 
 const canon = v => JSON.stringify(v);
+const hostOf = u => { try { return new URL(u).host || u; } catch { return u; } };
 const clip = (s, n = 200) => (s.length > n ? `${s.slice(0, n - 3)}...` : s);
 
 /** Which item a log line belongs to: holds attach to the change they flag, so one price move is one block. */
@@ -94,7 +95,13 @@ function describeChange(it, published, next) {
     const a = published?.services?.[svc]?.[it.field], b = next?.services?.[svc]?.[it.field];
     if (a && b && typeof a === 'object' && typeof b === 'object' && !Array.isArray(a) && !Array.isArray(b)) {
       for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) if (canon(a[k]) !== canon(b[k])) lines.push(`${it.field}.${k}: ${clip(canon(a[k]) ?? 'none')} → ${clip(canon(b[k]) ?? 'none')}`);
-    } else lines.push(`${it.field}: ${clip(canon(a) ?? 'none')} → ${clip(canon(b) ?? 'none')}`);
+    } else if (Array.isArray(a) && Array.isArray(b) && [...a, ...b].every(x => x && typeof x === 'object' && 'id' in x)) {
+      for (const id of new Set([...a, ...b].map(x => x.id))) {
+        const x = a.find(y => y.id === id), y = b.find(z => z.id === id);
+        if (!x || !y) { lines.push(`${it.field}[${id}]: ${x ? 'removed' : 'added'}`); continue; }
+        for (const k of new Set([...Object.keys(x), ...Object.keys(y)])) if (canon(x[k]) !== canon(y[k])) lines.push(`${it.field}[${id}].${k}: ${clip(canon(x[k]) ?? 'none')} → ${clip(canon(y[k]) ?? 'none')}`);
+      }
+    } else lines.push(`${it.field}: ${clip(canon(a) ?? 'none', 400)} → ${clip(canon(b) ?? 'none', 400)}`);
     return lines;
   }
   for (const l of it.changes) {
@@ -188,7 +195,7 @@ export function buildSheet({ published, next, record, openrouter, openrouterSha,
       if (!bad.length) bad.push('UNCHECKED: no source page was quoted for this item');
     }
     for (const b of bad) out.push(`- ${b}`);
-    out.push(`- Source quoted: ${good.length ? `yes, from ${[...new Set(good.map(q => new URL(q.url).host))].join(', ')}` : 'no'}`);
+    out.push(`- Source quoted: ${good.length ? `yes, from ${[...new Set(good.map(q => hostOf(q.url)))].join(', ')}` : 'no'}`);
     return out.join('\n');
   });
 
