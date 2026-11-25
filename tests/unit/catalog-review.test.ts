@@ -72,6 +72,7 @@ describe('catalog-review', () => {
     const sheet = readFileSync(run([good]).out, 'utf8');
     expect(sheet).toContain('> Price is $1.28 per million tokens.');
     expect(sheet).toContain('- Source quoted: yes, from example.test');
+    expect(sheet).toContain('1 of 3 items have at least one quote found in a saved page; 0 of those are quoted from OpenRouter only');
     expect(sheet).toContain(`page SHA-256 ${sha(page)}`);
   });
 

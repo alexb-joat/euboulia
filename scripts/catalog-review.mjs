@@ -145,7 +145,7 @@ export function buildSheet({ published, next, record, history = [record], openro
   }
   const fetchedAtFor = sha => quotes.find(q => q.pageSha256 === sha)?.fetchedAt;
 
-  let quoted = 0, unchecked = 0;
+  let quoted = 0, unchecked = 0, onlyOpenRouter = 0, partly = 0;
   const blocks = items.map(it => {
     const out = [`### ${it.key}`, '', `- Class: ${it.cls}`];
     for (const d of describeChange(it, published, next)) out.push(`- What changed: ${d}`);
@@ -192,6 +192,8 @@ export function buildSheet({ published, next, record, history = [record], openro
     }
     if (good.length) {
       quoted++;
+      if (good.every(q => hostOf(q.url).endsWith('openrouter.ai'))) onlyOpenRouter++;
+      if (bad.length) partly++;
       for (const q of good) out.push(`- Quoted from ${q.url} (fetched ${q.fetchedAt}, page SHA-256 ${q.pageSha256})${q.note ? ` (${q.note})` : ''}:`, '', `  > ${q.quote.replace(/\s+/g, ' ').trim()}`, '');
     } else {
       unchecked++;
@@ -220,6 +222,8 @@ export function buildSheet({ published, next, record, history = [record], openro
     `- The job holds everything while any held line exists, so accepting publishes all ${(record.changes ?? []).length} changes together; the ${(record.holds ?? []).length} held lines flag ${heldItems} of them. There is no way to accept some.`,
     '- Held lines as logged:',
     list(record.holds ?? []),
+    '',
+    `- What "quoted" means below: ${quoted} of ${items.length} items have at least one quote found in a saved page; ${onlyOpenRouter} of those are quoted from OpenRouter only (an aggregator, not the maker); ${partly} have a quote and also an UNCHECKED line for something that could not be quoted; ${unchecked} have no quote at all.`,
     '',
     '## The log against a fresh rebuild',
     '',
