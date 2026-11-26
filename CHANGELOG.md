@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- With a plan set, each option in the "why?" cloud keeps its name on one line: the cost sits on short lines under each other ("included (Max)", its weight against Sonnet 5.5, the API equivalent), and in a slim side margin names and the API figure wrap instead of being cut off.
+
 ## 0.1.2 (2026-11-25)
 
 - "Choose for me", off by default (options page): when you send on Claude and the suggestion differs from the model menu, Euboulia clicks the menu to the suggested model and effort, then sends. The badge reads "Sending with: …" beforehand and "Sent with … · Switch back" after. Switch back sets the menu back for your next message and offers "Don't switch in this chat". A model you picked yourself in the menu always wins, and a model the menu does not list is never picked. If the menu does not respond within 1.5 s, the message goes unchanged and the badge says "Couldn't switch …, sent with …". A message is never held for longer than that and never sent twice. ChatGPT and the other sites keep suggesting only.
