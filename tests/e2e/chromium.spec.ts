@@ -143,7 +143,7 @@ test('cloud with a plan: every model name on one line and every cost figure in f
   await page.evaluate(() => (document.querySelector('euboulia-badge')!.shadowRoot!.querySelector('button') as HTMLButtonElement).click());
   await page.evaluate(() => (document.querySelector('euboulia-cloud')!.shadowRoot!.querySelector('button.more') as HTMLButtonElement).click());
 
-  const measure = () => page.evaluate(() => {
+  const measure = (p = page) => p.evaluate(() => {
     const host = document.querySelector('euboulia-cloud') as HTMLElement;
     const root = host.shadowRoot!;
     const list = root.querySelector('.list') as HTMLElement;
@@ -181,6 +181,36 @@ test('cloud with a plan: every model name on one line and every cost figure in f
     }
   }
   await page.close();
+
+  // The slimmest margin cloud (about 248 px): names may wrap there, but nothing is cut off and every figure stays.
+  const slim = await context.newPage();
+  await slim.setViewportSize({ width: 1700, height: 900 });
+  await slim.goto('http://127.0.0.1:8099/claude.html');
+  await slim.locator('.ProseMirror').click();
+  await slim.keyboard.type('Why does this Python function raise KeyError? def f(d): return d["x"]');
+  await expect.poll(() => badgeText(slim), { timeout: 3000 }).toMatch(/Suggest:|Good pick/);
+  await slim.evaluate(() => (document.querySelector('euboulia-badge')!.shadowRoot!.querySelector('button') as HTMLButtonElement).click());
+  await slim.evaluate(() => (document.querySelector('euboulia-cloud')!.shadowRoot!.querySelector('button.more') as HTMLButtonElement | null)?.click());
+  let narrowest = 0;
+  for (let w = 1700; w >= 900; w -= 10) {
+    await slim.setViewportSize({ width: w, height: 900 });
+    await slim.waitForTimeout(30);
+    if (await slim.evaluate(() => (document.querySelector('euboulia-cloud') as HTMLElement).dataset.mode) !== 'margin') break;
+    narrowest = w;
+  }
+  expect(narrowest, 'a viewport width with the cloud in the margin').toBeGreaterThan(0);
+  await slim.setViewportSize({ width: narrowest, height: 900 });
+  await slim.waitForTimeout(150);
+  const n = await measure(slim);
+  const at = `at ${narrowest}x900 (${n.mode}, cloud ${n.width} px)`;
+  expect(n.width, `slimmest margin cloud ${at}`).toBeLessThan(300);
+  expect(n.listClipped, `.list clipped ${at}`).toBe(false);
+  expect(n.rows.filter(r => r.clipped.length).map(r => `${r.label}: ${r.clipped.join(', ')}`), `clipped cells ${at}`).toEqual([]);
+  for (const r of n.rows.filter(r => r.service === 'Claude')) {
+    expect(r.cost, `${r.label} weight ${at}`).toMatch(/[≈<][\d.]+×/);
+    expect(r.cost, `${r.label} API figure ${at}`).toMatch(/API equivalent [~<]?\$[\d.]+/);
+  }
+  await slim.close();
 
   await setClaudePlan('');   // later tests expect a fresh install's defaults
 });

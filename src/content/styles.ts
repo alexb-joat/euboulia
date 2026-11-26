@@ -79,6 +79,8 @@ td.name .label { white-space: nowrap; }
 td.cost { text-align: right; }
 td.cost > * { display: block; white-space: nowrap; }
 td.cost small { color: var(--eu-muted); font-size: .85em; }
+:host([tight]) td.name .label, :host([tight]) td.cost small { white-space: normal; }
+:host([tight]) td.fit { width: 40px; }
 p { margin: 0; }
 p.why { font-size: .95em; }
 .else { font-size: .92em; padding-top: 8px; border-top: 1px solid var(--eu-border); }

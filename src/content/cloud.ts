@@ -74,6 +74,17 @@ export class Cloud {
       s.left = ''; s.top = ''; s.right = `${p.right}px`; s.bottom = `${p.bottom}px`;
       s.setProperty('--eu-maxh', `${Math.max(160, innerHeight - p.bottom - GAP)}px`);
     }
+    this.fitRows();
+  }
+
+  /**
+   * Names and cost lines stay on one line while the table fits the cloud; in a narrow cloud (a slim margin, a small
+   * site font) they may wrap instead, so nothing is cut off or scrolls sideways.
+   */
+  private fitRows(): void {
+    const list = this.root.querySelector<HTMLElement>('.list');
+    this.host.removeAttribute('tight');
+    if (list && list.clientWidth > 0 && list.scrollWidth > list.clientWidth) this.host.setAttribute('tight', '');
   }
 
   private onResize = () => {
@@ -100,7 +111,7 @@ export class Cloud {
     const tools = el('div', 'tools');
     const collapse = el('button', undefined, '–');
     collapse.title = 'Collapse';
-    collapse.addEventListener('click', () => this.host.toggleAttribute('collapsed'));
+    collapse.addEventListener('click', () => { this.host.toggleAttribute('collapsed'); this.fitRows(); });
     const close = el('button', undefined, '×');
     close.title = 'Close';
     close.addEventListener('click', () => this.close());
