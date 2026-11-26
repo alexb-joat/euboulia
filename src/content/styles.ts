@@ -75,8 +75,10 @@ tr.win td.name { font-weight: 600; }
 td.fit { width: 84px; padding-right: 8px; }
 .bar { height: 5px; border-radius: 3px; background: var(--eu-faint); overflow: hidden; }
 .bar i { display: block; height: 100%; background: var(--eu-muted); }
-td.cost { text-align: right; white-space: nowrap; }
-td.cost small { display: block; color: var(--eu-muted); font-size: .85em; }
+td.name .label { white-space: nowrap; }
+td.cost { text-align: right; }
+td.cost > * { display: block; white-space: nowrap; }
+td.cost small { color: var(--eu-muted); font-size: .85em; }
 p { margin: 0; }
 p.why { font-size: .95em; }
 .else { font-size: .92em; padding-top: 8px; border-top: 1px solid var(--eu-border); }

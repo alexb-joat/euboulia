@@ -36,7 +36,11 @@ describe('limit weight', () => {
     expect(limitTitle(BUNDLED, opus('max'))).toMatch(/^Opus 5\.5 · Max takes about 6× the share of your Max plan's limit that Sonnet 5\.5 · Medium takes per send\. Euboulia's estimate/);
     const priced = suggest(undefined).ranked.map(r => ({ ...r, plan: undefined, capWeight: undefined, cost: { kind: 'api' as const, usd: 0.01, tokensOut: 100 } }))[0]!;
     expect(limitWeight(BUNDLED, priced)).toBeUndefined();
-    expect(explain(s, BUNDLED).rows.every(r => / · ≈[\d.]+× Sonnet 5\.5$/.test(r.cost))).toBe(true);
+    // The cloud's rows keep the parts apart (one line each); the joined label above is what the badge and "Elsewhere" show.
+    const rows = explain(s, BUNDLED).rows;
+    expect(rows.every(r => r.cost === 'included (Max)' && /^≈[\d.]+× Sonnet 5\.5$/.test(r.weight ?? ''))).toBe(true);
+    const maxRow = [...rows, ...explain(s, BUNDLED).more].find(r => r.key === opus('max').key)!;
+    expect(`${maxRow.cost} · ${maxRow.weight}`).toBe(costLabel(BUNDLED, opus('max')));
   });
 });
 

@@ -128,7 +128,8 @@ export class Cloud {
     const body = el('tbody');
     const addRow = (r: Explanation['rows'][number], extra = false) => {
       const tr = el('tr', [r.isWinner ? 'win' : '', extra ? 'extra' : ''].filter(Boolean).join(' ') || undefined);
-      const name = el('td', 'name', r.label);
+      const name = el('td', 'name');
+      name.append(el('span', 'label', r.label));   // one line: the cost cell gives way instead
       if (r.isCurrent) name.append(el('em', undefined, ' · selected now'));
       name.append(el('small', undefined, r.serviceName));
       const fit = el('td', 'fit');
@@ -138,7 +139,10 @@ export class Cloud {
       bar.append(fill);
       fit.append(bar, el('span', 'pct', `${Math.round(r.fit * 100)}%`));
       fit.title = `Fit for this task: ${Math.round(r.fit * 100)}%`;
-      const cost = el('td', 'cost', r.cost);
+      // Each part on its own line, so a plan's "included (Max)", its weight and its API figure fit beside the name.
+      const cost = el('td', 'cost');
+      cost.append(el('span', 'price', r.cost));
+      if (r.weight) cost.append(el('span', 'weight', r.weight));
       if (r.apiCost) cost.append(el('small', undefined, r.apiCost));
       tr.append(name, fit, cost);
       body.append(tr);

@@ -4,7 +4,11 @@ import { capUnit } from '../catalog/index';
 import { formatCost, formatUsd, formatWeight } from './cost';
 
 export interface ExplainRow {
-  key: string; modelId: string; label: string; serviceName: string; fit: number; cost: string; apiCost?: string; isWinner: boolean; isCurrent?: boolean;
+  key: string; modelId: string; label: string; serviceName: string; fit: number;
+  cost: string;               // the price, or "included (Plan)"
+  weight?: string;            // "≈1.2× Sonnet 5.5": the plan-limit weight, when known
+  apiCost?: string;           // "API equivalent ~$0.009" for a plan option
+  isWinner: boolean; isCurrent?: boolean;
 }
 
 export interface Explanation {
@@ -72,12 +76,18 @@ export function costLabel(catalog: Catalog, r: Ranked, badge = false): string {
   return weight ? `included · ${weight}` : costStrings(catalog, r).cost;
 }
 
-function costStrings(catalog: Catalog, r: Ranked): { cost: string; apiCost?: string } {
+/** The cost's parts, kept apart so the cloud can give each its own line. */
+function costParts(catalog: Catalog, r: Ranked): { cost: string; weight?: string; apiCost?: string } {
   const weight = limitWeight(catalog, r);
-  const cost = formatCost(r.cost, planName(catalog, r)) + (weight ? ` · ${weight}` : '');
   const apiCost = r.cost.kind === 'included' && r.cost.apiUsd !== undefined
     ? `API equivalent ${formatUsd(r.cost.apiUsd)}` : undefined;
-  return { cost, apiCost };
+  return { cost: formatCost(r.cost, planName(catalog, r)), ...(weight ? { weight } : {}), ...(apiCost ? { apiCost } : {}) };
+}
+
+/** The same parts on one line, for the badge and the "Elsewhere" sentence. */
+function costStrings(catalog: Catalog, r: Ranked): { cost: string; apiCost?: string } {
+  const { cost, weight, apiCost } = costParts(catalog, r);
+  return { cost: cost + (weight ? ` · ${weight}` : ''), apiCost };
 }
 
 function dominantReason(s: Suggestion, catalog: Catalog): string {
@@ -116,7 +126,7 @@ export function explain(s: Suggestion, catalog: Catalog): Explanation {
   const toRow = (r: Ranked): ExplainRow => ({
     key: r.key, modelId: r.modelId, label: r.label,
     serviceName: catalog.services[r.serviceId]?.name ?? r.serviceId,
-    fit: r.fit, ...costStrings(catalog, r), isWinner: r.key === s.here.key, isCurrent: s.current === r.key,
+    fit: r.fit, ...costParts(catalog, r), isWinner: r.key === s.here.key, isCurrent: s.current === r.key,
   });
   const rows: ExplainRow[] = s.ranked.slice(0, 3).map(toRow);
   const shown = new Set(rows.map(r => r.key));

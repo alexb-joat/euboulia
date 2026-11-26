@@ -118,6 +118,73 @@ test('cloud follows window resizes: header visible, panel inside the window, onl
   await page.close();
 });
 
+test('cloud with a plan: every model name on one line and every cost figure in full, in the margin and the dock', async () => {
+  // Claude's Max plan, set the way a person would: the plan menu in the Claude row of the options page.
+  const sw = context.serviceWorkers()[0] ?? await context.waitForEvent('serviceworker');
+  const optionsUrl = `chrome-extension://${new URL(sw.url()).host}/options.html`;
+  const setClaudePlan = async (plan: string) => {
+    const options = await context.newPage();
+    await options.goto(optionsUrl);
+    await options.waitForSelector('html[data-ready]', { state: 'attached' });
+    const row = options.locator('#servicesTable tbody tr').filter({ has: options.locator('td:first-child', { hasText: /^Claude$/ }) });
+    await row.locator('select').selectOption(plan);
+    await expect.poll(() => row.locator('select').inputValue()).toBe(plan);
+    await options.waitForTimeout(200);   // the change handler stores the prefs asynchronously
+    await options.close();
+  };
+  await setClaudePlan('max');
+
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('http://127.0.0.1:8099/real/claude.html');
+  await page.locator('[data-testid="chat-input"]').first().click();
+  await page.keyboard.type('Why does this Python function raise KeyError? def f(d): return d["x"]');
+  await expect.poll(() => badgeText(page), { timeout: 3000 }).toMatch(/Suggest|Good pick/);
+  await page.evaluate(() => (document.querySelector('euboulia-badge')!.shadowRoot!.querySelector('button') as HTMLButtonElement).click());
+  await page.evaluate(() => (document.querySelector('euboulia-cloud')!.shadowRoot!.querySelector('button.more') as HTMLButtonElement).click());
+
+  const measure = () => page.evaluate(() => {
+    const host = document.querySelector('euboulia-cloud') as HTMLElement;
+    const root = host.shadowRoot!;
+    const list = root.querySelector('.list') as HTMLElement;
+    const rows = [...root.querySelectorAll('tbody tr')].map(tr => {
+      const name = tr.querySelector('td.name')!;
+      const range = document.createRange();
+      range.selectNodeContents(name.firstChild!);
+      const tops = new Set([...range.getClientRects()].map(r => Math.round(r.top)));
+      return {
+        label: name.firstChild!.textContent!,
+        lines: tops.size,
+        service: name.querySelector('small')?.textContent ?? '',
+        cost: tr.querySelector('td.cost')!.textContent ?? '',
+        clipped: [...tr.querySelectorAll('td')].filter(td => td.scrollWidth > td.clientWidth).map(td => td.className),
+      };
+    });
+    return { mode: host.dataset.mode, width: Math.round(host.getBoundingClientRect().width), listClipped: list.scrollWidth > list.clientWidth, rows };
+  });
+
+  // The captured Claude page leaves less than MIN_MARGIN beside the thread at 1440 px, so both sizes dock (as on 25 Nov).
+  for (const [w, h] of [[1440, 900], [1000, 700]] as const) {
+    await page.setViewportSize({ width: w, height: h });
+    await page.waitForTimeout(150);
+    const m = await measure();
+    const at = `at ${w}x${h} (${m.mode}, cloud ${m.width} px)`;
+    if (w === 1000) expect(m.mode, at).toBe('dock');
+    expect(m.rows.filter(r => r.service === 'Claude').length, `Claude rows ${at}`).toBeGreaterThan(1);
+    const wrapped = m.rows.filter(r => r.lines !== 1);
+    expect(wrapped.map(r => `${r.label}: ${r.lines} lines`), `model labels on more than one line ${at}: ${wrapped.length} of ${m.rows.length}`).toEqual([]);
+    expect(m.listClipped, `.list clipped ${at}`).toBe(false);
+    expect(m.rows.filter(r => r.clipped.length).map(r => `${r.label}: ${r.clipped.join(', ')}`), `clipped cells ${at}`).toEqual([]);
+    for (const r of m.rows.filter(r => r.service === 'Claude')) {
+      expect(r.cost, `${r.label} weight ${at}`).toMatch(/[≈<][\d.]+×/);
+      expect(r.cost, `${r.label} API figure ${at}`).toMatch(/API equivalent [~<]?\$[\d.]+/);
+    }
+  }
+  await page.close();
+
+  await setClaudePlan('');   // later tests expect a fresh install's defaults
+});
+
 test('badge steps aside while a site menu covers it, and comes back when the menu closes', async () => {
   const page = await context.newPage();
   await page.setViewportSize({ width: 1600, height: 900 });

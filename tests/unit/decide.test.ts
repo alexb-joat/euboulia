@@ -69,6 +69,7 @@ describe('explain', () => {
     const s = decide({ ...base, here: rank([inc]), elsewhere: [] })!;
     const row = explain(s, catalog).rows[0]!;
     expect(row.cost).toBe('included (Pro)');
+    expect(row.weight).toBeUndefined();   // this catalog names no weight-1 option, so there is no limit weight to show
     expect(row.apiCost).toMatch(/API equivalent/);
   });
 });
