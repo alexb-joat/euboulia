@@ -5,6 +5,12 @@ updates:
     schedule: { interval: weekly }
     # Hold new releases for a week: most hijacked packages are pulled within days.
     cooldown: { default-days: 7 }
+    groups:
+      # Minor and patch bumps of the dev tools come as one weekly PR, so they are tested
+      # together and can't go stale against each other. A major bump stays its own PR.
+      dev-tools:
+        dependency-type: development
+        update-types: [minor, patch]
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: weekly }
